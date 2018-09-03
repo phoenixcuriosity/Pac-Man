@@ -21,36 +21,30 @@
 
 */
 
+#ifndef Ghost_H
+#define Ghost_H
+
 #include "lib.h"
-#include "Pac_Man_lib.h"
-#include "mainLoop.h"
-#include "renduecran.h"
-#include "sdl.h"
-#include "deleteAll.h"
 
-int main(int argc, char** argv) {
-	sysinfo information;
+class Ghost {
+public:
+	Ghost(std::string name, unsigned int x, unsigned int y);
+	~Ghost();
 
-	srand((unsigned int)time(NULL));
+	std::string GETname()const;
+	unsigned int GETx()const;
+	unsigned int GETy()const;
 
-
-	initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
-	initfile(information);
-
-	logfileconsole("________PROGRAMME START________");
-
-	calculimage(information);
-
-	ecrantitre(information);
-
-	mainLoop(information);
+	void SETname(std::string name);
+	void SETx(unsigned int x);
+	void SETy(unsigned int y);
 
 
-	deleteAll(information);
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
-	logfileconsole("SDL_Quit Success");
-	logfileconsole("________PROGRAMME FINISH________");
-	return 0;
-}
+private:
+	std::string _name;
+	unsigned int _x;
+	unsigned int _y;
+};
+
+#endif // !Ghost_H
+

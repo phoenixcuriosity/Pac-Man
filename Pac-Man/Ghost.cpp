@@ -21,36 +21,37 @@
 
 */
 
-#include "lib.h"
-#include "Pac_Man_lib.h"
-#include "mainLoop.h"
-#include "renduecran.h"
+#include "Ghost.h"
 #include "sdl.h"
-#include "deleteAll.h"
 
-int main(int argc, char** argv) {
-	sysinfo information;
+using namespace std;
 
-	srand((unsigned int)time(NULL));
+Ghost::Ghost(string name, unsigned int x, unsigned int y): _name(name), _x(x), _y(y)
+{
+	logfileconsole("A ghost have been created Successfully");
+}
 
+Ghost::~Ghost()
+{
+	logfileconsole("A ghost have been deleted Successfully");
+}
 
-	initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
-	initfile(information);
+string Ghost::GETname()const {
+	return _name;
+}
+unsigned int Ghost::GETx()const {
+	return _x;
+}
+unsigned int Ghost::GETy()const {
+	return _y;
+}
 
-	logfileconsole("________PROGRAMME START________");
-
-	calculimage(information);
-
-	ecrantitre(information);
-
-	mainLoop(information);
-
-
-	deleteAll(information);
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
-	logfileconsole("SDL_Quit Success");
-	logfileconsole("________PROGRAMME FINISH________");
-	return 0;
+void Ghost::SETname(string name) {
+	_name = name;
+}
+void Ghost::SETx(unsigned int x) {
+	_x = x;
+}
+void Ghost::SETy(unsigned int y) {
+	_x = y;
 }

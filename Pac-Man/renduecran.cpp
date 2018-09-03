@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -54,7 +54,22 @@ void alwaysrender(sysinfo& information){
 	//t1 = clock();
 
 	
-	SDL_RenderPresent(information.ecran.renderer);
+	
+
+	switch (information.variable.statescreen) {
+	case STATEplay:
+		SDL_RenderClear(information.ecran.renderer);
+
+		for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++)
+			information.allTextures.tabTexture[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
+			information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+
+		SDL_RenderPresent(information.ecran.renderer);
+		break;
+	}
+
+
 	//t2 = clock();
 	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 }

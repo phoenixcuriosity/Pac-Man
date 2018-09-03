@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -35,8 +35,6 @@ void mainLoop(sysinfo& information) {
 	logfileconsole("_mainLoop Start_");
 	SDL_Event event;
 
-	int countedFrames = 0;
-
 	int SDL_EnableUNICODE(1); // on azerty
 
 	while (information.variable.continuer) {
@@ -59,23 +57,21 @@ void mainLoop(sysinfo& information) {
 				case SDLK_SPACE:
 
 					break;
-				case SDLK_b:
-					break;
-				case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
-					mouse(information, event);
-					break;
-				case SDL_MOUSEWHEEL:
-					//wheel(information, event.wheel.y);
-
-					break;
 				}
-
+			case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
+				mouse(information, event);
+				break;
+			case SDL_MOUSEWHEEL:
+				//wheel(information, event.wheel.y);
+			break;
 			}
-			alwaysrender(information);
+
 		}
+		alwaysrender(information);
 	}
 	logfileconsole("_mainLoop End_");
 }
+	
 
 void initfile(sysinfo& information) {
 	ofstream log("log.txt");
@@ -86,6 +82,8 @@ void initfile(sysinfo& information) {
 void calculimage(sysinfo& information) {
 	logfileconsole("_calculimage Start_");
 
+	clock_t t1, t2;
+	t1 = clock();
 	
 	int spacemenu = 64, initspacemenu = 300;
 
@@ -95,16 +93,18 @@ void calculimage(sysinfo& information) {
 	createbutton(information, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 	createbutton(information, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 	createbutton(information, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-
+	information.variable.statescreen = STATEplay;
+	createbutton(information, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
 	
 	// ______Writetxt_____ 
 	information.variable.statescreen = STATEecrantitre;
-	loadwritetxt(information, "Game dev in c++ with SDL2.0.8", { 255, 127, 127, 255 }, 24, 0, 0);
-	loadwritetxt(information, "La mort n'est que le commencement", { 127, 255, 127, 255 }, 24, SCREEN_WIDTH / 2, 800, center_x);
-	loadwritetxt(information, "Je suis devenu la mort,", { 127, 255, 127, 255 }, 24, SCREEN_WIDTH / 2, 832, center_x);
-	loadwritetxt(information, "le destructeur des Mondes", { 127, 255, 127, 255 }, 24, SCREEN_WIDTH / 2, 864, center_x);
-	loadwritetxt(information, "CIVILIZATION", { 0, 64, 255, 255 }, 70, SCREEN_WIDTH / 2, 100, center_x);
+	loadwritetxt(information, "Game dev in c++ with SDL2.0.8", { 255, 127, 127, 255 }, 18, 0, 0);
+	loadwritetxt(information, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, 18, 0, 30);
+	loadwritetxt(information, "New Pac-Man Super Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, 50, SCREEN_WIDTH / 2, 100, center_x);
 
+
+	t2 = clock();
+	cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	
 	logfileconsole("_calculimage End_");
 }

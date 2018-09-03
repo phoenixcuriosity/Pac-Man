@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ unsigned int Buttons::testcolor(SDL_Color txt, SDL_Color back) const {
 		return 0;
 }
 
-unsigned int Buttons::searchButton(string& msg, unsigned int statescreen, signed int x, signed int y) {
+unsigned int Buttons::searchButton(string msg, unsigned int statescreen, signed int x, signed int y) {
 	if (statescreen == this->GETstatescreen()) {
 		if (x >= this->GETxc() - this->GETw() / 2 && x <= this->GETxc() + this->GETw() / 2) {
 			if (y >= this->GETy() - this->GETh() / 2 && y <= this->GETyc() + this->GETh() / 2) {

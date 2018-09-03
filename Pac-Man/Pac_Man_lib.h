@@ -1,12 +1,23 @@
 /*
 
-	
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-*/
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
-/*
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -18,9 +29,11 @@
 #include "Buttons.h"
 #include "Texture.h"
 
-const unsigned int SCREEN_WIDTH = 1280;
-const unsigned int SCREEN_HEIGHT = 720;
-const int tileSize = 64;
+const unsigned int SCREEN_WIDTH = 1920;
+const unsigned int SCREEN_HEIGHT = 1080;
+const int tileSize = 32;
+const int mapHeight = 20;
+const int mapLength = 20;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -33,7 +46,7 @@ const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 enum { normal, shaded, normaltexture};
 enum { nocenter, center_x, center_y, center };
 
-enum { STATEnothing, STATEecrantitre, STATEecrannewgame, STATEreload, STATEmainmap, STATEscience, STATEcitiemap };  // différents état de l'écran
+enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };	// spécifications de la séléction
 
 
@@ -73,17 +86,10 @@ struct tile{
 	unsigned int tile_nb = 0;
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
+
+
 	
 };
-
-typedef struct map map;
-struct map {
-	
-	
-	//unsigned int selectsupertiles = ceil(float(SUPERTILES)/2);
-};
-
-
 
 typedef struct texture texture;
 struct texture {
@@ -95,7 +101,7 @@ typedef struct sysinfo sysinfo;
 struct sysinfo {
 	screen ecran;
 	var variable;
-	map maps;
+	tile map[mapHeight * mapLength];
 	std::vector<Buttons*> tabbutton;
 	texture allTextures;
 };

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="deleteAll.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="keyboardAndMouse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainLoop.cpp" />
@@ -31,6 +32,7 @@
   <ItemGroup>
     <ClInclude Include="Buttons.h" />
     <ClInclude Include="deleteAll.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="keyboardAndMouse.h" />
     <ClInclude Include="lib.h" />
     <ClInclude Include="mainLoop.h" />
@@ -92,17 +94,19 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>SDL2-2.0.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <StackReserveSize>10000000</StackReserveSize>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

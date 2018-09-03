@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ void initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]){
 		cout << endl << "SDL could not initialize! SDL_Error: " << SDL_GetError();
 	else{
 		window = SDL_CreateWindow("Civ_rob_2",
-			100, 100,
+			0, 0,
 			SCREEN_WIDTH, SCREEN_HEIGHT,
 			 SDL_WINDOW_OPENGL);
 

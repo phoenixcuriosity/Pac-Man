@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@
 
 #include "Texture.h"
 
-
+#include "lib.h"
 
 
 class Buttons : public Texture {
@@ -59,7 +59,7 @@ public:
 	~Buttons();
 
 	virtual unsigned int testcolor(SDL_Color, SDL_Color) const;
-	virtual unsigned int searchButton(std::string& msg, unsigned int statescreen, signed int x, signed int y);
+	virtual unsigned int searchButton(std::string msg, unsigned int statescreen, signed int x, signed int y);
 	virtual unsigned int searchButtonName(std::string& msg, unsigned int statescreen);
 
 	virtual void resetOnStatescreen(unsigned int, unsigned int);

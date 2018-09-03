@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -44,23 +44,27 @@ void cliqueGauche(sysinfo& information, SDL_Event event) {
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	for (unsigned int i = 0; i < information.tabbutton.size(); i++) { // recherche si une bouton est dans ces coordonnées
 		switch (information.variable.statescreen) {
-		case STATEmainmap:
-			
+		case STATEplay:
+			if (information.tabbutton[i]->searchButton((string)"Return to Title Screen", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.variable.statescreen = STATEecrantitre;
+				ecrantitre(information);
+				return;
+			}
 			break;
 		case STATEecrantitre:
-			if (information.tabbutton[i]->searchButton((string&)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
-				
+			if (information.tabbutton[i]->searchButton((string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.variable.statescreen = STATEplay;
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string&)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
-				
+			else if (information.tabbutton[i]->searchButton((string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.variable.continuer = false;
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string&)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
-				//clearSave(information);
+			else if (information.tabbutton[i]->searchButton((string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.variable.continuer = false;
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string&)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.continuer = false;
 				return;
 			}

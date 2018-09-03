@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -32,8 +32,8 @@
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1080;
 const int tileSize = 32;
-const int mapHeight = 20;
-const int mapLength = 20;
+const int mapHeight = 25;
+const int mapLength = 25;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -87,7 +87,8 @@ struct tile{
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
 
-
+	bool wall = false;
+	bool entity = false;
 	
 };
 
@@ -95,6 +96,8 @@ typedef struct texture texture;
 struct texture {
 	std::vector<Texture*> tabTexture;
 	TTF_Font *font[80];
+	unsigned int indexGround = 0;
+	unsigned int indexPacman = 0;
 };
 
 typedef struct sysinfo sysinfo;

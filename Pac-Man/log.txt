@@ -1,11 +1,16 @@
 
 ________PROGRAMME START________
+CreateWindow Success
+CreateRenderer Success
+TTF_Init Success
+SDL_Init Success
 _calculimage Start_
 Create Button n:0 msg = New Game Success
 Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:4 msg = Return to Title Screen Success
+temps d'execution de alwaysrender : 0.027000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -14,9 +19,15 @@ _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop End_
 *********_________ Start DeleteAll _________*********
-Delete Texture n:0 name = Game dev in c++ with SDL2.0.8 Success
-Delete Texture n:1 name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
-Delete Texture n:2 name = New Pac-Man Super Plus DELUX Pro Turbo Edition Success
+Delete Texture n:0 name = White.bmp Success
+Delete Texture n:1 name = Black.bmp Success
+Delete Texture n:2 name = pacman_R.jpg Success
+Delete Texture n:3 name = pacman_L.png Success
+Delete Texture n:4 name = Game dev in C++ and with SDL2.0.8 Success
+Delete Texture n:5 name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
+Delete Texture n:6 name = New Pac-Man Super Plus DELUX Pro Turbo Edition Success
+Delete Texture n:7 name = With ALL DLC For Only 99.99$ what a deal !!! Success
+Delete Texture n:8 name = Well Well Well... Now let's play Success
 Delete ALL Texture Success
 Delete Button n:0 name = New Game Success
 Delete Button n:1 name = Reload Success

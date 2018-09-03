@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -36,6 +36,7 @@ void ecrantitre(sysinfo& information){
 	logfileconsole("_Ecrantitres Start_");
 	
 	information.variable.statescreen = STATEecrantitre;
+	SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(information.ecran.renderer);
 
 	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++)
@@ -45,6 +46,7 @@ void ecrantitre(sysinfo& information){
 	
 	
 	SDL_RenderPresent(information.ecran.renderer);
+
 	logfileconsole("_Ecrantitres End_");
 }
 
@@ -59,9 +61,14 @@ void alwaysrender(sysinfo& information){
 	switch (information.variable.statescreen) {
 	case STATEplay:
 		SDL_RenderClear(information.ecran.renderer);
-
-		for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++)
-			information.allTextures.tabTexture[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+		SDL_SetRenderDrawColor(information.ecran.renderer, 128, 128, 128, 0xFF);
+		afficherMap(information);
+		
+		for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
+			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Well Well Well... Now let's play", information.variable.statescreen);
+			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_L.png", information.variable.statescreen);
+			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_R.jpg", information.variable.statescreen);
+		}
 		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
 			information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
@@ -72,4 +79,20 @@ void alwaysrender(sysinfo& information){
 
 	//t2 = clock();
 	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
+}
+
+void afficherMap(sysinfo& information) {
+	unsigned int k = 0;
+
+	for (unsigned int i = 0; i < mapLength; i++) {
+		for (unsigned int j = 0; j < mapHeight; j++) {
+			for (unsigned int l = 0; l < information.allTextures.tabTexture.size(); l++) {
+				if (information.map[k].wall == true)
+					information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, "Black.bmp", information.map[k].tile_x, information.map[k].tile_y);
+				else
+					information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, "White.bmp", information.map[k].tile_x, information.map[k].tile_y);
+			}
+			k++;
+		}
+	}
 }

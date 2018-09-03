@@ -32,13 +32,12 @@ int main(int argc, char** argv) {
 	sysinfo information;
 
 	srand((unsigned int)time(NULL));
-
-
-	initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
 	initfile(information);
 
 	logfileconsole("________PROGRAMME START________");
 
+	initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
+	initGrid(information);
 	calculimage(information);
 
 	ecrantitre(information);

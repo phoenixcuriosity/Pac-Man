@@ -1,10 +1,10 @@
 /*
 
-	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	Pac-Man
+	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.2
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -55,9 +55,11 @@ public:
 
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTexture(SDL_Renderer*&, int = -1, int = -1);
-	virtual void renderTextureTestStates(SDL_Renderer*&,unsigned int, unsigned int, int = -1, int = -1);
+	virtual void renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc = -1, int yc = -1);
+	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc = -1, int yc = -1, unsigned int angle = 0);
 	virtual void renderTextureTestString(SDL_Renderer*&, const std::string&, int = -1, int = -1);
 	virtual bool renderTextureTestStringAndStates(SDL_Renderer*&, const std::string&, unsigned int, int = -1, int = -1);
+	virtual bool TextureTestString(const std::string&, int = -1, int = -1);
 
 	virtual void changeAlpha(Uint8);
 

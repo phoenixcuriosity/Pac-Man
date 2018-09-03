@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -27,8 +27,13 @@
 #include "Pac_Man_lib.h"
 #include "sdl.h"
 
+void keySDLK_UP(sysinfo& information);
+void keySDLK_DOWN(sysinfo& information);
+void keySDLK_RIGHT(sysinfo& information);
+void keySDLK_LEFT(sysinfo& information);
 void mouse(sysinfo&, SDL_Event event);
 void cliqueGauche(sysinfo&, SDL_Event event);
+
 
 
 #endif

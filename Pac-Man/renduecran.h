@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -28,5 +28,6 @@
 
 void ecrantitre(sysinfo&);
 void alwaysrender(sysinfo&);
+void afficherMap(sysinfo& information);
 
 #endif

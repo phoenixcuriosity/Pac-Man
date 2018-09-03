@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -26,6 +26,44 @@
 
 using namespace std;
 
+void keySDLK_UP(sysinfo& information) {
+	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
+		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
+			information.allTextures.tabTexture[i]->SETdsty(information.allTextures.tabTexture[i]->GETyc() - 3);
+			information.allTextures.tabTexture[i]->SETyc(information.allTextures.tabTexture[i]->GETyc() - 3);
+			return;
+		}
+	}
+}
+void keySDLK_DOWN(sysinfo& information) {
+	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
+		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
+			information.allTextures.tabTexture[i]->SETdsty(information.allTextures.tabTexture[i]->GETyc() + 3);
+			information.allTextures.tabTexture[i]->SETyc(information.allTextures.tabTexture[i]->GETyc() + 3);
+			return;
+		}
+	}
+}
+void keySDLK_RIGHT(sysinfo& information) {
+	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
+		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
+			information.allTextures.tabTexture[i]->SETdstx(information.allTextures.tabTexture[i]->GETxc() + 3);
+			information.allTextures.tabTexture[i]->SETxc(information.allTextures.tabTexture[i]->GETxc() + 3);
+			return;
+		}
+	}
+}
+void keySDLK_LEFT(sysinfo& information) {
+	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
+		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
+			information.allTextures.tabTexture[i]->SETdstx(information.allTextures.tabTexture[i]->GETxc() - 3);
+			information.allTextures.tabTexture[i]->SETxc(information.allTextures.tabTexture[i]->GETxc() - 3);
+			return;
+		}
+	}
+}
+
+
 void mouse(sysinfo& information, SDL_Event event) {
 	/*
 	Handle Mouse Event
@@ -46,7 +84,6 @@ void cliqueGauche(sysinfo& information, SDL_Event event) {
 		switch (information.variable.statescreen) {
 		case STATEplay:
 			if (information.tabbutton[i]->searchButton((string)"Return to Title Screen", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.statescreen = STATEecrantitre;
 				ecrantitre(information);
 				return;
 			}

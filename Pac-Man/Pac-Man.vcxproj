@@ -39,6 +39,7 @@
     <ClInclude Include="Pac_Man_lib.h" />
     <ClInclude Include="renduecran.h" />
     <ClInclude Include="sdl.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

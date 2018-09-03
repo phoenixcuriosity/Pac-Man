@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -45,11 +45,17 @@ void mainLoop(sysinfo& information) {
 				break;
 			case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 				switch (event.key.keysym.sym) {
-				case SDLK_F5:
-
+				case SDLK_UP:
+					keySDLK_UP(information);
 					break;
-				case SDLK_F6:
-
+				case SDLK_DOWN:
+					keySDLK_DOWN(information);
+					break;
+				case SDLK_RIGHT:
+					keySDLK_RIGHT(information);
+					break;
+				case SDLK_LEFT:
+					keySDLK_LEFT(information);
 					break;
 				case SDLK_ESCAPE:
 					information.variable.continuer = 0;
@@ -79,13 +85,37 @@ void initfile(sysinfo& information) {
 	else
 		cout << endl << "ERREUR: Impossible d'ouvrir le fichier : log.txt";
 }
+void initGrid(sysinfo& information) {
+	unsigned int k = 0;
+	for (unsigned int i = 0; i < mapLength; i++) {
+		for (unsigned int j = 0; j < mapHeight; j++) {
+			information.map[k].tile_nb = k;
+			information.map[k].tile_x = tileSize * i + (SCREEN_WIDTH / 2 - (mapLength / 2 * tileSize));
+			information.map[k].tile_y = tileSize * j + (SCREEN_HEIGHT / 2 - (mapHeight / 2 * tileSize));
+			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1)
+				information.map[k].wall = true;
+			else
+				information.map[k].wall = false;
+			k++;
+		}
+	}
+}
 void calculimage(sysinfo& information) {
 	logfileconsole("_calculimage Start_");
 
 	clock_t t1, t2;
 	t1 = clock();
 	
-	int spacemenu = 64, initspacemenu = 300;
+	string IPath = "image/";
+	
+	information.variable.statescreen = STATEplay;
+	loadImage(information, information.allTextures.indexGround, IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexGround, IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1);
+
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_R.jpg", "pacman_R.jpg", (Uint8)255, 500, 500);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_L.png", "pacman_L.png", (Uint8)255, 600, 600);
+	
+	int spacemenu = 64, initspacemenu = 400;
 
 	// ______Buttons_____
 	information.variable.statescreen = STATEecrantitre;
@@ -98,14 +128,16 @@ void calculimage(sysinfo& information) {
 	
 	// ______Writetxt_____ 
 	information.variable.statescreen = STATEecrantitre;
-	loadwritetxt(information, "Game dev in c++ with SDL2.0.8", { 255, 127, 127, 255 }, 18, 0, 0);
+	loadwritetxt(information, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, 18, 0, 0);
 	loadwritetxt(information, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, 18, 0, 30);
 	loadwritetxt(information, "New Pac-Man Super Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, 50, SCREEN_WIDTH / 2, 100, center_x);
-
+	loadwritetxt(information, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, 25, SCREEN_WIDTH / 2, 160, center_x);
+	information.variable.statescreen = STATEplay;
+	loadwritetxt(information, "Well Well Well... Now let's play", { 0, 64, 255, 255 }, 26, SCREEN_WIDTH / 2, 100, center_x);
 
 	t2 = clock();
-	cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
-	
+
+	logfileconsole("temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));
 	logfileconsole("_calculimage End_");
 }
 

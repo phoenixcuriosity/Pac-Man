@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -59,7 +59,6 @@ void Texture::render(SDL_Renderer*& renderer, int xc, int yc) {
 	SDL_RenderCopy(renderer, _texture, NULL, &_dst);
 }
 
-
 void Texture::renderTexture(SDL_Renderer*& renderer, int xc, int yc) {
 	render(renderer, xc, yc);
 }
@@ -67,6 +66,16 @@ void Texture::renderTexture(SDL_Renderer*& renderer, int xc, int yc) {
 void Texture::renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc, int yc) {
 	if (_statescreen == statescreen)
 		render(renderer, xc, yc);
+}
+
+void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc, int yc, unsigned int angle) {
+	if (_statescreen == statescreen) {
+		if (xc != -1 && yc != -1) {
+		_dst.x = xc;
+		_dst.y = yc;
+	}
+		SDL_RenderCopyEx(renderer, _texture, NULL, &_dst, angle, NULL, SDL_FLIP_NONE);
+	}
 }
 
 void Texture::renderTextureTestString(SDL_Renderer*& renderer, const std::string& msg, int xc, int yc) {
@@ -80,6 +89,11 @@ bool Texture::renderTextureTestStringAndStates(SDL_Renderer*& renderer, const st
 		return true;
 	}
 	return false;	
+}
+bool Texture::TextureTestString(const std::string& msg, int xc, int yc) {
+	if (_name == msg)
+		return true;
+	return false;
 }
 
 

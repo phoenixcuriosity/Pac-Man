@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.2
+	last modification on this file on version:0.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -60,32 +60,36 @@ void mouse(sysinfo& information, SDL_Event event) {
 void cliqueGauche(sysinfo& information, SDL_Event event) {
 	
 	// recherche du bouton par comparaison de string et des positions x et y du clic
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++) { // recherche si une bouton est dans ces coordonnées
-		switch (information.variable.statescreen) {
-		case STATEplay:
-			if (information.tabbutton[i]->searchButton((string)"Return to Title Screen", information.variable.statescreen, event.button.x, event.button.y)) {
+	
+	switch (information.variable.statescreen) {
+	case STATEplay:
+		for (unsigned int i = 0; i < information.allButton.buttonplay.size(); i++) { // recherche si une bouton est dans ces coordonnées
+			if (information.allButton.buttonplay[i]->searchButton((string)"Return to Title Screen", information.variable.statescreen, event.button.x, event.button.y)) {
 				ecrantitre(information);
 				return;
 			}
-			break;
-		case STATEecrantitre:
-			if (information.tabbutton[i]->searchButton((string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
+		}
+		
+		break;
+	case STATEecrantitre:
+		for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++) {
+			if (information.allButton.buttonecrantitre[i]->searchButton((string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.statescreen = STATEplay;
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.buttonecrantitre[i]->searchButton((string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.continuer = false;
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.buttonecrantitre[i]->searchButton((string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.continuer = false;
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.buttonecrantitre[i]->searchButton((string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.continuer = false;
 				return;
 			}
-			break;
 		}
+		break;
 	}
 }

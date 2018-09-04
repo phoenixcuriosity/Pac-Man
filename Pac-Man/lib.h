@@ -41,6 +41,5 @@
 #include "SDL2-2.0.8/include/SDL_ttf.h"
 #include "SDL2-2.0.8/include/SDL_image.h"
 
-#include <direct.h>
 
 #endif

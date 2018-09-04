@@ -75,9 +75,19 @@ private:
 };
 
 class Ghost : public Entity {
+public:
+	Ghost();
+	~Ghost();
 
+private:
+	unsigned int type;
 };
 class Gold : public Entity {
+public:
+	Gold();
+	~Gold();
+
+private:
 
 };
 

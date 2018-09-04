@@ -9,8 +9,8 @@ Create Button n:0 msg = New Game Success
 Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
-Create Button n:4 msg = Return to Title Screen Success
-temps d'execution de alwaysrender : 0.049000
+Create Button n:0 msg = Return to Title Screen Success
+temps d'execution de alwaysrender : 0.035000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -21,24 +21,68 @@ _mainLoop End_
 Pacman is dead
 A Entity have been deleted Successfully
 *********_________ Start DeleteAll _________*********
-Delete Texture n:0 name = White.bmp Success
-Delete Texture n:1 name = Black.bmp Success
-Delete Texture n:2 name = pacman_U.png Success
-Delete Texture n:3 name = pacman_L.png Success
-Delete Texture n:4 name = pacman_D.png Success
-Delete Texture n:5 name = pacman_R.png Success
-Delete Texture n:6 name = Game dev in C++ and with SDL2.0.8 Success
-Delete Texture n:7 name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
-Delete Texture n:8 name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
-Delete Texture n:9 name = With ALL DLC For Only 99.99$ what a deal !!! Success
-Delete Texture n:10 name = Well Well Well... Now let's play Success
-Delete ALL Texture Success
-Delete Button n:0 name = New Game Success
-Delete Button n:1 name = Reload Success
-Delete Button n:2 name = Option Success
-Delete Button n:3 name = Quit Success
-Delete Button n:4 name = Return to Title Screen Success
-Delete ALL Button Success
+Delete ground Texture name = White.bmp Success
+Delete ground Texture name = Black.bmp Success
+Delete ALL ground Texture Success
+Delete pacman Texture name = pacman_U_1.png Success
+Delete pacman Texture name = pacman_U_2.png Success
+Delete pacman Texture name = pacman_L_1.png Success
+Delete pacman Texture name = pacman_L_2.png Success
+Delete pacman Texture name = pacman_D_1.png Success
+Delete pacman Texture name = pacman_D_2.png Success
+Delete pacman Texture name = pacman_R_1.png Success
+Delete pacman Texture name = pacman_R_2.png Success
+Delete ALL pacman Texture Success
+Delete red Texture name = Red_U_1.png Success
+Delete red Texture name = Red_L_1.png Success
+Delete red Texture name = Red_D_1.png Success
+Delete red Texture name = Red_R_1.png Success
+Delete red Texture name = Red_U_2.png Success
+Delete red Texture name = Red_L_2.png Success
+Delete red Texture name = Red_D_2.png Success
+Delete red Texture name = Red_R_2.png Success
+Delete ALL red Texture Success
+Delete blue Texture name = Blue_U_1.png Success
+Delete blue Texture name = Blue_L_1.png Success
+Delete blue Texture name = Blue_D_1.png Success
+Delete blue Texture name = Blue_R_1.png Success
+Delete blue Texture name = Blue_U_2.png Success
+Delete blue Texture name = Blue_L_2.png Success
+Delete blue Texture name = Blue_D_2.png Success
+Delete blue Texture name = Blue_R_2.png Success
+Delete ALL blue Texture Success
+Delete yellow Texture name = Yellow_U_1.png Success
+Delete yellow Texture name = Yellow_L_1.png Success
+Delete yellow Texture name = Yellow_D_1.png Success
+Delete yellow Texture name = Yellow_R_1.png Success
+Delete yellow Texture name = Yellow_U_2.png Success
+Delete yellow Texture name = Yellow_L_2.png Success
+Delete yellow Texture name = Yellow_D_2.png Success
+Delete yellow Texture name = Yellow_R_2.png Success
+Delete ALL yellow Texture Success
+Delete pink Texture name = Pink_U_1.png Success
+Delete pink Texture name = Pink_L_1.png Success
+Delete pink Texture name = Pink_D_1.png Success
+Delete pink Texture name = Pink_R_1.png Success
+Delete pink Texture name = Pink_U_2.png Success
+Delete pink Texture name = Pink_L_2.png Success
+Delete pink Texture name = Pink_D_2.png Success
+Delete pink Texture name = Pink_R_2.png Success
+Delete ALL pink Texture Success
+Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success
+Delete txtecrantitre Texture name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
+Delete txtecrantitre Texture name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
+Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!! Success
+Delete txtecrantitre Texture name = Well Well Well... Now let's play Success
+Delete ALL txtecrantitre Texture Success
+Delete ALL txtplay Texture Success
+Delete Button ecrantitre name = New Game Success
+Delete Button ecrantitre name = Reload Success
+Delete Button ecrantitre name = Option Success
+Delete Button ecrantitre name = Quit Success
+Delete ALL Button ecrantitre Success
+Delete Button play name = Return to Title Screen Success
+Delete ALL Button play Success
 *********_________ End DeleteAll _________*********
 SDL_Quit Success
 ________PROGRAMME FINISH________

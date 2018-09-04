@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -121,7 +121,7 @@ SDL_Texture* renderTextShaded(SDL_Renderer*& renderer, const std::string &messag
 	return texture;
 }
 
-void loadImage(sysinfo& information, unsigned int& index, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt) {
+void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt) {
 
 
 	int iW = 0, iH = 0, xc = 0, yc = 0;
@@ -132,15 +132,14 @@ void loadImage(sysinfo& information, unsigned int& index, const std::string &pat
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface != NULL) {
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
-		newTexture = SDL_CreateTextureFromSurface(information.ecran.renderer, loadedSurface);
+		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		if (newTexture != NULL) {
 			if (alpha != (Uint8)255) {
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 					logSDLError(cout, "alpha : ");
 			}
 			centrage(xc, yc, loadedSurface->w, loadedSurface->h, cnt);
-			information.allTextures.tabTexture.push_back(new Texture(newTexture, msg, information.variable.statescreen, information.variable.select, xc, yc, loadedSurface->w, loadedSurface->h));
-			index++;
+			tabTexture.push_back(new Texture(newTexture, msg, statescreen, select, xc, yc, loadedSurface->w, loadedSurface->h));
 		}
 		else
 			logfileconsole("___________ERROR : loadImage : cannot create Texture from : " + path);
@@ -150,19 +149,19 @@ void loadImage(sysinfo& information, unsigned int& index, const std::string &pat
 		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
 }
 
-void loadwritetxt(sysinfo& information, const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
+void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture,const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
 	SDL_Texture *image = renderText(information.ecran.renderer, msg, color, information.allTextures.font[size]);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
-	information.allTextures.tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
+	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
-void loadwritetxtshaded(sysinfo& information, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
+void loadwritetxtshaded(sysinfo& information, std::vector<Texture*>& tabTexture, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
 	SDL_Texture *image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
-	information.allTextures.tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
+	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
 
 

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.2
+	last modification on this file on version:0.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -39,10 +39,10 @@ void ecrantitre(sysinfo& information){
 	SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(information.ecran.renderer);
 
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++)
-		information.allTextures.tabTexture[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++)
-		information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+	for (unsigned int i = 0; i < information.allTextures.txtecrantitre.size(); i++)
+		information.allTextures.txtecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+	for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++)
+		information.allButton.buttonecrantitre[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 	
 	
 	SDL_RenderPresent(information.ecran.renderer);
@@ -60,35 +60,57 @@ void alwaysrender(sysinfo& information, Pacman& player){
 
 	switch (information.variable.statescreen) {
 	case STATEplay:
+
 		SDL_RenderClear(information.ecran.renderer);
 		SDL_SetRenderDrawColor(information.ecran.renderer, 128, 128, 128, 0xFF);
 		afficherMap(information);
-		
-		for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Well Well Well... Now let's play", information.variable.statescreen);
+
+		information.variable.modulo = (information.variable.modulo + 1) % 60;
+		if (information.variable.modulo == 0)
+			player.SETalternateSkin(!player.GETalternateSkin());
+
+		for (unsigned int i = 0; i < information.allTextures.txtplay.size(); i++) {
+			information.allTextures.txtplay[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Well Well Well... Now let's play", information.variable.statescreen);
+
+		}
+		for (unsigned int i = 0; i < information.allTextures.pacman.size(); i++) {
 			switch (player.GETcurrentHeading()) {
 			case UP:
 				if(player.GETalternateSkin())
-					information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
-					"pacman_U_O.png", player.GETx(), player.GETy());
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_U_1.png", player.GETx(), player.GETy());
 				else
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_U_2.png", player.GETx(), player.GETy());
 				break;
 			case LEFT:
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
-					"pacman_L_O.png", player.GETx(), player.GETy());
+				if(player.GETalternateSkin())
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_L_1.png", player.GETx(), player.GETy());
+				else
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_L_2.png", player.GETx(), player.GETy());
 				break;
 			case DOWN:
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
-					"pacman_D_O.png", player.GETx(), player.GETy());
+				if (player.GETalternateSkin())
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_D_1.png", player.GETx(), player.GETy());
+				else
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_D_2.png", player.GETx(), player.GETy());
 				break;
 			case RIGHT:
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
-					"pacman_R_O.png", player.GETx(), player.GETy());
+				if (player.GETalternateSkin())
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_R_1.png", player.GETx(), player.GETy());
+				else
+					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
+						"pacman_R_2.png", player.GETx(), player.GETy());
 				break;
 			}
 		}
-		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
-			information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+		for (unsigned int i = 0; i < information.allButton.buttonplay.size(); i++)
+			information.allButton.buttonplay[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
 		SDL_RenderPresent(information.ecran.renderer);
 		break;
@@ -104,11 +126,11 @@ void afficherMap(sysinfo& information) {
 
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
-			for (unsigned int l = 0; l < information.allTextures.tabTexture.size(); l++) {
+			for (unsigned int l = 0; l < information.allTextures.ground.size(); l++) {
 				if (information.map[k].wall == true)
-					information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, "Black.bmp", information.map[k].tile_x, information.map[k].tile_y);
+					information.allTextures.ground[l]->renderTextureTestString(information.ecran.renderer, "Black.bmp", information.map[k].tile_x, information.map[k].tile_y);
 				else
-					information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, "White.bmp", information.map[k].tile_x, information.map[k].tile_y);
+					information.allTextures.ground[l]->renderTextureTestString(information.ecran.renderer, "White.bmp", information.map[k].tile_x, information.map[k].tile_y);
 			}
 			k++;
 		}

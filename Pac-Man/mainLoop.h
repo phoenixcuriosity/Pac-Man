@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.2
+	last modification on this file on version:0.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -24,12 +24,14 @@
 #ifndef mainLoop_H
 #define mainLoop_H
 #include "Pac_Man_lib.h"
+#include "Buttons.h"
 
 void mainLoop(sysinfo&);
 void initfile(sysinfo& information);
 void initGrid(sysinfo& information);
 void calculimage(sysinfo&);
-void createbutton(sysinfo&, const std::string &msg, SDL_Color, SDL_Color, int, int, int, int = 0); // parametre par defaut -> nocenter
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, const std::string& msg,
+	SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton = 0);
 void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton);
 
 #endif

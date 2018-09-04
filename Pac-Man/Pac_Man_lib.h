@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.2
+	last modification on this file on version:0.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -75,9 +75,10 @@ typedef struct var var;
 struct var {
 
 	bool continuer = true;
-	unsigned int nbturn = 0;
+	unsigned int modulo = 0;
 	unsigned int select = selectnothing;
 	unsigned int statescreen = 0; // selectnothing par défaut
+
 
 	subcatWheel s_wheel;
 };
@@ -96,10 +97,24 @@ struct tile{
 
 typedef struct texture texture;
 struct texture {
-	std::vector<Texture*> tabTexture;
+	std::vector<Texture*> ground;
+
+	std::vector<Texture*> pacman;
+	std::vector<Texture*> red;
+	std::vector<Texture*> blue;
+	std::vector<Texture*> yellow;
+	std::vector<Texture*> pink;
+
+	std::vector<Texture*> txtecrantitre;
+	std::vector<Texture*> txtplay;
+
 	TTF_Font *font[80];
-	unsigned int indexGround = 0;
-	unsigned int indexPacman = 0;
+};
+
+typedef struct button button;
+struct button {
+	std::vector<Buttons*> buttonecrantitre;
+	std::vector<Buttons*> buttonplay;
 };
 
 typedef struct sysinfo sysinfo;
@@ -107,7 +122,7 @@ struct sysinfo {
 	screen ecran;
 	var variable;
 	tile map[mapHeight * mapLength];
-	std::vector<Buttons*> tabbutton;
+	button allButton;
 	texture allTextures;
 };
 

@@ -40,6 +40,7 @@ void deleteAll(sysinfo& information){
 	deleteDyTabPlayerAndTextures(information.allTextures.pink, "pink Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.txtecrantitre, "txtecrantitre Texture"); 
 	deleteDyTabPlayerAndTextures(information.allTextures.txtplay, "txtplay Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.imgecrantitre, "imgecrantitre Texture");
 
 	deleteDyTabPlayerAndTextures(information.allButton.buttonecrantitre, "Button ecrantitre");
 	deleteDyTabPlayerAndTextures(information.allButton.buttonplay, "Button play");

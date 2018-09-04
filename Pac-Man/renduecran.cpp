@@ -41,6 +41,10 @@ void ecrantitre(sysinfo& information){
 
 	for (unsigned int i = 0; i < information.allTextures.txtecrantitre.size(); i++)
 		information.allTextures.txtecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+	
+	for (unsigned int i = 0; i < information.allTextures.imgecrantitre.size(); i++)
+		information.allTextures.imgecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+	
 	for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++)
 		information.allButton.buttonecrantitre[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 	
@@ -65,7 +69,7 @@ void alwaysrender(sysinfo& information, Pacman& player){
 		SDL_SetRenderDrawColor(information.ecran.renderer, 128, 128, 128, 0xFF);
 		afficherMap(information);
 
-		information.variable.modulo = (information.variable.modulo + 1) % 60;
+		information.variable.modulo = (information.variable.modulo + 1) % 10;
 		if (information.variable.modulo == 0)
 			player.SETalternateSkin(!player.GETalternateSkin());
 

@@ -105,6 +105,7 @@ struct texture {
 	std::vector<Texture*> yellow;
 	std::vector<Texture*> pink;
 
+	std::vector<Texture*> imgecrantitre;
 	std::vector<Texture*> txtecrantitre;
 	std::vector<Texture*> txtplay;
 

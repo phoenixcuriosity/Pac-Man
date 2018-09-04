@@ -10,7 +10,7 @@ Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
-temps d'execution de alwaysrender : 0.035000
+temps d'execution de alwaysrender : 0.066000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -76,6 +76,11 @@ Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!!
 Delete txtecrantitre Texture name = Well Well Well... Now let's play Success
 Delete ALL txtecrantitre Texture Success
 Delete ALL txtplay Texture Success
+Delete imgecrantitre Texture name = linux.jpg Success
+Delete imgecrantitre Texture name = c++.jpg Success
+Delete imgecrantitre Texture name = sudo.jpg Success
+Delete imgecrantitre Texture name = PC_master_Race.jpg Success
+Delete ALL imgecrantitre Texture Success
 Delete Button ecrantitre name = New Game Success
 Delete Button ecrantitre name = Reload Success
 Delete Button ecrantitre name = Option Success

@@ -67,7 +67,9 @@ void alwaysrender(sysinfo& information){
 		for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
 			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Well Well Well... Now let's play", information.variable.statescreen);
 			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_L.png", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_R.jpg", information.variable.statescreen);
+			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_R.png", information.variable.statescreen);
+			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_U.png", information.variable.statescreen);
+			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_D.png", information.variable.statescreen);
 		}
 		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
 			information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);

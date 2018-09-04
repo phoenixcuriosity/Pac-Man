@@ -21,15 +21,18 @@
 
 */
 
-#ifndef Ghost_H
-#define Ghost_H
+#ifndef Entity_H
+#define Entity_H
 
 #include "lib.h"
+#include "Texture.h"
 
-class Ghost {
+enum{up, left, down, right};
+
+class Entity {
 public:
-	Ghost(std::string name, unsigned int x, unsigned int y);
-	~Ghost();
+	Entity(std::string name, unsigned int x, unsigned int y);
+	~Entity();
 
 	std::string GETname()const;
 	unsigned int GETx()const;
@@ -42,9 +45,36 @@ public:
 
 private:
 	std::string _name;
+	std::vector<Texture*> _tabTexture;
 	unsigned int _x;
 	unsigned int _y;
 };
 
-#endif // !Ghost_H
+class Pacman : public Entity {
+public:
+	Pacman(std::string name, unsigned int x, unsigned int y);
+	~Pacman();
+
+	int move();
+
+	unsigned int GETcurrentHeading()const;
+	unsigned int GETnextHeading()const;
+
+	void SETcurrentHeading(unsigned int);
+	void SETnectHeading(unsigned int);
+
+private:
+	unsigned int _currentHeading;
+	unsigned int _nextHeading;
+	bool _alternateSkin;
+};
+
+class Ghost : public Entity {
+
+};
+class Gold : public Entity {
+
+};
+
+#endif // !Entity_H
 

@@ -27,9 +27,13 @@
 #include "renduecran.h"
 #include "sdl.h"
 #include "deleteAll.h"
+#include "Entity.h"
+
+using namespace std;
 
 int main(int argc, char** argv) {
 	sysinfo information;
+	Pacman player((string)"robin", 800, 500);
 
 	srand((unsigned int)time(NULL));
 	initfile(information);

@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="deleteAll.cpp" />
-    <ClCompile Include="Ghost.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="keyboardAndMouse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainLoop.cpp" />
@@ -32,7 +32,7 @@
   <ItemGroup>
     <ClInclude Include="Buttons.h" />
     <ClInclude Include="deleteAll.h" />
-    <ClInclude Include="Ghost.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="keyboardAndMouse.h" />
     <ClInclude Include="lib.h" />
     <ClInclude Include="mainLoop.h" />

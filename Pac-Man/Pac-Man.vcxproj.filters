@@ -13,11 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Class">
+      <UniqueIdentifier>{12caa712-1ef5-4c24-8f2a-51f035fc6e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Class">
+      <UniqueIdentifier>{684c764f-f107-45b4-8fc1-4e3e79867377}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Buttons.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="deleteAll.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -33,20 +36,20 @@
     <ClCompile Include="sdl.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="keyboardAndMouse.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ghost.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="Buttons.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buttons.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="deleteAll.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -68,11 +71,14 @@
     <ClInclude Include="keyboardAndMouse.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Ghost.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="Buttons.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

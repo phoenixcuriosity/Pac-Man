@@ -21,37 +21,47 @@
 
 */
 
-#include "Ghost.h"
+#include "Entity.h"
 #include "sdl.h"
 
 using namespace std;
 
-Ghost::Ghost(string name, unsigned int x, unsigned int y): _name(name), _x(x), _y(y)
+Entity::Entity(string name, unsigned int x, unsigned int y): _name(name), _x(x), _y(y)
 {
-	logfileconsole("A ghost have been created Successfully");
+	logfileconsole("A Entity have been created Successfully");
 }
 
-Ghost::~Ghost()
+Entity::~Entity()
 {
-	logfileconsole("A ghost have been deleted Successfully");
+	logfileconsole("A Entity have been deleted Successfully");
 }
 
-string Ghost::GETname()const {
+string Entity::GETname()const {
 	return _name;
 }
-unsigned int Ghost::GETx()const {
+unsigned int Entity::GETx()const {
 	return _x;
 }
-unsigned int Ghost::GETy()const {
+unsigned int Entity::GETy()const {
 	return _y;
 }
 
-void Ghost::SETname(string name) {
+void Entity::SETname(string name) {
 	_name = name;
 }
-void Ghost::SETx(unsigned int x) {
+void Entity::SETx(unsigned int x) {
 	_x = x;
 }
-void Ghost::SETy(unsigned int y) {
+void Entity::SETy(unsigned int y) {
 	_x = y;
+}
+
+
+
+
+
+
+Pacman::Pacman(string name, unsigned int x, unsigned int y) : Entity(name, x, y), _currentHeading(up), _nextHeading(up), _alternateSkin(false)
+{
+	logfileconsole("Pacman is alive");
 }

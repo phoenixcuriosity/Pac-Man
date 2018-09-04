@@ -107,13 +107,16 @@ void calculimage(sysinfo& information) {
 	t1 = clock();
 	
 	string IPath = "image/";
+	vector<Texture*> imagePacman;
 	
 	information.variable.statescreen = STATEplay;
 	loadImage(information, information.allTextures.indexGround, IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1);
 	loadImage(information, information.allTextures.indexGround, IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1);
 
-	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_R.jpg", "pacman_R.jpg", (Uint8)255, 500, 500);
-	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_L.png", "pacman_L.png", (Uint8)255, 600, 600);
+	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_U.png", (Uint8)255, 700, 500);
+	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_L.png", (Uint8)255, 700, 500);
+	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_D.png", (Uint8)255, 700, 500);
+	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_R.png", (Uint8)255, 700, 500);
 	
 	int spacemenu = 64, initspacemenu = 400;
 
@@ -130,7 +133,7 @@ void calculimage(sysinfo& information) {
 	information.variable.statescreen = STATEecrantitre;
 	loadwritetxt(information, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, 18, 0, 0);
 	loadwritetxt(information, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, 18, 0, 30);
-	loadwritetxt(information, "New Pac-Man Super Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, 50, SCREEN_WIDTH / 2, 100, center_x);
+	loadwritetxt(information, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, 50, SCREEN_WIDTH / 2, 100, center_x);
 	loadwritetxt(information, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, 25, SCREEN_WIDTH / 2, 160, center_x);
 	information.variable.statescreen = STATEplay;
 	loadwritetxt(information, "Well Well Well... Now let's play", { 0, 64, 255, 255 }, 26, SCREEN_WIDTH / 2, 100, center_x);

@@ -26,6 +26,7 @@
 #include "sdl.h"
 #include "renduecran.h"
 #include "keyboardAndMouse.h"
+#include "Entity.h"
 
 
 
@@ -34,6 +35,7 @@ using namespace std;
 void mainLoop(sysinfo& information) {
 	logfileconsole("_mainLoop Start_");
 	SDL_Event event;
+	Pacman player((string)"robin", 1200, 500);
 
 	int SDL_EnableUNICODE(1); // on azerty
 
@@ -46,16 +48,16 @@ void mainLoop(sysinfo& information) {
 			case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 				switch (event.key.keysym.sym) {
 				case SDLK_UP:
-					keySDLK_UP(information);
+					keySDLK_UP(player);
 					break;
 				case SDLK_DOWN:
-					keySDLK_DOWN(information);
+					keySDLK_DOWN(player);
 					break;
 				case SDLK_RIGHT:
-					keySDLK_RIGHT(information);
+					keySDLK_RIGHT(player);
 					break;
 				case SDLK_LEFT:
-					keySDLK_LEFT(information);
+					keySDLK_LEFT(player);
 					break;
 				case SDLK_ESCAPE:
 					information.variable.continuer = 0;
@@ -73,7 +75,7 @@ void mainLoop(sysinfo& information) {
 			}
 
 		}
-		alwaysrender(information);
+		alwaysrender(information, player);
 	}
 	logfileconsole("_mainLoop End_");
 }
@@ -107,16 +109,20 @@ void calculimage(sysinfo& information) {
 	t1 = clock();
 	
 	string IPath = "image/";
-	vector<Texture*> imagePacman;
 	
 	information.variable.statescreen = STATEplay;
 	loadImage(information, information.allTextures.indexGround, IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1);
 	loadImage(information, information.allTextures.indexGround, IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1);
 
-	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_U.png", (Uint8)255, 700, 500);
-	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_L.png", (Uint8)255, 700, 500);
-	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_D.png", (Uint8)255, 700, 500);
-	loadImageEntity(information, imagePacman, IPath + "pacman/pacman_R.png", "pacman_R.png", (Uint8)255, 700, 500);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_U_O.png", "pacman_U.png", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_L_O.png", "pacman_L.png", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_D_O.png", "pacman_D.png", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_R_O.png", "pacman_R.png", (Uint8)255, -1, -1);
+
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_U_C.png", "pacman_U.png", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_L_C.png", "pacman_L.png", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_D_C.png", "pacman_D.png", (Uint8)255, -1, -1);
+	loadImage(information, information.allTextures.indexPacman, IPath + "pacman/pacman_R_C.png", "pacman_R.png", (Uint8)255, -1, -1);
 	
 	int spacemenu = 64, initspacemenu = 400;
 

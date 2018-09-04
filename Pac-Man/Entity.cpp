@@ -26,7 +26,8 @@
 
 using namespace std;
 
-Entity::Entity(string name, unsigned int x, unsigned int y): _name(name), _x(x), _y(y)
+Entity::Entity(std::string name, unsigned int x, unsigned int y)
+	: _name(name), _x(x), _y(y)
 {
 	logfileconsole("A Entity have been created Successfully");
 }
@@ -53,15 +54,43 @@ void Entity::SETx(unsigned int x) {
 	_x = x;
 }
 void Entity::SETy(unsigned int y) {
-	_x = y;
+	_y = y;
 }
 
 
 
 
-
-
-Pacman::Pacman(string name, unsigned int x, unsigned int y) : Entity(name, x, y), _currentHeading(up), _nextHeading(up), _alternateSkin(false)
+Pacman::Pacman(string name, unsigned int x, unsigned int y) : Entity(name, x, y), _currentHeading(UP), _nextHeading(UP), _alternateSkin(false)
 {
 	logfileconsole("Pacman is alive");
+}
+Pacman::~Pacman()
+{
+	logfileconsole("Pacman is dead");
+}
+
+unsigned int Pacman::GETcurrentHeading()const {
+	return _currentHeading;
+}
+unsigned int Pacman::GETnextHeading()const {
+	return _nextHeading;
+}
+bool Pacman::GETalternateSkin()const {
+	return _alternateSkin;
+}
+
+
+
+void Pacman::SETcurrentHeading(unsigned int currentHeading) {
+	_currentHeading = currentHeading;
+}
+void Pacman::SETnextHeading(unsigned int nextHeading){
+	_nextHeading = nextHeading;
+}
+void Pacman::SETalternateSkin(bool alternateSkin) {
+	_alternateSkin = alternateSkin;
+}
+
+const void Pacman::printOn(bool on)const {
+
 }

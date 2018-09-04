@@ -26,41 +26,21 @@
 
 using namespace std;
 
-void keySDLK_UP(sysinfo& information) {
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
-		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
-			information.allTextures.tabTexture[i]->SETdsty(information.allTextures.tabTexture[i]->GETyc() - 4);
-			information.allTextures.tabTexture[i]->SETyc(information.allTextures.tabTexture[i]->GETyc() - 4);
-			return;
-		}
-	}
+void keySDLK_UP(Pacman& player) {
+	player.SETy(player.GETy() - 4);
+	player.SETcurrentHeading(UP);
 }
-void keySDLK_DOWN(sysinfo& information) {
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
-		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
-			information.allTextures.tabTexture[i]->SETdsty(information.allTextures.tabTexture[i]->GETyc() + 4);
-			information.allTextures.tabTexture[i]->SETyc(information.allTextures.tabTexture[i]->GETyc() + 4);
-			return;
-		}
-	}
+void keySDLK_DOWN(Pacman& player) {
+	player.SETy(player.GETy() + 4);
+	player.SETcurrentHeading(DOWN);
 }
-void keySDLK_RIGHT(sysinfo& information) {
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
-		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
-			information.allTextures.tabTexture[i]->SETdstx(information.allTextures.tabTexture[i]->GETxc() + 4);
-			information.allTextures.tabTexture[i]->SETxc(information.allTextures.tabTexture[i]->GETxc() + 4);
-			return;
-		}
-	}
+void keySDLK_RIGHT(Pacman& player) {
+	player.SETx(player.GETx() + 4);
+	player.SETcurrentHeading(RIGHT);
 }
-void keySDLK_LEFT(sysinfo& information) {
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
-		if (information.allTextures.tabTexture[i]->TextureTestString("pacman_L.png")) {
-			information.allTextures.tabTexture[i]->SETdstx(information.allTextures.tabTexture[i]->GETxc() - 4);
-			information.allTextures.tabTexture[i]->SETxc(information.allTextures.tabTexture[i]->GETxc() - 4);
-			return;
-		}
-	}
+void keySDLK_LEFT(Pacman& player) {
+	player.SETx(player.GETx() - 4);
+	player.SETcurrentHeading(LEFT);
 }
 
 

@@ -25,12 +25,12 @@
 #define Entity_H
 
 #include "lib.h"
-#include "Texture.h"
 
-enum{up, left, down, right};
 
-class Entity {
+
+class Entity { // classe abstraite
 public:
+	Entity();
 	Entity(std::string name, unsigned int x, unsigned int y);
 	~Entity();
 
@@ -42,10 +42,11 @@ public:
 	void SETx(unsigned int x);
 	void SETy(unsigned int y);
 
+	virtual const void printOn(bool on = true)const = 0;
+
 
 private:
 	std::string _name;
-	std::vector<Texture*> _tabTexture;
 	unsigned int _x;
 	unsigned int _y;
 };
@@ -59,9 +60,13 @@ public:
 
 	unsigned int GETcurrentHeading()const;
 	unsigned int GETnextHeading()const;
+	bool GETalternateSkin()const;
 
 	void SETcurrentHeading(unsigned int);
-	void SETnectHeading(unsigned int);
+	void SETnextHeading(unsigned int);
+	void SETalternateSkin(bool);
+
+	virtual const void printOn(bool on = true)const;
 
 private:
 	unsigned int _currentHeading;

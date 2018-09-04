@@ -46,6 +46,8 @@ const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 enum { normal, shaded, normaltexture};
 enum { nocenter, center_x, center_y, center };
 
+enum { UP, LEFT, DOWN, RIGHT };
+
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };	// spécifications de la séléction
 

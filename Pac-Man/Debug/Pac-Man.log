@@ -1,11 +1,2 @@
-﻿  Buttons.cpp
-  deleteAll.cpp
-  Entity.cpp
-  keyboardAndMouse.cpp
-  main.cpp
-  mainLoop.cpp
-  renduecran.cpp
-  sdl.cpp
-c:\users\robin\documents\github\pac-man\pac-man\sdl.cpp(171): error C2065: 'index' : identificateur non déclaré
-  Texture.cpp
-  Génération de code en cours...
+﻿  Entity.cpp
+  Pac-Man.vcxproj -> C:\Users\Robin\Documents\GitHub\Pac-Man\Debug\Pac-Man.exe

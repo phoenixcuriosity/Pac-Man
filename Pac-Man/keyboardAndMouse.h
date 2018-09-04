@@ -26,11 +26,12 @@
 
 #include "Pac_Man_lib.h"
 #include "sdl.h"
+#include "Entity.h"
 
-void keySDLK_UP(sysinfo& information);
-void keySDLK_DOWN(sysinfo& information);
-void keySDLK_RIGHT(sysinfo& information);
-void keySDLK_LEFT(sysinfo& information);
+void keySDLK_UP(Pacman& player);
+void keySDLK_DOWN(Pacman& player);
+void keySDLK_RIGHT(Pacman& player);
+void keySDLK_LEFT(Pacman& player);
 void mouse(sysinfo&, SDL_Event event);
 void cliqueGauche(sysinfo&, SDL_Event event);
 

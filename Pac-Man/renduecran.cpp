@@ -51,11 +51,11 @@ void ecrantitre(sysinfo& information){
 }
 
 
-void alwaysrender(sysinfo& information){
+void alwaysrender(sysinfo& information, Pacman& player){
 	//clock_t t1, t2;
 	//t1 = clock();
 
-	
+
 	
 
 	switch (information.variable.statescreen) {
@@ -66,10 +66,26 @@ void alwaysrender(sysinfo& information){
 		
 		for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
 			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Well Well Well... Now let's play", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_L.png", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_R.png", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_U.png", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "pacman_D.png", information.variable.statescreen);
+			switch (player.GETcurrentHeading()) {
+			case UP:
+				if(player.GETalternateSkin())
+					information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
+					"pacman_U_O.png", player.GETx(), player.GETy());
+				else
+				break;
+			case LEFT:
+				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
+					"pacman_L_O.png", player.GETx(), player.GETy());
+				break;
+			case DOWN:
+				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
+					"pacman_D_O.png", player.GETx(), player.GETy());
+				break;
+			case RIGHT:
+				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer,
+					"pacman_R_O.png", player.GETx(), player.GETy());
+				break;
+			}
 		}
 		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
 			information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);

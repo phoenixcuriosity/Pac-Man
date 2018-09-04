@@ -33,7 +33,6 @@ SDL_Texture* renderText(SDL_Renderer*&, const std::string&, SDL_Color, TTF_Font*
 SDL_Texture* renderTextShaded(SDL_Renderer*&, const std::string&, SDL_Color, SDL_Color, TTF_Font*);
 
 void loadImage(sysinfo& information, unsigned int& index, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt = 0);
-void loadImageEntity(sysinfo& information, std::vector<Texture*>& tabTexture, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt = 0);
 void loadwritetxt(sysinfo&, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
 void loadwritetxtshaded(sysinfo&, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
 

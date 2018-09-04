@@ -149,33 +149,6 @@ void loadImage(sysinfo& information, unsigned int& index, const std::string &pat
 	else
 		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
 }
-void loadImageEntity(sysinfo& information, std::vector<Texture*>& tabTexture, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt) {
-
-
-	int iW = 0, iH = 0, xc = 0, yc = 0;
-	if (x != -1 && y != -1)
-		xc = x, yc = y;
-
-	SDL_Texture* newTexture = NULL;
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (loadedSurface != NULL) {
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
-		newTexture = SDL_CreateTextureFromSurface(information.ecran.renderer, loadedSurface);
-		if (newTexture != NULL) {
-			if (alpha != (Uint8)255) {
-				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
-					logSDLError(cout, "alpha : ");
-			}
-			centrage(xc, yc, loadedSurface->w, loadedSurface->h, cnt);
-			tabTexture.push_back(new Texture(newTexture, msg, information.variable.statescreen, information.variable.select, xc, yc, loadedSurface->w, loadedSurface->h));
-		}
-		else
-			logfileconsole("___________ERROR : loadImage : cannot create Texture from : " + path);
-		SDL_FreeSurface(loadedSurface);
-	}
-	else
-		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
-}
 
 void loadwritetxt(sysinfo& information, const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
 	SDL_Texture *image = renderText(information.ecran.renderer, msg, color, information.allTextures.font[size]);

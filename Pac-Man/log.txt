@@ -10,19 +10,23 @@ Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:4 msg = Return to Title Screen Success
-temps d'execution de alwaysrender : 0.026000
+temps d'execution de alwaysrender : 0.049000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
+A Entity have been created Successfully
+Pacman is alive
 _mainLoop End_
+Pacman is dead
+A Entity have been deleted Successfully
 *********_________ Start DeleteAll _________*********
 Delete Texture n:0 name = White.bmp Success
 Delete Texture n:1 name = Black.bmp Success
-Delete Texture n:2 name = pacman_R.png Success
+Delete Texture n:2 name = pacman_U.png Success
 Delete Texture n:3 name = pacman_L.png Success
-Delete Texture n:4 name = pacman_U.png Success
-Delete Texture n:5 name = pacman_D.png Success
+Delete Texture n:4 name = pacman_D.png Success
+Delete Texture n:5 name = pacman_R.png Success
 Delete Texture n:6 name = Game dev in C++ and with SDL2.0.8 Success
 Delete Texture n:7 name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
 Delete Texture n:8 name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success

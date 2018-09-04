@@ -25,9 +25,10 @@
 #define renduecran_H
 
 #include "Pac_Man_lib.h"
+#include "Entity.h"
 
 void ecrantitre(sysinfo&);
-void alwaysrender(sysinfo&);
+void alwaysrender(sysinfo&, Pacman& player);
 void afficherMap(sysinfo& information);
 
 #endif

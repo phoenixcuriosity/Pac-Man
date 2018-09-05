@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -40,6 +40,15 @@
 #include "SDL2-2.0.8/include/SDL.h"
 #include "SDL2-2.0.8/include/SDL_ttf.h"
 #include "SDL2-2.0.8/include/SDL_image.h"
+
+
+typedef struct screen screen;
+typedef struct subcatWheel subcatWheel;
+typedef struct var var;
+typedef struct tile tile;
+typedef struct texture texture;
+typedef struct button button;
+typedef struct sysinfo sysinfo;
 
 
 #endif

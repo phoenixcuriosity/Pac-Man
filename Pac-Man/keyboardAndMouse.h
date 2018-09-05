@@ -28,10 +28,6 @@
 #include "sdl.h"
 #include "Entity.h"
 
-void keySDLK_UP(Pacman& player);
-void keySDLK_DOWN(Pacman& player);
-void keySDLK_RIGHT(Pacman& player);
-void keySDLK_LEFT(Pacman& player);
 void mouse(sysinfo&, SDL_Event event);
 void cliqueGauche(sysinfo&, SDL_Event event);
 

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.3
+	last modification on this file on version:0.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -24,16 +24,18 @@
 #ifndef Pac_Man_lib_H
 #define Pac_Man_lib_H
 
-#include "lib.h"
+#include "lib.h"  // include lib et typedef
 
 #include "Buttons.h"
 #include "Texture.h"
+#include "Entity.h"
 
 const unsigned int SCREEN_WIDTH = 1920;
-const unsigned int SCREEN_HEIGHT = 1080;
+const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
 const int mapHeight = 25;
 const int mapLength = 25;
+const unsigned int vitesse = 1;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -46,14 +48,13 @@ const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 enum { normal, shaded, normaltexture};
 enum { nocenter, center_x, center_y, center };
 
+enum { red, blue, yellow, pink};
 enum { UP, LEFT, DOWN, RIGHT };
+enum { NO, validCondition};
 
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };	// spécifications de la séléction
 
-
-
-typedef struct screen screen;
 struct screen {
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
@@ -63,7 +64,6 @@ struct screen {
 
 };
 
-typedef struct subcatWheel subcatWheel;
 struct subcatWheel {
 	unsigned int mouse_x = 0;
 	unsigned int mouse_y = 0;
@@ -71,7 +71,6 @@ struct subcatWheel {
 	unsigned int xwheel = 0;
 };
 
-typedef struct var var;
 struct var {
 
 	bool continuer = true;
@@ -83,19 +82,16 @@ struct var {
 	subcatWheel s_wheel;
 };
 
-
-typedef struct tile tile;
 struct tile{
 	unsigned int tile_nb = 0;
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
 
 	bool wall = false;
-	bool entity = false;
+	bool entity = true;
 	
 };
 
-typedef struct texture texture;
 struct texture {
 	std::vector<Texture*> ground;
 
@@ -112,19 +108,18 @@ struct texture {
 	TTF_Font *font[80];
 };
 
-typedef struct button button;
 struct button {
 	std::vector<Buttons*> buttonecrantitre;
 	std::vector<Buttons*> buttonplay;
 };
 
-typedef struct sysinfo sysinfo;
 struct sysinfo {
 	screen ecran;
 	var variable;
 	tile map[mapHeight * mapLength];
 	button allButton;
 	texture allTextures;
+	std::vector<Ghost*> ghost;
 };
 
 

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -32,7 +32,7 @@
 class Entity { // classe abstraite
 public:
 	Entity() {};
-	Entity(std::string name, unsigned int x, unsigned int y);
+	Entity(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
 	~Entity();
 
 	std::string GETname()const;
@@ -57,10 +57,11 @@ private:
 
 class Pacman : public Entity {
 public:
-	Pacman(std::string name, unsigned int x, unsigned int y);
+	Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
 	~Pacman();
 
-	int move();
+	int move(tile map[], unsigned int pos);
+	int tryToMove(tile map[], unsigned int pos);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
 	unsigned int GETcurrentHeading()const;
@@ -79,11 +80,25 @@ private:
 
 class Ghost : public Entity {
 public:
-	Ghost();
+	Ghost(std::string name, unsigned int x, unsigned int y, unsigned int type,unsigned int value = 0);
 	~Ghost();
 
+	int move(unsigned int pos);
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
+
+	unsigned int GETcurrentHeading()const;
+	unsigned int GETnextHeading()const;
+	bool GETalternateSkin()const;
+
+	void SETcurrentHeading(unsigned int);
+	void SETnextHeading(unsigned int);
+	void SETalternateSkin(bool);
+
 private:
-	unsigned int type;
+	unsigned int _currentHeading;
+	unsigned int _nextHeading;
+	bool _alternateSkin;
+	unsigned int _type;
 };
 class Gold : public Entity {
 public:
@@ -91,7 +106,7 @@ public:
 	~Gold();
 
 private:
-	unsigned int type;
+	unsigned int _type;
 };
 
 #endif // !Entity_H

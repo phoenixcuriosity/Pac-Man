@@ -26,24 +26,6 @@
 
 using namespace std;
 
-void keySDLK_UP(Pacman& player) {
-	player.SETy(player.GETy() - 4);
-	player.SETcurrentHeading(UP);
-}
-void keySDLK_DOWN(Pacman& player) {
-	player.SETy(player.GETy() + 4);
-	player.SETcurrentHeading(DOWN);
-}
-void keySDLK_RIGHT(Pacman& player) {
-	player.SETx(player.GETx() + 4);
-	player.SETcurrentHeading(RIGHT);
-}
-void keySDLK_LEFT(Pacman& player) {
-	player.SETx(player.GETx() - 4);
-	player.SETcurrentHeading(LEFT);
-}
-
-
 void mouse(sysinfo& information, SDL_Event event) {
 	/*
 	Handle Mouse Event

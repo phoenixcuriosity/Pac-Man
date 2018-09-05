@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.3
+	last modification on this file on version:0.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,7 +35,12 @@ using namespace std;
 void mainLoop(sysinfo& information) {
 	logfileconsole("_mainLoop Start_");
 	SDL_Event event;
-	Pacman player((string)"robin", 1200, 500);
+
+	Pacman player((string)"robin", 832, 512);
+	information.ghost.push_back(new Ghost("Red", 1200, 500, red));
+	information.ghost.push_back(new Ghost("Blue", 1200, 532, blue));
+	information.ghost.push_back(new Ghost("Yellow", 1200, 564, yellow));
+	information.ghost.push_back(new Ghost("Pink", 1200, 596, pink));
 
 	int SDL_EnableUNICODE(1); // on azerty
 
@@ -48,16 +53,16 @@ void mainLoop(sysinfo& information) {
 			case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 				switch (event.key.keysym.sym) {
 				case SDLK_UP:
-					keySDLK_UP(player);
+					player.SETcurrentHeading(UP);
 					break;
 				case SDLK_DOWN:
-					keySDLK_DOWN(player);
+					player.SETcurrentHeading(DOWN);
 					break;
 				case SDLK_RIGHT:
-					keySDLK_RIGHT(player);
+					player.SETcurrentHeading(RIGHT);
 					break;
 				case SDLK_LEFT:
-					keySDLK_LEFT(player);
+					player.SETcurrentHeading(LEFT);
 					break;
 				case SDLK_ESCAPE:
 					information.variable.continuer = 0;
@@ -77,6 +82,9 @@ void mainLoop(sysinfo& information) {
 		}
 		alwaysrender(information, player);
 	}
+
+	for (unsigned int i = 0; i < information.ghost.size(); i++)
+		delete information.ghost[i];
 	logfileconsole("_mainLoop End_");
 }
 	
@@ -98,6 +106,18 @@ void initGrid(sysinfo& information) {
 				information.map[k].wall = true;
 			else
 				information.map[k].wall = false;
+			if(k == 208)
+				information.map[k].wall = true;
+			else if (k == 311)
+				information.map[k].wall = true;
+			else if (k == 287)
+				information.map[k].wall = true;
+			else if (k == 111)
+				information.map[k].wall = true;
+			else if (k == 215)
+				information.map[k].wall = true;
+			else if (k == 239)
+				information.map[k].wall = true;
 			k++;
 		}
 	}
@@ -159,7 +179,7 @@ void calculimage(sysinfo& information) {
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2 + 400, center);
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2, center);
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 + 400, center);
-
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, center);
 	int spacemenu = 64, initspacemenu = 400;
 
 	// ______Buttons_____
@@ -178,7 +198,7 @@ void calculimage(sysinfo& information) {
 	loadwritetxt(information, information.allTextures.txtecrantitre, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, 50, SCREEN_WIDTH / 2, 100, center_x);
 	loadwritetxt(information, information.allTextures.txtecrantitre, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, 25, SCREEN_WIDTH / 2, 160, center_x);
 	information.variable.statescreen = STATEplay;
-	loadwritetxt(information, information.allTextures.txtecrantitre, "Well Well Well... Now let's play", { 0, 64, 255, 255 }, 26, SCREEN_WIDTH / 2, 100, center_x);
+	loadwritetxt(information, information.allTextures.txtplay, "Well Well Well... Now let's play", { 0, 64, 255, 255 }, 26, SCREEN_WIDTH / 2, 100, center_x);
 
 	t2 = clock();
 	logfileconsole("temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));

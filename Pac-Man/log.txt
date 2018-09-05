@@ -10,18 +10,24 @@ Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
-temps d'execution de alwaysrender : 0.103000
+temps d'execution de alwaysrender : 0.070000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
-A Entity have been created Successfully
 Pacman is alive
+Red is alive
+Blue is alive
+Yellow is alive
+Pink is alive
 _Ecrantitres Start_
 _Ecrantitres End_
+Red is dead
+Blue is dead
+Yellow is dead
+Pink is dead
 _mainLoop End_
 Pacman is dead
-A Entity have been deleted Successfully
 *********_________ Start DeleteAll _________*********
 Delete ground Texture name = White.bmp Success
 Delete ground Texture name = Black.bmp Success
@@ -75,13 +81,14 @@ Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success
 Delete txtecrantitre Texture name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
 Delete txtecrantitre Texture name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
 Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!! Success
-Delete txtecrantitre Texture name = Well Well Well... Now let's play Success
 Delete ALL txtecrantitre Texture Success
+Delete txtplay Texture name = Well Well Well... Now let's play Success
 Delete ALL txtplay Texture Success
 Delete imgecrantitre Texture name = linux.jpg Success
 Delete imgecrantitre Texture name = c++.jpg Success
 Delete imgecrantitre Texture name = sudo.jpg Success
 Delete imgecrantitre Texture name = PC_master_Race.jpg Success
+Delete imgecrantitre Texture name = matlab.jpg Success
 Delete ALL imgecrantitre Texture Success
 Delete Button ecrantitre name = New Game Success
 Delete Button ecrantitre name = Reload Success

@@ -25,30 +25,34 @@
 #define Entity_H
 
 #include "lib.h"
+#include "Texture.h"
 
 
 
 class Entity { // classe abstraite
 public:
-	Entity();
+	Entity() {};
 	Entity(std::string name, unsigned int x, unsigned int y);
 	~Entity();
 
 	std::string GETname()const;
 	unsigned int GETx()const;
 	unsigned int GETy()const;
+	unsigned int GETvalue()const;
 
 	void SETname(std::string name);
 	void SETx(unsigned int x);
 	void SETy(unsigned int y);
+	void SETvalue(unsigned int value);
 
-	virtual const void printOn(bool on = true)const = 0;
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) = 0;
 
 
 private:
 	std::string _name;
 	unsigned int _x;
 	unsigned int _y;
+	unsigned int _value;
 };
 
 class Pacman : public Entity {
@@ -57,6 +61,7 @@ public:
 	~Pacman();
 
 	int move();
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
 	unsigned int GETcurrentHeading()const;
 	unsigned int GETnextHeading()const;
@@ -65,8 +70,6 @@ public:
 	void SETcurrentHeading(unsigned int);
 	void SETnextHeading(unsigned int);
 	void SETalternateSkin(bool);
-
-	virtual const void printOn(bool on = true)const;
 
 private:
 	unsigned int _currentHeading;
@@ -88,7 +91,7 @@ public:
 	~Gold();
 
 private:
-
+	unsigned int type;
 };
 
 #endif // !Entity_H

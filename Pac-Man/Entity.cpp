@@ -46,6 +46,9 @@ unsigned int Entity::GETx()const {
 unsigned int Entity::GETy()const {
 	return _y;
 }
+unsigned int Entity::GETvalue()const {
+	return _value;
+}
 
 void Entity::SETname(string name) {
 	_name = name;
@@ -55,6 +58,9 @@ void Entity::SETx(unsigned int x) {
 }
 void Entity::SETy(unsigned int y) {
 	_y = y;
+}
+void Entity::SETvalue(unsigned int value) {
+	_value = value;
 }
 
 
@@ -67,6 +73,38 @@ Pacman::Pacman(string name, unsigned int x, unsigned int y) : Entity(name, x, y)
 Pacman::~Pacman()
 {
 	logfileconsole("Pacman is dead");
+}
+
+
+void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {
+	for (unsigned int i = 0; i < tabTexture.size(); i++) {
+		switch (_currentHeading) {
+		case UP:
+			if (_alternateSkin)
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_U_1.png", this->GETx(), this->GETy());
+			else
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_U_2.png", this->GETx(), this->GETy());
+			break;
+		case LEFT:
+			if (_alternateSkin)
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_L_1.png", this->GETx(), this->GETy());
+			else
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_L_2.png", this->GETx(), this->GETy());
+			break;
+		case DOWN:
+			if (_alternateSkin)
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_D_1.png", this->GETx(), this->GETy());
+			else
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_D_2.png", this->GETx(), this->GETy());
+			break;
+		case RIGHT:
+			if (_alternateSkin)
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_R_1.png", this->GETx(), this->GETy());
+			else
+				tabTexture[i]->renderTextureTestString(renderer, "pacman_R_2.png", this->GETx(), this->GETy());
+			break;
+		}
+	}
 }
 
 unsigned int Pacman::GETcurrentHeading()const {
@@ -89,8 +127,4 @@ void Pacman::SETnextHeading(unsigned int nextHeading){
 }
 void Pacman::SETalternateSkin(bool alternateSkin) {
 	_alternateSkin = alternateSkin;
-}
-
-const void Pacman::printOn(bool on)const {
-
 }

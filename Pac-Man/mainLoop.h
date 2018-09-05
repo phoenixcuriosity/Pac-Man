@@ -30,8 +30,6 @@ void mainLoop(sysinfo&);
 void initfile(sysinfo& information);
 void initGrid(sysinfo& information);
 void calculimage(sysinfo&);
-void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, const std::string& msg,
-	SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton = 0);
-void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton);
+
 
 #endif

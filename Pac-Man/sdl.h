@@ -37,6 +37,10 @@ void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsig
 void loadwritetxt(sysinfo&, std::vector<Texture*>& tabTexture, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
 void loadwritetxtshaded(sysinfo&, std::vector<Texture*>& tabTexture, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
 
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, const std::string& msg,
+	SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton = 0);
+void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton);
+
 void writetxt(sysinfo&, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
 void writetxtshaded(sysinfo&, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
 void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);

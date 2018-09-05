@@ -164,6 +164,55 @@ void loadwritetxtshaded(sysinfo& information, std::vector<Texture*>& tabTexture,
 	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
 
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, const string& msg, SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton) {
+	int iW = 0, iH = 0;
+	unsigned int i = 0;
+	int xc = 0, yc = 0;
+	SDL_Texture *image = nullptr;
+	SDL_Texture *imageOn = nullptr;
+
+	if (tabbutton.size() > 0) {
+		i++;
+	}
+	for (i; i <= tabbutton.size(); i++) {
+		if (i == tabbutton.size()) {
+			image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
+			imageOn = renderTextShaded(information.ecran.renderer, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
+			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+			searchcenter(x, y, xc, yc, iW, iH, centerbutton);
+			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH, imageOn, x, y, size, color, backcolor));
+
+			logfileconsole("Create Button n:" + to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
+			break;
+		}
+	}
+}
+
+void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton) {
+	switch (centerbutton) {
+	case nocenter:
+		xc = x + iW / 2;
+		yc = y + iH / 2;
+		break;
+	case center_x:
+		xc = x;
+		yc = y + iH / 2;
+		x = x - iW / 2;
+		break;
+	case center_y:
+		xc = x + iW / 2;
+		yc = y;
+		y = y - iH / 2;
+		break;
+	case center:
+		xc = x;
+		yc = y;
+		x = x - iW / 2;
+		y = y - iH / 2;
+		break;
+	}
+}
+
 
 
 void writetxt(sysinfo& information, const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {

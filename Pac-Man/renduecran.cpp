@@ -56,19 +56,22 @@ void ecrantitre(sysinfo& information){
 
 
 void alwaysrender(sysinfo& information, Pacman& player){
-	//clock_t t1, t2;
-	//t1 = clock();
-
-
-	
+	clock_t t1, t2;
+	t1 = clock();
 
 	switch (information.variable.statescreen) {
 	case STATEplay:
 
+		/*
+			fond gris et affichage de la map avec les couloirs et murs
+		*/
 		SDL_RenderClear(information.ecran.renderer);
 		SDL_SetRenderDrawColor(information.ecran.renderer, 128, 128, 128, 0xFF);
 		afficherMap(information);
 
+		/*
+			changement de skin toutes 10 boucles
+		*/
 		information.variable.modulo = (information.variable.modulo + 1) % 10;
 		if (information.variable.modulo == 0)
 			player.SETalternateSkin(!player.GETalternateSkin());
@@ -77,42 +80,9 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			information.allTextures.txtplay[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Well Well Well... Now let's play", information.variable.statescreen);
 
 		}
-		for (unsigned int i = 0; i < information.allTextures.pacman.size(); i++) {
-			switch (player.GETcurrentHeading()) {
-			case UP:
-				if(player.GETalternateSkin())
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_U_1.png", player.GETx(), player.GETy());
-				else
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_U_2.png", player.GETx(), player.GETy());
-				break;
-			case LEFT:
-				if(player.GETalternateSkin())
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_L_1.png", player.GETx(), player.GETy());
-				else
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_L_2.png", player.GETx(), player.GETy());
-				break;
-			case DOWN:
-				if (player.GETalternateSkin())
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_D_1.png", player.GETx(), player.GETy());
-				else
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_D_2.png", player.GETx(), player.GETy());
-				break;
-			case RIGHT:
-				if (player.GETalternateSkin())
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_R_1.png", player.GETx(), player.GETy());
-				else
-					information.allTextures.pacman[i]->renderTextureTestString(information.ecran.renderer,
-						"pacman_R_2.png", player.GETx(), player.GETy());
-				break;
-			}
-		}
+
+		player.afficher(information.ecran.renderer, information.allTextures.pacman);
+
 		for (unsigned int i = 0; i < information.allButton.buttonplay.size(); i++)
 			information.allButton.buttonplay[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
@@ -120,9 +90,8 @@ void alwaysrender(sysinfo& information, Pacman& player){
 		break;
 	}
 
-
-	//t2 = clock();
-	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
+	t2 = clock();
+	cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 }
 
 void afficherMap(sysinfo& information) {
@@ -130,12 +99,10 @@ void afficherMap(sysinfo& information) {
 
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
-			for (unsigned int l = 0; l < information.allTextures.ground.size(); l++) {
-				if (information.map[k].wall == true)
-					information.allTextures.ground[l]->renderTextureTestString(information.ecran.renderer, "Black.bmp", information.map[k].tile_x, information.map[k].tile_y);
-				else
-					information.allTextures.ground[l]->renderTextureTestString(information.ecran.renderer, "White.bmp", information.map[k].tile_x, information.map[k].tile_y);
-			}
+			if (information.map[k].wall == true)
+				information.allTextures.ground[1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+			else
+				information.allTextures.ground[0]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			k++;
 		}
 	}

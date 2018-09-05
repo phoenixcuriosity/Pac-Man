@@ -107,9 +107,9 @@ void calculimage(sysinfo& information) {
 
 	clock_t t1, t2;
 	t1 = clock();
-	
+
 	string IPath = "image/";
-	
+
 	information.variable.statescreen = STATEplay;
 	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1);
 	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1);
@@ -120,10 +120,10 @@ void calculimage(sysinfo& information) {
 
 
 	for (unsigned int i = 0; i < Pos.size(); i++) {
-		for(unsigned int j = 1; j < 3; j++)
+		for (unsigned int j = 1; j < 3; j++)
 			loadImage(information.ecran.renderer, information.allTextures.pacman, information.variable.statescreen, information.variable.select, IPath + "pacman/pacman_" + Pos[i] + "_" + to_string(j) + ".png", "pacman_" + Pos[i] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
 	}
-	
+
 	for (unsigned int i = 0; i < ghostName.size(); i++) {
 		for (unsigned int j = 1; j < 3; j++) {
 			for (unsigned int k = 0; k < Pos.size(); k++) {
@@ -149,17 +149,17 @@ void calculimage(sysinfo& information) {
 						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
 					break;
 				}
-				
 
-			}	
+
+			}
 		}
 	}
 	information.variable.statescreen = STATEecrantitre;
-	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH/2 + 500, SCREEN_HEIGHT/2, center);
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2, center);
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2 + 400, center);
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2, center);
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 + 400, center);
-	
+
 	int spacemenu = 64, initspacemenu = 400;
 
 	// ______Buttons_____
@@ -170,7 +170,7 @@ void calculimage(sysinfo& information) {
 	createbutton(information, information.allButton.buttonecrantitre, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 	information.variable.statescreen = STATEplay;
 	createbutton(information, information.allButton.buttonplay, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
-	
+
 	// ______Writetxt_____ 
 	information.variable.statescreen = STATEecrantitre;
 	loadwritetxt(information, information.allTextures.txtecrantitre, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, 18, 0, 0);
@@ -183,54 +183,5 @@ void calculimage(sysinfo& information) {
 	t2 = clock();
 	logfileconsole("temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));
 	logfileconsole("_calculimage End_");
-}
-
-void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton,const string& msg, SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton) {
-	int iW = 0, iH = 0;
-	unsigned int i = 0;
-	int xc = 0, yc = 0;
-	SDL_Texture *image = nullptr;
-	SDL_Texture *imageOn = nullptr;
-
-	if (tabbutton.size() > 0) {
-		i++;
-	}
-	for (i; i <= tabbutton.size(); i++) {
-		if (i == tabbutton.size()) {
-			image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
-			imageOn = renderTextShaded(information.ecran.renderer, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
-			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-			searchcenter(x, y, xc, yc, iW, iH, centerbutton);
-			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH, imageOn, x, y, size, color, backcolor));
-
-			logfileconsole("Create Button n:" + to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
-			break;
-		}
-	}
-}
-
-void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton) {
-	switch (centerbutton) {
-	case nocenter:
-		xc = x + iW / 2;
-		yc = y + iH / 2;
-		break;
-	case center_x:
-		xc = x;
-		yc = y + iH / 2;
-		x = x - iW / 2;
-		break;
-	case center_y:
-		xc = x + iW / 2;
-		yc = y;
-		y = y - iH / 2;
-		break;
-	case center:
-		xc = x;
-		yc = y;
-		x = x - iW / 2;
-		y = y - iH / 2;
-		break;
-	}
 }
 

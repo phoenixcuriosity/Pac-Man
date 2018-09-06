@@ -10,7 +10,7 @@ Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
-temps d'execution de alwaysrender : 0.070000
+temps d'execution de alwaysrender : 0.078000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_

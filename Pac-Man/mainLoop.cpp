@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.4
+	last modification on this file on version:0.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -53,16 +53,16 @@ void mainLoop(sysinfo& information) {
 			case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 				switch (event.key.keysym.sym) {
 				case SDLK_UP:
-					player.SETcurrentHeading(UP);
+					player.SETnextHeading(UP);
 					break;
 				case SDLK_DOWN:
-					player.SETcurrentHeading(DOWN);
+					player.SETnextHeading(DOWN);
 					break;
 				case SDLK_RIGHT:
-					player.SETcurrentHeading(RIGHT);
+					player.SETnextHeading(RIGHT);
 					break;
 				case SDLK_LEFT:
-					player.SETcurrentHeading(LEFT);
+					player.SETnextHeading(LEFT);
 					break;
 				case SDLK_ESCAPE:
 					information.variable.continuer = 0;
@@ -110,6 +110,20 @@ void initGrid(sysinfo& information) {
 				information.map[k].wall = true;
 			else if (k == 311)
 				information.map[k].wall = true;
+			else if (k == 336)
+				information.map[k].wall = true;
+			else if (k == 361)
+				information.map[k].wall = true;
+			else if (k == 386)
+				information.map[k].wall = true;
+
+			else if (k == 436)
+				information.map[k].wall = true;
+			else if (k == 461)
+				information.map[k].wall = true;
+			else if (k == 486)
+				information.map[k].wall = true;
+
 			else if (k == 287)
 				information.map[k].wall = true;
 			else if (k == 111)

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.4
+	last modification on this file on version:0.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -60,8 +60,9 @@ public:
 	Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
 	~Pacman();
 
-	int move(tile map[], unsigned int pos);
+	int move(tile map[], unsigned int secondLoop = -1);
 	int tryToMove(tile map[], unsigned int pos);
+	int tryToMoveSecondLoop(tile map[], unsigned int pos);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
 	unsigned int GETcurrentHeading()const;

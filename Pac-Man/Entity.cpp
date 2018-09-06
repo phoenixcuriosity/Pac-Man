@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.4
+	last modification on this file on version:0.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -74,33 +74,46 @@ Pacman::~Pacman()
 }
 
 
-int Pacman::move(tile map[], unsigned int pos) {
+int Pacman::move(tile map[], unsigned int secondLoop) {
+	unsigned int testPos = 0;
+	if (_currentHeading != _nextHeading || secondLoop == -1)
+		testPos = _nextHeading;
+	else
+		testPos = _currentHeading;
 
 
-	switch (pos) {
+	switch (testPos) {
 	case UP:
 		if (tryToMove(map, UP) == validCondition) {
 			this->SETy(this->GETy() - vitesse);
 			_currentHeading = UP;
 		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
 		break;
 	case LEFT:
 		if (tryToMove(map, LEFT) == validCondition) {
 			this->SETx(this->GETx() - vitesse);
 			_currentHeading = LEFT;
 		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
 		break;
 	case DOWN:
 		if (tryToMove(map, DOWN) == validCondition) {
 			this->SETy(this->GETy() + vitesse);
 			_currentHeading = DOWN;
 		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
 		break;
 	case RIGHT:
 		if (tryToMove(map, RIGHT) == validCondition) {
 			this->SETx(this->GETx() + vitesse);
 			_currentHeading = RIGHT;
 		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
 		break;
 	}
 	return 0;
@@ -174,8 +187,41 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 		else
 			return 1;
 		break;
+	default:
+		logfileconsole("____ERROR : Entity : Pacman : tryToMove : pos");
+		return 0;
+		break;
 	}
 	
+}
+int Pacman::tryToMoveSecondLoop(tile map[], unsigned int testPos) {
+	switch (testPos) {
+	case UP:
+		if (tryToMove(map, UP) == validCondition) {
+			this->SETy(this->GETy() - vitesse);
+			_currentHeading = UP;
+		}
+		break;
+	case LEFT:
+		if (tryToMove(map, LEFT) == validCondition) {
+			this->SETx(this->GETx() - vitesse);
+			_currentHeading = LEFT;
+		}
+		break;
+	case DOWN:
+		if (tryToMove(map, DOWN) == validCondition) {
+			this->SETy(this->GETy() + vitesse);
+			_currentHeading = DOWN;
+		}
+		break;
+	case RIGHT:
+		if (tryToMove(map, RIGHT) == validCondition) {
+			this->SETx(this->GETx() + vitesse);
+			_currentHeading = RIGHT;
+		}
+		break;
+	}
+	return 0;
 }
 
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {

@@ -87,7 +87,6 @@ void alwaysrender(sysinfo& information, Pacman& player){
 
 
 		//
-		player.move(information.map);
 		player.afficher(information.ecran.renderer, information.allTextures.pacman);
 		for (unsigned int i = 0; i < information.ghost.size(); i++) {
 			if(i == red)

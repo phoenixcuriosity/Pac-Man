@@ -35,7 +35,7 @@ const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
 const int mapHeight = 25;
 const int mapLength = 25;
-const unsigned int vitesse = 1;
+const unsigned int vitesse = 2;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };

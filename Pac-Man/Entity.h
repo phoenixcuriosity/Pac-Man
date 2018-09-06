@@ -84,7 +84,10 @@ public:
 	Ghost(std::string name, unsigned int x, unsigned int y, unsigned int type,unsigned int value = 0);
 	~Ghost();
 
-	int move(unsigned int pos);
+	int move(tile map[], unsigned int secondLoop = -1);
+	int tryToMove(tile map[], unsigned int pos);
+	int tryToMoveSecondLoop(tile map[], unsigned int pos);
+
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
 	unsigned int GETcurrentHeading()const;

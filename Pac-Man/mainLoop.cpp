@@ -37,12 +37,15 @@ void mainLoop(sysinfo& information) {
 	SDL_Event event;
 
 	Pacman player((string)"robin", 832, 512);
-	information.ghost.push_back(new Ghost("Red", 1200, 500, red));
-	information.ghost.push_back(new Ghost("Blue", 1200, 532, blue));
-	information.ghost.push_back(new Ghost("Yellow", 1200, 564, yellow));
-	information.ghost.push_back(new Ghost("Pink", 1200, 596, pink));
+	information.ghost.push_back(new Ghost("Red", 640, 512, red));
+	information.ghost.push_back(new Ghost("Blue", 1280, 512, blue));
+	information.ghost.push_back(new Ghost("Yellow", 1280, 564, yellow));
+	information.ghost.push_back(new Ghost("Pink", 1280, 596, pink));
 
 	int SDL_EnableUNICODE(1); // on azerty
+
+	unsigned int randomPos1 = 0, randomPos2 = 0, randomPos3 = 0, randomPos4 = 0;
+	unsigned int moduloPos = 0;
 
 	while (information.variable.continuer) {
 		while (SDL_PollEvent(&event) != 0) {
@@ -80,6 +83,33 @@ void mainLoop(sysinfo& information) {
 			}
 
 		}
+
+		moduloPos = (moduloPos + 1) % 60;
+		
+		
+		if (moduloPos == 0) {
+			randomPos1 = rand() % 4; randomPos2 = rand() % 4; randomPos3 = rand() % 4; randomPos4 = rand() % 4;
+			for (unsigned int i = 0; i < information.ghost.size(); i++) {
+				switch (i) {
+				case 0:
+					information.ghost[i]->SETnextHeading(randomPos1);
+					break;
+				case 1:
+					information.ghost[i]->SETnextHeading(randomPos2);
+					break;
+				case 2:
+					information.ghost[i]->SETnextHeading(randomPos3);
+					break;
+				case 3:
+					information.ghost[i]->SETnextHeading(randomPos4);
+					break;
+				}
+			}
+		}
+
+		for (unsigned int i = 0; i < information.ghost.size(); i++)
+			information.ghost[i]->move(information.map);
+		player.move(information.map);
 		alwaysrender(information, player);
 	}
 
@@ -102,7 +132,7 @@ void initGrid(sysinfo& information) {
 			information.map[k].tile_nb = k;
 			information.map[k].tile_x = tileSize * i + (SCREEN_WIDTH / 2 - (mapLength / 2 * tileSize));
 			information.map[k].tile_y = tileSize * j + (SCREEN_HEIGHT / 2 - (mapHeight / 2 * tileSize));
-			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1)
+			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1 || i == 15 || i == 17 || j == 9)
 				information.map[k].wall = true;
 			else
 				information.map[k].wall = false;
@@ -117,8 +147,17 @@ void initGrid(sysinfo& information) {
 			else if (k == 386)
 				information.map[k].wall = true;
 
+			else if (k == 385)
+				information.map[k].wall = false;
+
+			else if (k == 409)
+				information.map[k].wall = false;
+
 			else if (k == 436)
 				information.map[k].wall = true;
+			else if (k == 435)
+				information.map[k].wall = false;
+
 			else if (k == 461)
 				information.map[k].wall = true;
 			else if (k == 486)

@@ -79,19 +79,19 @@ void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int
 }
 
 void Texture::renderTextureTestString(SDL_Renderer*& renderer, const std::string& msg, int xc, int yc) {
-	if (_name == msg)
+	if (_name.compare(msg) == 0)
 		render(renderer, xc, yc);
 }
 
 bool Texture::renderTextureTestStringAndStates(SDL_Renderer*& renderer, const std::string& msg, unsigned int statescreen, int xc, int yc) {
-	if (_name == msg && _statescreen == statescreen){
+	if (_name.compare(msg) == 0 && _statescreen == statescreen){
 		render(renderer, xc, yc);
 		return true;
 	}
 	return false;	
 }
 bool Texture::TextureTestString(const std::string& msg, int xc, int yc) {
-	if (_name == msg)
+	if (_name.compare(msg) == 0)
 		return true;
 	return false;
 }

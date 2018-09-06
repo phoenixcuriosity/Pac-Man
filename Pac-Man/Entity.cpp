@@ -291,7 +291,153 @@ Ghost::~Ghost()
 	logfileconsole(this->GETname() + " is dead");
 }
 
-int Ghost::move(unsigned int pos) {
+int Ghost::move(tile map[], unsigned int secondLoop) {
+	unsigned int testPos = 0;
+	if (_currentHeading != _nextHeading || secondLoop == -1)
+		testPos = _nextHeading;
+	else
+		testPos = _currentHeading;
+
+
+	switch (testPos) {
+	case UP:
+		if (tryToMove(map, UP) == validCondition) {
+			this->SETy(this->GETy() - vitesse);
+			_currentHeading = UP;
+		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
+		break;
+	case LEFT:
+		if (tryToMove(map, LEFT) == validCondition) {
+			this->SETx(this->GETx() - vitesse);
+			_currentHeading = LEFT;
+		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
+		break;
+	case DOWN:
+		if (tryToMove(map, DOWN) == validCondition) {
+			this->SETy(this->GETy() + vitesse);
+			_currentHeading = DOWN;
+		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
+		break;
+	case RIGHT:
+		if (tryToMove(map, RIGHT) == validCondition) {
+			this->SETx(this->GETx() + vitesse);
+			_currentHeading = RIGHT;
+		}
+		else
+			tryToMoveSecondLoop(map, _currentHeading);
+		break;
+	}
+	return 0;
+}
+int Ghost::tryToMove(tile map[], unsigned int pos) {
+	unsigned int moyX = 0, moyY = 0, k = 0, ghostTile = 0, nextTile = 0;
+	for (unsigned int m = 0; m < SCREEN_WIDTH; m += tileSize) {
+		if (m >= this->GETx()) {
+			moyX = m;
+			break;
+		}
+	}
+	for (unsigned int m = 0; m < SCREEN_HEIGHT; m += tileSize) {
+		if (m >= this->GETy()) {
+			moyY = m;
+			break;
+		}
+	}
+	for (unsigned int i = 0; i < mapLength; i++) {
+		for (unsigned int j = 0; j < mapHeight; j++) {
+			if (map[k].tile_x == moyX && map[k].tile_y == moyY) {
+				ghostTile = k;
+				break;
+			}
+			k++;
+		}
+	}
+
+	switch (pos) {
+	case UP:
+		nextTile = ghostTile - 1;
+		if (map[nextTile].wall) {
+			if (this->GETy() - vitesse > map[nextTile].tile_y + tileSize)
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	case LEFT:
+		nextTile = ghostTile - mapHeight;
+		if (map[nextTile].wall) {
+			if (this->GETx() - vitesse > map[nextTile].tile_x + tileSize)
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	case DOWN:
+		nextTile = ghostTile + 1;
+		if (map[nextTile].wall) {
+			if (this->GETy() + vitesse < map[nextTile].tile_y - tileSize)
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	case RIGHT:
+		nextTile = ghostTile + mapHeight;
+		if (map[nextTile].wall) {
+			if (this->GETx() + vitesse < map[nextTile].tile_x - tileSize)
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	default:
+		logfileconsole("____ERROR : Entity : Pacman : tryToMove : pos");
+		return 0;
+		break;
+	}
+
+}
+int Ghost::tryToMoveSecondLoop(tile map[], unsigned int testPos) {
+	switch (testPos) {
+	case UP:
+		if (tryToMove(map, UP) == validCondition) {
+			this->SETy(this->GETy() - vitesse);
+			_currentHeading = UP;
+		}
+		break;
+	case LEFT:
+		if (tryToMove(map, LEFT) == validCondition) {
+			this->SETx(this->GETx() - vitesse);
+			_currentHeading = LEFT;
+		}
+		break;
+	case DOWN:
+		if (tryToMove(map, DOWN) == validCondition) {
+			this->SETy(this->GETy() + vitesse);
+			_currentHeading = DOWN;
+		}
+		break;
+	case RIGHT:
+		if (tryToMove(map, RIGHT) == validCondition) {
+			this->SETx(this->GETx() + vitesse);
+			_currentHeading = RIGHT;
+		}
+		break;
+	}
 	return 0;
 }
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {

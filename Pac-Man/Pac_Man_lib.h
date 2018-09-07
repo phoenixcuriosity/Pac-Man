@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.4
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,7 +35,7 @@ const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
 const int mapHeight = 25;
 const int mapLength = 25;
-const unsigned int vitesse = 2;
+const unsigned int vitesse = 1;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -74,10 +74,16 @@ struct subcatWheel {
 struct var {
 
 	bool continuer = true;
-	unsigned int modulo = 0;
+	
 	unsigned int select = selectnothing;
 	unsigned int statescreen = 0; // selectnothing par défaut
+	unsigned int score = 0;
+	
 
+	unsigned int modulo = 0;
+	unsigned int moduloScore = 0;
+
+	unsigned int tempoScore = 0;
 
 	subcatWheel s_wheel;
 };
@@ -100,10 +106,15 @@ struct texture {
 	std::vector<Texture*> blue;
 	std::vector<Texture*> yellow;
 	std::vector<Texture*> pink;
+	std::vector<Texture*> collectibles;
+
+	std::vector<Texture*> scoreValue;
 
 	std::vector<Texture*> imgecrantitre;
 	std::vector<Texture*> txtecrantitre;
 	std::vector<Texture*> txtplay;
+
+
 
 	TTF_Font *font[80];
 };

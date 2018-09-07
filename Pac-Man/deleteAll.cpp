@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.3
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -38,6 +38,8 @@ void deleteAll(sysinfo& information){
 	deleteDyTabPlayerAndTextures(information.allTextures.blue, "blue Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.yellow, "yellow Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.pink, "pink Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.collectibles, "collectibles Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.scoreValue, "scoreValue Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.txtecrantitre, "txtecrantitre Texture"); 
 	deleteDyTabPlayerAndTextures(information.allTextures.txtplay, "txtplay Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.imgecrantitre, "imgecrantitre Texture");

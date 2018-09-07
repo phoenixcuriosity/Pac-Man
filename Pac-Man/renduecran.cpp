@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.4
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -59,6 +59,8 @@ void alwaysrender(sysinfo& information, Pacman& player){
 	//clock_t t1, t2;
 	//t1 = clock();
 
+
+
 	switch (information.variable.statescreen) {
 	case STATEplay:
 
@@ -98,10 +100,27 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			else
 				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.pink);
 		}
-			
+
+
+		
+		information.variable.moduloScore = (information.variable.moduloScore + 1) % 20;
+		if (player.GETtypeOfValue() != 0 || information.variable.tempoScore != 0) {
+			if(player.GETtypeOfValue() != 0)
+				information.variable.tempoScore = player.GETtypeOfValue();
+			switch (information.variable.tempoScore) {
+			case 100:
+				information.allTextures.scoreValue[0]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				break;
+			}
+			if (information.variable.moduloScore == 0)
+				information.variable.tempoScore = 0;
+		}
 
 		for (unsigned int i = 0; i < information.allButton.buttonplay.size(); i++)
 			information.allButton.buttonplay[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+
+
+		writetxt(information, to_string(player.GETvalue()), { 0, 64, 255, 255 }, 24, SCREEN_WIDTH / 2, 76, center_x);
 
 		SDL_RenderPresent(information.ecran.renderer);
 		break;
@@ -116,10 +135,14 @@ void afficherMap(sysinfo& information) {
 
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
-			if (information.map[k].wall == true)
+			if (information.map[k].wall)
 				information.allTextures.ground[1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
-			else
+			else {
 				information.allTextures.ground[0]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+				if(information.map[k].entity)
+					information.allTextures.collectibles[0]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+			}
+				
 			k++;
 		}
 	}

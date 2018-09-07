@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.5
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -64,7 +64,7 @@ void Entity::SETvalue(unsigned int value) {
 
 
 
-Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value) : Entity(name, x, y, value), _currentHeading(RIGHT), _nextHeading(UP), _alternateSkin(false)
+Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value) : Entity(name, x, y, value), _currentHeading(RIGHT), _nextHeading(UP), _alternateSkin(false), _typeOfValue(0)
 {
 	logfileconsole("Pacman is alive");
 }
@@ -141,6 +141,14 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 			k++;
 		}
 	}
+
+	if (map[pacmanTile].entity) {
+		map[k].entity = false;
+		this->SETvalue(this->GETvalue() + 100);
+		_typeOfValue = 100;
+	}
+	else
+		_typeOfValue = 0;
 
 	switch (pos){
 	case UP:
@@ -264,6 +272,9 @@ unsigned int Pacman::GETnextHeading()const {
 bool Pacman::GETalternateSkin()const {
 	return _alternateSkin;
 }
+unsigned int Pacman::GETtypeOfValue()const {
+	return _typeOfValue;
+}
 
 
 
@@ -275,6 +286,9 @@ void Pacman::SETnextHeading(unsigned int nextHeading){
 }
 void Pacman::SETalternateSkin(bool alternateSkin) {
 	_alternateSkin = alternateSkin;
+}
+void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
+	_typeOfValue = typeOfValue;
 }
 
 

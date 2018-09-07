@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.3
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -32,12 +32,12 @@ void deleteAll(sysinfo&);
 
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
-	unsigned int size = dytab.size();
-	for (unsigned int i = 0; i < size; i++) {
+	
+	for (unsigned int i = 0; i < dytab.size(); i++) {
 		logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
 		delete dytab[i];
 	}
-	for (unsigned int i = 0; i < size; i++)
+	for (unsigned int i = 0; i < dytab.size(); i++)
 		dytab.pop_back();
 	if (dytab.size() != 0)
 		logfileconsole("___________ERROR : " + name + ".size() != 0");

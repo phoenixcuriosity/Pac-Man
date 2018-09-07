@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.5
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -68,15 +68,19 @@ public:
 	unsigned int GETcurrentHeading()const;
 	unsigned int GETnextHeading()const;
 	bool GETalternateSkin()const;
+	unsigned int GETtypeOfValue()const;
 
 	void SETcurrentHeading(unsigned int);
 	void SETnextHeading(unsigned int);
 	void SETalternateSkin(bool);
+	void SETtypeOfValue(unsigned int);
 
 private:
 	unsigned int _currentHeading;
 	unsigned int _nextHeading;
 	bool _alternateSkin;
+
+	unsigned int _typeOfValue;
 };
 
 class Ghost : public Entity {

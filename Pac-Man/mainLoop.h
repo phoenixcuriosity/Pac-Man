@@ -27,9 +27,7 @@
 #include "Buttons.h"
 
 void mainLoop(sysinfo&);
-void initfile(sysinfo& information);
-void initGrid(sysinfo& information);
-void calculimage(sysinfo&);
+void move(sysinfo& information, Pacman& Player);
 
 
 #endif

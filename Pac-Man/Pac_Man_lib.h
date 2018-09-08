@@ -53,7 +53,7 @@ enum { UP, LEFT, DOWN, RIGHT };
 enum { NO, validCondition};
 
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
-enum { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };	// spécifications de la séléction
+enum { selectnothing, pause };	// spécifications de la séléction
 
 struct screen {
 	SDL_Window *window = nullptr;
@@ -81,6 +81,7 @@ struct var {
 	
 
 	unsigned int modulo = 0;
+	unsigned int moduloPos = 0;
 	unsigned int moduloScore = 0;
 
 	unsigned int tempoScore = 0;

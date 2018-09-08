@@ -121,13 +121,13 @@ int Pacman::move(tile map[], unsigned int secondLoop) {
 int Pacman::tryToMove(tile map[], unsigned int pos) {
 	unsigned int moyX = 0, moyY = 0, k = 0, pacmanTile = 0, nextTile = 0;
 	for (unsigned int m = 0; m < SCREEN_WIDTH; m += tileSize) {
-		if (m >= this->GETx()) {
+		if (m > this->GETx()) {
 			moyX = m;
 			break;
 		}
 	}
 	for (unsigned int m = 0; m < SCREEN_HEIGHT; m += tileSize) {
-		if (m >= this->GETy()) {
+		if (m > this->GETy()) {
 			moyY = m;
 			break;
 		}

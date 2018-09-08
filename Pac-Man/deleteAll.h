@@ -32,12 +32,12 @@ void deleteAll(sysinfo&);
 
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
-	
-	for (unsigned int i = 0; i < dytab.size(); i++) {
+	unsigned int size = dytab.size();
+	for (unsigned int i = 0; i < size; i++) {
 		logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
 		delete dytab[i];
 	}
-	for (unsigned int i = 0; i < dytab.size(); i++)
+	for (unsigned int i = 0; i < size; i++)
 		dytab.pop_back();
 	if (dytab.size() != 0)
 		logfileconsole("___________ERROR : " + name + ".size() != 0");

@@ -10,7 +10,8 @@ Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
-temps d'execution de alwaysrender : 0.071000
+Create Button n:1 msg = Pause Success
+temps d'execution de alwaysrender : 0.110000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -31,7 +32,7 @@ Pacman is dead
 *********_________ Start DeleteAll _________*********
 Delete ground Texture name = White.bmp Success
 Delete ground Texture name = Black.bmp Success
-___________ERROR : ground Texture.size() != 0
+Delete ALL ground Texture Success
 Delete pacman Texture name = pacman_U_1.png Success
 Delete pacman Texture name = pacman_U_2.png Success
 Delete pacman Texture name = pacman_L_1.png Success
@@ -40,7 +41,7 @@ Delete pacman Texture name = pacman_D_1.png Success
 Delete pacman Texture name = pacman_D_2.png Success
 Delete pacman Texture name = pacman_R_1.png Success
 Delete pacman Texture name = pacman_R_2.png Success
-___________ERROR : pacman Texture.size() != 0
+Delete ALL pacman Texture Success
 Delete red Texture name = Red_U_1.png Success
 Delete red Texture name = Red_L_1.png Success
 Delete red Texture name = Red_D_1.png Success
@@ -49,7 +50,7 @@ Delete red Texture name = Red_U_2.png Success
 Delete red Texture name = Red_L_2.png Success
 Delete red Texture name = Red_D_2.png Success
 Delete red Texture name = Red_R_2.png Success
-___________ERROR : red Texture.size() != 0
+Delete ALL red Texture Success
 Delete blue Texture name = Blue_U_1.png Success
 Delete blue Texture name = Blue_L_1.png Success
 Delete blue Texture name = Blue_D_1.png Success
@@ -58,7 +59,7 @@ Delete blue Texture name = Blue_U_2.png Success
 Delete blue Texture name = Blue_L_2.png Success
 Delete blue Texture name = Blue_D_2.png Success
 Delete blue Texture name = Blue_R_2.png Success
-___________ERROR : blue Texture.size() != 0
+Delete ALL blue Texture Success
 Delete yellow Texture name = Yellow_U_1.png Success
 Delete yellow Texture name = Yellow_L_1.png Success
 Delete yellow Texture name = Yellow_D_1.png Success
@@ -67,7 +68,7 @@ Delete yellow Texture name = Yellow_U_2.png Success
 Delete yellow Texture name = Yellow_L_2.png Success
 Delete yellow Texture name = Yellow_D_2.png Success
 Delete yellow Texture name = Yellow_R_2.png Success
-___________ERROR : yellow Texture.size() != 0
+Delete ALL yellow Texture Success
 Delete pink Texture name = Pink_U_1.png Success
 Delete pink Texture name = Pink_L_1.png Success
 Delete pink Texture name = Pink_D_1.png Success
@@ -76,7 +77,7 @@ Delete pink Texture name = Pink_U_2.png Success
 Delete pink Texture name = Pink_L_2.png Success
 Delete pink Texture name = Pink_D_2.png Success
 Delete pink Texture name = Pink_R_2.png Success
-___________ERROR : pink Texture.size() != 0
+Delete ALL pink Texture Success
 Delete collectibles Texture name = gold.bmp Success
 Delete ALL collectibles Texture Success
 Delete scoreValue Texture name = 100 Success
@@ -84,12 +85,12 @@ Delete scoreValue Texture name = 200 Success
 Delete scoreValue Texture name = 400 Success
 Delete scoreValue Texture name = 800 Success
 Delete scoreValue Texture name = 5000 Success
-___________ERROR : scoreValue Texture.size() != 0
+Delete ALL scoreValue Texture Success
 Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success
 Delete txtecrantitre Texture name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
 Delete txtecrantitre Texture name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
 Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!! Success
-___________ERROR : txtecrantitre Texture.size() != 0
+Delete ALL txtecrantitre Texture Success
 Delete txtplay Texture name = Your Score Success
 Delete ALL txtplay Texture Success
 Delete imgecrantitre Texture name = linux.jpg Success
@@ -97,13 +98,14 @@ Delete imgecrantitre Texture name = c++.jpg Success
 Delete imgecrantitre Texture name = sudo.jpg Success
 Delete imgecrantitre Texture name = PC_master_Race.jpg Success
 Delete imgecrantitre Texture name = matlab.jpg Success
-___________ERROR : imgecrantitre Texture.size() != 0
+Delete ALL imgecrantitre Texture Success
 Delete Button ecrantitre name = New Game Success
 Delete Button ecrantitre name = Reload Success
 Delete Button ecrantitre name = Option Success
 Delete Button ecrantitre name = Quit Success
-___________ERROR : Button ecrantitre.size() != 0
+Delete ALL Button ecrantitre Success
 Delete Button play name = Return to Title Screen Success
+Delete Button play name = Pause Success
 Delete ALL Button play Success
 *********_________ End DeleteAll _________*********
 SDL_Quit Success

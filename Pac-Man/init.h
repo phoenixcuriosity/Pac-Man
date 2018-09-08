@@ -21,40 +21,17 @@
 
 */
 
+#ifndef  init_H
+#define init_H
+
 #include "lib.h"
-#include "Pac_Man_lib.h"
-#include "mainLoop.h"
-#include "renduecran.h"
-#include "sdl.h"
-#include "init.h"
-#include "deleteAll.h"
+
+void initfile(sysinfo& information);
+void initGrid(sysinfo& information);
+void calculimage(sysinfo&);
 
 
-using namespace std;
-
-int main(int argc, char** argv) {
-	sysinfo information;
-	
-	srand((unsigned int)time(NULL));
-	initfile(information);
-
-	logfileconsole("________PROGRAMME START________");
-
-	initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
-	initGrid(information);
-	calculimage(information);
-
-	ecrantitre(information);
-
-	mainLoop(information);
+#endif // ! init_H
 
 
-	deleteAll(information);
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
-	logfileconsole("SDL_Quit Success");
-	logfileconsole("________PROGRAMME FINISH________");
-	return 0;
-}
 

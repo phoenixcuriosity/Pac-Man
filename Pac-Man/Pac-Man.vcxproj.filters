@@ -48,6 +48,9 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
+    <ClCompile Include="init.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deleteAll.h">
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="init.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

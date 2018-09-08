@@ -50,6 +50,14 @@ void cliqueGauche(sysinfo& information, SDL_Event event) {
 				ecrantitre(information);
 				return;
 			}
+			if (information.allButton.buttonplay[i]->searchButton((string)"Pause", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.buttonplay[i]->changeOn();
+				if (information.allButton.buttonplay[i]->GETon())
+					information.variable.select = pause;
+				else
+					information.variable.select = selectnothing;
+				return;
+			}
 		}
 		
 		break;

@@ -103,7 +103,7 @@ void alwaysrender(sysinfo& information, Pacman& player){
 
 
 		
-		information.variable.moduloScore = (information.variable.moduloScore + 1) % 20;
+		information.variable.moduloScore = (information.variable.moduloScore + 1) % 30;
 		if (player.GETtypeOfValue() != 0 || information.variable.tempoScore != 0) {
 			if(player.GETtypeOfValue() != 0)
 				information.variable.tempoScore = player.GETtypeOfValue();

@@ -44,13 +44,17 @@ const SDL_Color Green = { 0, 255, 0, 255 };
 const SDL_Color Blue = { 0, 0, 255, 255 };
 const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
 const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
+const SDL_Color NoColor = { 0, 0, 0, 0 };
 
-enum { normal, shaded, normaltexture};
+enum { normal, blended, shaded};
 enum { nocenter, center_x, center_y, center };
 
 enum { red, blue, yellow, pink};
 enum { UP, LEFT, DOWN, RIGHT };
 enum { NO, validCondition};
+
+enum { nothing, gold, cherry, strawberry, peach, key};
+enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valuekey = 500};
 
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, pause };	// spécifications de la séléction
@@ -60,8 +64,6 @@ struct screen {
 	SDL_Renderer *renderer = nullptr;
 
 	std::string stringTileSize = std::to_string(tileSize);
-
-
 };
 
 struct subcatWheel {
@@ -95,7 +97,7 @@ struct tile{
 	unsigned int tile_y = 0;
 
 	bool wall = false;
-	bool entity = true;
+	unsigned int entity = 1;
 	
 };
 

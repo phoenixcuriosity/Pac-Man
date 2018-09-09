@@ -23,6 +23,7 @@
 
 #include "keyboardAndMouse.h"
 #include "renduecran.h"
+#include "init.h"
 
 using namespace std;
 
@@ -56,6 +57,10 @@ void cliqueGauche(sysinfo& information, SDL_Event event) {
 					information.variable.select = pause;
 				else
 					information.variable.select = selectnothing;
+				return;
+			}
+			if (information.allButton.buttonplay[i]->searchButton((string)"Initial Grid", information.variable.statescreen, event.button.x, event.button.y)) {
+				initGrid(information);
 				return;
 			}
 		}

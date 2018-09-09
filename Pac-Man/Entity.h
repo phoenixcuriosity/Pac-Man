@@ -58,6 +58,7 @@ private:
 class Pacman : public Entity {
 public:
 	Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
+	Pacman(Pacman& player);
 	~Pacman();
 
 	int move(tile map[], unsigned int secondLoop = -1);

@@ -142,6 +142,11 @@ void calculimage(sysinfo& information) {
 	}
 
 	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/gold.bmp", "gold.bmp", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/peach.png", "peach.png", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1);
+
 
 	information.variable.statescreen = STATEecrantitre;
 	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2, center);
@@ -153,28 +158,29 @@ void calculimage(sysinfo& information) {
 
 	// ______Buttons_____
 	information.variable.statescreen = STATEecrantitre;
-	createbutton(information, information.allButton.buttonecrantitre, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
-	createbutton(information, information.allButton.buttonecrantitre, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	createbutton(information, information.allButton.buttonecrantitre, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	createbutton(information, information.allButton.buttonecrantitre, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre, shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre, shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre, shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre, shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 	information.variable.statescreen = STATEplay;
-	createbutton(information, information.allButton.buttonplay, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
-	createbutton(information, information.allButton.buttonplay, "Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
+	createbutton(information, information.allButton.buttonplay, shaded, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
+	createbutton(information, information.allButton.buttonplay, shaded, "Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
+	createbutton(information, information.allButton.buttonplay, shaded, "Initial Grid", WriteColorButton, BackColorButton, 32, 0, 64);
 
 	// ______Writetxt_____ 
 	information.variable.statescreen = STATEecrantitre;
-	loadwritetxt(information, information.allTextures.txtecrantitre, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, 18, 0, 0);
-	loadwritetxt(information, information.allTextures.txtecrantitre, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, 18, 0, 30);
-	loadwritetxt(information, information.allTextures.txtecrantitre, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, 50, SCREEN_WIDTH / 2, 100, center_x);
-	loadwritetxt(information, information.allTextures.txtecrantitre, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, 25, SCREEN_WIDTH / 2, 160, center_x);
+	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0);
+	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30);
+	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
+	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, center_x);
 	information.variable.statescreen = STATEplay;
-	loadwritetxt(information, information.allTextures.txtplay, "Your Score", { 0, 64, 255, 255 }, 26, SCREEN_WIDTH / 2, 50, center_x);
+	loadwritetxt(information, information.allTextures.txtplay, blended, "Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, center_x);
 
-	loadwritetxt(information, information.allTextures.scoreValue, "100", { 255, 0, 0, 255 }, 26, -1, -1);
-	loadwritetxt(information, information.allTextures.scoreValue, "200", { 0, 64, 255, 255 }, 26, -1, -1);
-	loadwritetxt(information, information.allTextures.scoreValue, "400", { 0, 64, 255, 255 }, 26, -1, -1);
-	loadwritetxt(information, information.allTextures.scoreValue, "800", { 0, 64, 255, 255 }, 26, -1, -1);
-	loadwritetxt(information, information.allTextures.scoreValue, "5000", { 0, 64, 255, 255 }, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "400", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "800", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
 
 
 	t2 = clock();

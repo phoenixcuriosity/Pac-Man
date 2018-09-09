@@ -64,7 +64,14 @@ void Entity::SETvalue(unsigned int value) {
 
 
 
-Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value) : Entity(name, x, y, value), _currentHeading(RIGHT), _nextHeading(UP), _alternateSkin(false), _typeOfValue(0)
+Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
+	: Entity(name, x, y, value), _currentHeading(RIGHT), _nextHeading(UP), _alternateSkin(false), _typeOfValue(0)
+{
+	logfileconsole("Pacman is alive");
+}
+Pacman::Pacman(Pacman& player)
+	: Entity(player.GETname(), player.GETx(), player.GETy(), player.GETvalue()), _currentHeading(player.GETcurrentHeading()),
+	_nextHeading(player.GETnextHeading()), _alternateSkin(player.GETalternateSkin()), _typeOfValue(player.GETtypeOfValue())
 {
 	logfileconsole("Pacman is alive");
 }
@@ -142,13 +149,38 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 		}
 	}
 
-	if (map[pacmanTile].entity) {
-		map[k].entity = false;
-		this->SETvalue(this->GETvalue() + 100);
-		_typeOfValue = 100;
-	}
-	else
+	
+	switch (map[pacmanTile].entity) {
+	case nothing:
 		_typeOfValue = 0;
+		break;
+	case gold:
+		map[k].entity = nothing;
+		this->SETvalue(this->GETvalue() + valuegold);
+		_typeOfValue = valuegold;
+		break;
+	case cherry:
+		map[k].entity = nothing;
+		this->SETvalue(this->GETvalue() + valuecherry);
+		_typeOfValue = valuecherry;
+		break;
+	case strawberry:
+		map[k].entity = nothing;
+		this->SETvalue(this->GETvalue() + valuestrawberry);
+		_typeOfValue = valuestrawberry;
+		break;
+	case peach:
+		map[k].entity = nothing;
+		this->SETvalue(this->GETvalue() + valuepeach);
+		_typeOfValue = valuepeach;
+		break;
+	case key:
+		map[k].entity = nothing;
+		this->SETvalue(this->GETvalue() + valuekey);
+		_typeOfValue = valuekey;
+		break;
+	}
+		
 
 	switch (pos){
 	case UP:

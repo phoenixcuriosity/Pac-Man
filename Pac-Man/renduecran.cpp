@@ -120,7 +120,7 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			information.allButton.buttonplay[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
 
-		writetxt(information, to_string(player.GETvalue()), { 0, 64, 255, 255 }, 24, SCREEN_WIDTH / 2, 76, center_x);
+		writetxt(information, blended, to_string(player.GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
 
 		SDL_RenderPresent(information.ecran.renderer);
 		break;

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.3
+	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -101,19 +101,14 @@ void initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]){
 
 
 
-SDL_Texture* renderText(SDL_Renderer*& renderer, const std::string &message, SDL_Color color, TTF_Font* font){
-	
-	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
-	if (texture == nullptr)
-		logfileconsole("___________ERROR : renderText nullptr for : " + message);
-	SDL_FreeSurface(surf);
-	return texture;
-}
+SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font){
+	SDL_Surface *surf = nullptr;
 
-SDL_Texture* renderTextShaded(SDL_Renderer*& renderer, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font){
-
-	SDL_Surface *surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
+	if(type == blended)
+		surf = TTF_RenderText_Blended(font, message.c_str(), color);
+	else if(type == shaded)
+		surf = TTF_RenderText_Shaded(font, message.c_str(), color, BackColorButton);
+	 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
 	if (texture == nullptr)
 		logfileconsole("___________ERROR : renderTextShaded nullptr for : " + message);
@@ -149,22 +144,15 @@ void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsig
 		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
 }
 
-void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture,const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderText(information.ecran.renderer, msg, color, information.allTextures.font[size]);
-	int xc = x, yc = y, iW = 0, iH = 0;
-	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-	centrage(xc, yc, iW, iH, cnt);
-	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
-}
-void loadwritetxtshaded(sysinfo& information, std::vector<Texture*>& tabTexture, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
+void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
+	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
 	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
 
-void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, const string& msg, SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton) {
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton) {
 	int iW = 0, iH = 0;
 	unsigned int i = 0;
 	int xc = 0, yc = 0;
@@ -176,8 +164,8 @@ void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, const 
 	}
 	for (i; i <= tabbutton.size(); i++) {
 		if (i == tabbutton.size()) {
-			image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
-			imageOn = renderTextShaded(information.ecran.renderer, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
+			image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
+			imageOn = renderText(information.ecran.renderer, type, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
 			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 			searchcenter(x, y, xc, yc, iW, iH, centerbutton);
 			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH, imageOn, x, y, size, color, backcolor));
@@ -213,16 +201,8 @@ void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbu
 	}
 }
 
-
-
-void writetxt(sysinfo& information, const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderText(information.ecran.renderer, msg, color, information.allTextures.font[size]);
-	loadAndWriteImage(information.ecran.renderer, image, x, y, cnt);
-	SDL_DestroyTexture(image);
-}
-
-void writetxtshaded(sysinfo& information, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
+void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
+	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 	loadAndWriteImage(information.ecran.renderer, image, x, y, cnt);
 	SDL_DestroyTexture(image);
 }

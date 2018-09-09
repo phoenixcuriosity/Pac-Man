@@ -11,7 +11,8 @@ Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 Create Button n:1 msg = Pause Success
-temps d'execution de alwaysrender : 0.110000
+Create Button n:2 msg = Initial Grid Success
+temps d'execution de alwaysrender : 0.085000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -79,6 +80,10 @@ Delete pink Texture name = Pink_D_2.png Success
 Delete pink Texture name = Pink_R_2.png Success
 Delete ALL pink Texture Success
 Delete collectibles Texture name = gold.bmp Success
+Delete collectibles Texture name = cherry.png Success
+Delete collectibles Texture name = strawberry.png Success
+Delete collectibles Texture name = peach.png Success
+Delete collectibles Texture name = key.png Success
 Delete ALL collectibles Texture Success
 Delete scoreValue Texture name = 100 Success
 Delete scoreValue Texture name = 200 Success
@@ -106,6 +111,7 @@ Delete Button ecrantitre name = Quit Success
 Delete ALL Button ecrantitre Success
 Delete Button play name = Return to Title Screen Success
 Delete Button play name = Pause Success
+Delete Button play name = Initial Grid Success
 Delete ALL Button play Success
 *********_________ End DeleteAll _________*********
 SDL_Quit Success

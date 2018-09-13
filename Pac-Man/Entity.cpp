@@ -81,77 +81,66 @@ Pacman::~Pacman()
 }
 
 
-int Pacman::move(tile map[], unsigned int secondLoop) {
-	unsigned int testPos = 0;
-	if (_currentHeading != _nextHeading || secondLoop == -1)
-		testPos = _nextHeading;
+int Pacman::move(tile map[], unsigned int secondLoopPos) {
+	bool validMove = false;
+	unsigned int pos = 0;
+	if (secondLoopPos == -1)
+		pos = _nextHeading;
 	else
-		testPos = _currentHeading;
+		pos = _currentHeading;
+
+	
+	if (secondLoopPos == -1 ) {
+		if (tryToMove(map, _nextHeading) == validCondition)
+			validMove = true;
+		else
+			move(map, _currentHeading);
+	}
+	else {
+		if (tryToMove(map, _currentHeading) == validCondition)
+			validMove = true;
+	}
 
 
-	switch (testPos) {
-	case UP:
-		if (tryToMove(map, UP) == validCondition) {
+	if (validMove) {
+		switch (pos) {
+		case UP:
 			this->SETy(this->GETy() - vitesse);
 			_currentHeading = UP;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	case LEFT:
-		if (tryToMove(map, LEFT) == validCondition) {
+			break;
+		case LEFT:
 			this->SETx(this->GETx() - vitesse);
 			_currentHeading = LEFT;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	case DOWN:
-		if (tryToMove(map, DOWN) == validCondition) {
+			break;
+		case DOWN:
 			this->SETy(this->GETy() + vitesse);
 			_currentHeading = DOWN;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	case RIGHT:
-		if (tryToMove(map, RIGHT) == validCondition) {
+			break;
+		case RIGHT:
 			this->SETx(this->GETx() + vitesse);
 			_currentHeading = RIGHT;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	}
-	return 0;
-}
-int Pacman::tryToMove(tile map[], unsigned int pos) {
-	unsigned int moyX = 0, moyY = 0, k = 0, pacmanTile = 0, nextTile = 0;
-
-	for (unsigned int m = 0; m < SCREEN_WIDTH; m += tileSize) {
-		if (m > this->GETx()) {
-			moyX = m;
-				break;
-		}
-	}
-	for (unsigned int m = 0; m < SCREEN_HEIGHT; m += tileSize) {
-		if (m > this->GETy()) {
-			moyY = m;
 			break;
 		}
 	}
 	
+	return 0;
+}
+
+int Pacman::tryToMove(tile map[], unsigned int pos) {
+	unsigned int k = 0, pacmanTile = 0, nextTile = 0;
+	
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
-			if (map[k].tile_x == moyX && map[k].tile_y == moyY) {
-				pacmanTile = k;
-				break;
+			if (this->GETxc() >= map[k].tile_x && this->GETxc() < (map[k].tile_x + tileSize)) {
+				if (this->GETyc() >= map[k].tile_y && this->GETyc() < (map[k].tile_y + tileSize)) {
+					pacmanTile = k;
+					break;
+				}
 			}
 			k++;
 		}
 	}
 
-	
 	switch (map[pacmanTile].entity) {
 	case nothing:
 		_typeOfValue = 0;
@@ -182,13 +171,12 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 		_typeOfValue = valuekey;
 		break;
 	}
-		
 
-	switch (pos){
+	switch (pos) {
 	case UP:
 		nextTile = pacmanTile - 1;
 		if (map[nextTile].wall) {
-			if (this->GETy() - vitesse > map[nextTile].tile_y + tileSize)
+			if (this->GETy() - vitesse > (map[nextTile].tile_y + tileSize))
 				return 1;
 			else
 				return 0;
@@ -199,7 +187,7 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 	case LEFT:
 		nextTile = pacmanTile - mapHeight;
 		if (map[nextTile].wall) {
-			if (this->GETx() - vitesse > map[nextTile].tile_x + tileSize)
+			if (this->GETx() - vitesse > (map[nextTile].tile_x + tileSize))
 				return 1;
 			else
 				return 0;
@@ -210,7 +198,7 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 	case DOWN:
 		nextTile = pacmanTile + 1;
 		if (map[nextTile].wall) {
-			if (this->GETy() + vitesse < map[nextTile].tile_y - tileSize)
+			if (((this->GETy() + tileSize) + vitesse) < map[nextTile].tile_y)
 				return 1;
 			else
 				return 0;
@@ -221,7 +209,7 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 	case RIGHT:
 		nextTile = pacmanTile + mapHeight;
 		if (map[nextTile].wall) {
-			if (this->GETx() + vitesse < map[nextTile].tile_x - tileSize)
+			if (((this->GETx() + tileSize) + vitesse) < map[nextTile].tile_x)
 				return 1;
 			else
 				return 0;
@@ -229,41 +217,9 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 		else
 			return 1;
 		break;
-	default:
-		logfileconsole("____ERROR : Entity : Pacman : tryToMove : pos");
-		return 0;
-		break;
 	}
-	
-}
-int Pacman::tryToMoveSecondLoop(tile map[], unsigned int testPos) {
-	switch (testPos) {
-	case UP:
-		if (tryToMove(map, UP) == validCondition) {
-			this->SETy(this->GETy() - vitesse);
-			_currentHeading = UP;
-		}
-		break;
-	case LEFT:
-		if (tryToMove(map, LEFT) == validCondition) {
-			this->SETx(this->GETx() - vitesse);
-			_currentHeading = LEFT;
-		}
-		break;
-	case DOWN:
-		if (tryToMove(map, DOWN) == validCondition) {
-			this->SETy(this->GETy() + vitesse);
-			_currentHeading = DOWN;
-		}
-		break;
-	case RIGHT:
-		if (tryToMove(map, RIGHT) == validCondition) {
-			this->SETx(this->GETx() + vitesse);
-			_currentHeading = RIGHT;
-		}
-		break;
-	}
-	return 0;
+
+	return Not_Valid;
 }
 
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {

@@ -61,9 +61,8 @@ public:
 	Pacman(Pacman& player);
 	~Pacman();
 
-	int move(tile map[], unsigned int secondLoop = -1);
+	int move(tile map[], unsigned int secondLoopPos = -1);
 	int tryToMove(tile map[], unsigned int pos);
-	int tryToMoveSecondLoop(tile map[], unsigned int pos);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
 	unsigned int GETxc()const;

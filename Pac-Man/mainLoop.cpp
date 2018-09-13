@@ -58,7 +58,7 @@ void mainLoop(sysinfo& information) {
 	logfileconsole("_mainLoop Start_");
 	SDL_Event event;
 
-	Pacman Player((string)"robin", 832, 512);
+	Pacman Player((string)"robin", 832, 544);
 	information.ghost.push_back(new Ghost("Red", 640, 512, red));
 	information.ghost.push_back(new Ghost("Blue", 1280, 512, blue));
 	information.ghost.push_back(new Ghost("Yellow", 1280, 564, yellow));

@@ -12,7 +12,7 @@ Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 Create Button n:1 msg = Pause Success
 Create Button n:2 msg = Initial Grid Success
-temps d'execution de alwaysrender : 0.130000
+temps d'execution de alwaysrender : 0.096000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_

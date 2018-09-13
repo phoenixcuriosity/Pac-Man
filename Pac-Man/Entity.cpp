@@ -65,7 +65,7 @@ void Entity::SETvalue(unsigned int value) {
 
 
 Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
-	: Entity(name, x, y, value), _currentHeading(RIGHT), _nextHeading(UP), _alternateSkin(false), _typeOfValue(0)
+	: Entity(name, x, y, value), _currentHeading(UP), _nextHeading(UP), _alternateSkin(false), _typeOfValue(0)
 {
 	logfileconsole("Pacman is alive");
 }
@@ -127,10 +127,11 @@ int Pacman::move(tile map[], unsigned int secondLoop) {
 }
 int Pacman::tryToMove(tile map[], unsigned int pos) {
 	unsigned int moyX = 0, moyY = 0, k = 0, pacmanTile = 0, nextTile = 0;
+
 	for (unsigned int m = 0; m < SCREEN_WIDTH; m += tileSize) {
 		if (m > this->GETx()) {
 			moyX = m;
-			break;
+				break;
 		}
 	}
 	for (unsigned int m = 0; m < SCREEN_HEIGHT; m += tileSize) {
@@ -139,6 +140,7 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 			break;
 		}
 	}
+	
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
 			if (map[k].tile_x == moyX && map[k].tile_y == moyY) {
@@ -295,6 +297,12 @@ void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture)
 	}
 }
 
+unsigned int Pacman::GETxc()const {
+	return this->GETx() + tileSize / 2;
+}
+unsigned int Pacman::GETyc()const {
+	return this->GETy() + tileSize / 2;
+}
 unsigned int Pacman::GETcurrentHeading()const {
 	return _currentHeading;
 }
@@ -309,7 +317,12 @@ unsigned int Pacman::GETtypeOfValue()const {
 }
 
 
-
+void Pacman::SETxc(unsigned int xc) {
+	_xc = xc;
+}
+void Pacman::SETyc(unsigned int yc) {
+	_yc = yc;
+}
 void Pacman::SETcurrentHeading(unsigned int currentHeading) {
 	_currentHeading = currentHeading;
 }

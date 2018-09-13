@@ -32,6 +32,28 @@
 
 using namespace std;
 
+
+/*
+
+sysinfo* ptr = &information;
+
+cout << endl << (*ptr).variable.continuer;
+
+test(ptr);
+
+cout << endl << (*ptr).variable.continuer;
+ptr = nullptr;
+
+
+void test(void* ptr) {
+	cout << endl << (*(sysinfo*)ptr).variable.continuer;
+	(*(sysinfo*)ptr).variable.continuer= false;
+}
+
+*/
+
+
+
 void mainLoop(sysinfo& information) {
 	logfileconsole("_mainLoop Start_");
 	SDL_Event event;

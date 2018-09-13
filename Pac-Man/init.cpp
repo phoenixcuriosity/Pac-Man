@@ -42,16 +42,22 @@ void initGrid(sysinfo& information) {
 			information.map[k].tile_nb = k;
 			information.map[k].tile_x = tileSize * i + (SCREEN_WIDTH / 2 - (mapLength / 2 * tileSize));
 			information.map[k].tile_y = tileSize * j + (SCREEN_HEIGHT / 2 - (mapHeight / 2 * tileSize));
+			cout << endl << information.map[k].tile_nb << " , " << information.map[k].tile_x << " , " << information.map[k].tile_y;
+
 			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1 || i == 15 || i == 17 || j == 9) {
 				information.map[k].wall = true;
-				information.map[k].entity = false;
+				information.map[k].entity = nothing;
 			}
-
 			else {
 				information.map[k].wall = false;
-				information.map[k].entity = true;
+				information.map[k].entity = gold;
 			}
-
+			k++;
+		}
+	}
+	k = 0;
+	for (unsigned int i = 0; i < mapLength; i++) {
+		for (unsigned int j = 0; j < mapHeight; j++) {
 			if (k == 208)
 				information.map[k].wall = true;
 			else if (k == 311)
@@ -62,14 +68,21 @@ void initGrid(sysinfo& information) {
 				information.map[k].wall = true;
 			else if (k == 386)
 				information.map[k].wall = true;
-			else if (k == 385)
+			else if (k == 385) {
 				information.map[k].wall = false;
-			else if (k == 409)
+				information.map[k].entity = cherry;
+			}
+			else if (k == 409) {
 				information.map[k].wall = false;
+				information.map[k].entity = cherry;
+			}
+				
 			else if (k == 436)
 				information.map[k].wall = true;
-			else if (k == 435)
+			else if (k == 435) {
 				information.map[k].wall = false;
+				information.map[k].entity = strawberry;
+			}
 			else if (k == 461)
 				information.map[k].wall = true;
 			else if (k == 486)
@@ -178,8 +191,8 @@ void calculimage(sysinfo& information) {
 
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1);
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
-	loadwritetxt(information, information.allTextures.scoreValue, blended, "400", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
-	loadwritetxt(information, information.allTextures.scoreValue, blended, "800", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
 
 

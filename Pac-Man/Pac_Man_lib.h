@@ -54,7 +54,7 @@ enum { UP, LEFT, DOWN, RIGHT };
 enum { NO, validCondition};
 
 enum { nothing, gold, cherry, strawberry, peach, key};
-enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valuekey = 500};
+enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valuekey = 5000};
 
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, pause };	// spécifications de la séléction
@@ -74,13 +74,11 @@ struct subcatWheel {
 };
 
 struct var {
-
 	bool continuer = true;
 	
 	unsigned int select = selectnothing;
 	unsigned int statescreen = 0; // selectnothing par défaut
 	unsigned int score = 0;
-	
 
 	unsigned int modulo = 0;
 	unsigned int moduloPos = 0;
@@ -110,14 +108,11 @@ struct texture {
 	std::vector<Texture*> yellow;
 	std::vector<Texture*> pink;
 	std::vector<Texture*> collectibles;
-
 	std::vector<Texture*> scoreValue;
 
 	std::vector<Texture*> imgecrantitre;
 	std::vector<Texture*> txtecrantitre;
 	std::vector<Texture*> txtplay;
-
-
 
 	TTF_Font *font[80];
 };

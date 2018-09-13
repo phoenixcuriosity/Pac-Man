@@ -111,7 +111,14 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			case 100:
 				information.allTextures.scoreValue[0]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
+			case 200:
+				information.allTextures.scoreValue[1]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				break;
+			case 400:
+				information.allTextures.scoreValue[2]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				break;
 			}
+
 			if (information.variable.moduloScore == 0)
 				information.variable.tempoScore = 0;
 		}
@@ -139,10 +146,9 @@ void afficherMap(sysinfo& information) {
 				information.allTextures.ground[1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			else {
 				information.allTextures.ground[0]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
-				if(information.map[k].entity)
-					information.allTextures.collectibles[0]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+				if(information.map[k].entity != nothing)
+					information.allTextures.collectibles[information.map[k].entity - 1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			}
-				
 			k++;
 		}
 	}

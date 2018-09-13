@@ -66,17 +66,24 @@ public:
 	int tryToMoveSecondLoop(tile map[], unsigned int pos);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
+	unsigned int GETxc()const;
+	unsigned int GETyc()const;
 	unsigned int GETcurrentHeading()const;
 	unsigned int GETnextHeading()const;
 	bool GETalternateSkin()const;
 	unsigned int GETtypeOfValue()const;
 
+	void SETxc(unsigned int);
+	void SETyc(unsigned int);
 	void SETcurrentHeading(unsigned int);
 	void SETnextHeading(unsigned int);
 	void SETalternateSkin(bool);
 	void SETtypeOfValue(unsigned int);
 
 private:
+	unsigned int _xc;
+	unsigned int _yc;
+
 	unsigned int _currentHeading;
 	unsigned int _nextHeading;
 	bool _alternateSkin;

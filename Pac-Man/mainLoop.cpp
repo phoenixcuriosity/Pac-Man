@@ -62,7 +62,7 @@ void mainLoop(sysinfo& information) {
 	information.ghost.push_back(new Ghost("Red", 640, 512, red));
 	information.ghost.push_back(new Ghost("Blue", 1280, 512, blue));
 	information.ghost.push_back(new Ghost("Yellow", 1280, 564, yellow));
-	information.ghost.push_back(new Ghost("Pink", 1280, 596, pink));
+	information.ghost.push_back(new Ghost("Pink", 1280, 628, pink));
 
 	int SDL_EnableUNICODE(1); // on azerty
 

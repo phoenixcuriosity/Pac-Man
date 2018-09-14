@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,6 +35,18 @@ void initfile(sysinfo& information) {
 	else
 		cout << endl << "ERREUR: Impossible d'ouvrir le fichier : log.txt";
 }
+void initTile(tile& map, bool wall, unsigned int entity) {
+	map.wall = wall; map.entity = entity;
+}
+void forme(tile map[], unsigned int length, unsigned int height, unsigned int space) {
+	for (unsigned int i = 0; i < length; i++) {
+		for (unsigned int j = 0; j < height; j++) {
+			initTile(map[space], true, nothing);
+			space++;
+		}
+		space += (mapHeight - height);
+	}
+}
 void initGrid(sysinfo& information) {
 	unsigned int k = 0;
 	for (unsigned int i = 0; i < mapLength; i++) {
@@ -42,9 +54,7 @@ void initGrid(sysinfo& information) {
 			information.map[k].tile_nb = k;
 			information.map[k].tile_x = tileSize * i + (SCREEN_WIDTH / 2 - (mapLength / 2 * tileSize));
 			information.map[k].tile_y = tileSize * j + (SCREEN_HEIGHT / 2 - (mapHeight / 2 * tileSize));
-			cout << endl << information.map[k].tile_nb << " , " << information.map[k].tile_x << " , " << information.map[k].tile_y;
-
-			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1 || i == 15 || i == 17 || j == 9) {
+			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1) {
 				information.map[k].wall = true;
 				information.map[k].entity = nothing;
 			}
@@ -55,49 +65,65 @@ void initGrid(sysinfo& information) {
 			k++;
 		}
 	}
-	k = 0;
-	for (unsigned int i = 0; i < mapLength; i++) {
-		for (unsigned int j = 0; j < mapHeight; j++) {
-			if (k == 208)
-				information.map[k].wall = true;
-			else if (k == 311)
-				information.map[k].wall = true;
-			else if (k == 336)
-				information.map[k].wall = true;
-			else if (k == 361)
-				information.map[k].wall = true;
-			else if (k == 386)
-				information.map[k].wall = true;
-			else if (k == 385) {
-				information.map[k].wall = false;
-				information.map[k].entity = cherry;
-			}
-			else if (k == 409) {
-				information.map[k].wall = false;
-				information.map[k].entity = cherry;
-			}
-				
-			else if (k == 436)
-				information.map[k].wall = true;
-			else if (k == 435) {
-				information.map[k].wall = false;
-				information.map[k].entity = strawberry;
-			}
-			else if (k == 461)
-				information.map[k].wall = true;
-			else if (k == 486)
-				information.map[k].wall = true;
-			else if (k == 287)
-				information.map[k].wall = true;
-			else if (k == 111)
-				information.map[k].wall = true;
-			else if (k == 215)
-				information.map[k].wall = true;
-			else if (k == 239)
-				information.map[k].wall = true;
-			k++;
-		}
-	}
+	unsigned int space = 0;
+	// ouverture
+	initTile(information.map[12], false, nothing);
+	//initTile(information.map[612], false, nothing);
+
+	forme(information.map, 4, 2, 52); // 1
+	forme(information.map, 2, 3, 55); // 2 
+	forme(information.map, 2, 1, 59); // 3 
+	forme(information.map, 4, 1, 36); // 4
+	forme(information.map, 4, 1, 38); // 5
+	forme(information.map, 4, 2, 65); // 6
+	forme(information.map, 1, 5, 68); // 7
+	forme(information.map, 1, 5, 130); // 8
+	forme(information.map, 2, 2, 118); // 9
+	forme(information.map, 2, 2, 121); // 10
+	forme(information.map, 1, 3, 177); // 11
+	initTile(information.map[space = 161], true, nothing); // 12a
+	forme(information.map, 1, 2, 181); // 12b
+	forme(information.map, 2, 4, 183); // 12c
+	initTile(information.map[space = 163], true, nothing); // 13a
+	forme(information.map, 2, 4, 188); // 13b
+	forme(information.map, 2, 3, 193); // 14
+	forme(information.map, 4, 1, 197); // 15a
+	forme(information.map, 1, 3, 270); // 15b
+	forme(information.map, 2, 5, 227); // 16
+	forme(information.map, 5, 1, 258); // 17a
+	forme(information.map, 1, 2, 306); // 17b
+	forme(information.map, 2, 1, 260); // 18a
+	forme(information.map, 1, 4, 261); // 18b
+	forme(information.map, 3, 1, 289); // 18c
+	forme(information.map, 2, 1, 335); // 18d
+	forme(information.map, 1, 4, 361); // 18e
+	initTile(information.map[space = 266], true, nothing); // 19
+	forme(information.map, 5, 1, 268); // 20a
+	forme(information.map, 1, 2, 316); // 20b
+	forme(information.map, 1, 4, 301); // 21
+	forme(information.map, 1, 4, 320); // 22
+	forme(information.map, 2, 5, 352); // 23
+	initTile(information.map[space = 366], true, nothing); // 24
+	forme(information.map, 1, 2, 370); // 25a
+	forme(information.map, 4, 1, 372); // 25b
+	forme(information.map, 2, 4, 408); // 26a
+	forme(information.map, 1, 2, 431); // 26b
+	initTile(information.map[space = 461], true, nothing); // 26c
+	forme(information.map, 2, 4, 413); // 27a
+	initTile(information.map[space = 463], true, nothing); // 27b
+	forme(information.map, 2, 3, 418); // 28
+	forme(information.map, 1, 3, 427); // 29
+	forme(information.map, 4, 2, 477); // 30
+	forme(information.map, 1, 5, 480); // 31
+	forme(information.map, 4, 2, 490); // 32
+	forme(information.map, 2, 2, 493); // 33
+	forme(information.map, 2, 2, 496); // 34
+	forme(information.map, 4, 1, 511); // 35
+	forme(information.map, 4, 1, 513); // 36
+	forme(information.map, 2, 3, 530); // 37
+	forme(information.map, 2, 1, 534); // 38
+	forme(information.map, 1, 5, 568); // 39
+
 }
 void calculimage(sysinfo& information) {
 	logfileconsole("_calculimage Start_");

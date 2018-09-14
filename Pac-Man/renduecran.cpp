@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -128,6 +128,8 @@ void alwaysrender(sysinfo& information, Pacman& player){
 
 
 		writetxt(information, blended, to_string(player.GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
+
+		writetxt(information, shaded, "Life remaining : " + to_string(player.GETlife()), { 255, 0, 0, 255 }, White, 32, 0, 250);
 
 		SDL_RenderPresent(information.ecran.renderer);
 		break;

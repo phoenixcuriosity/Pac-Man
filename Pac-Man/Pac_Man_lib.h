@@ -51,7 +51,7 @@ enum { nocenter, center_x, center_y, center };
 
 enum { red, blue, yellow, pink};
 enum { UP, LEFT, DOWN, RIGHT };
-enum { Not_Valid, validCondition};
+enum { Not_Valid, validCondition, validNextHeading};
 
 enum { nothing, gold, cherry, strawberry, peach, key};
 enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valuekey = 5000};

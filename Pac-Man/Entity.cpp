@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -26,8 +26,9 @@
 
 using namespace std;
 
-Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int value)
-	: _name(name), _x(x), _y(y), _value(value)
+Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value)
+	: _name(name), _x(x), _y(y), _value(value), _xc(x + tileSize / 2),
+	_yc(y + tileSize / 2),  _currentHeading(currentHeading), _nextHeading(nextHeading)
 {
 }
 
@@ -44,6 +45,24 @@ unsigned int Entity::GETx()const {
 unsigned int Entity::GETy()const {
 	return _y;
 }
+unsigned int Entity::GETxc()const {
+	return _x + tileSize / 2;
+}
+unsigned int Entity::GETyc()const {
+	return _y + tileSize / 2;
+}
+unsigned int Entity::GETtile()const {
+	return _tile;
+}
+unsigned int Entity::GETcurrentHeading()const {
+	return _currentHeading;
+}
+unsigned int Entity::GETnextHeading()const {
+	return _nextHeading;
+}
+bool Entity::GETalternateSkin()const {
+	return _alternateSkin;
+}
 unsigned int Entity::GETvalue()const {
 	return _value;
 }
@@ -57,6 +76,24 @@ void Entity::SETx(unsigned int x) {
 void Entity::SETy(unsigned int y) {
 	_y = y;
 }
+void Entity::SETxc(unsigned int xc) {
+	_xc = xc;
+}
+void Entity::SETyc(unsigned int yc) {
+	_yc = yc;
+}
+void Entity::SETtile(unsigned int tile) {
+	_tile = tile;
+}
+void Entity::SETcurrentHeading(unsigned int currentHeading) {
+	_currentHeading = currentHeading;
+}
+void Entity::SETnextHeading(unsigned int nextHeading) {
+	_nextHeading = nextHeading;
+}
+void Entity::SETalternateSkin(bool alternateSkin) {
+	_alternateSkin = alternateSkin;
+}
 void Entity::SETvalue(unsigned int value) {
 	_value = value;
 }
@@ -65,13 +102,13 @@ void Entity::SETvalue(unsigned int value) {
 
 
 Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
-	: Entity(name, x, y, value), _currentHeading(UP), _nextHeading(UP), _alternateSkin(false), _typeOfValue(0)
+	: Entity(name, x, y, UP, UP, value), _life(3), _typeOfValue(0)
 {
 	logfileconsole("Pacman is alive");
 }
 Pacman::Pacman(Pacman& player)
-	: Entity(player.GETname(), player.GETx(), player.GETy(), player.GETvalue()), _currentHeading(player.GETcurrentHeading()),
-	_nextHeading(player.GETnextHeading()), _alternateSkin(player.GETalternateSkin()), _typeOfValue(player.GETtypeOfValue())
+	: Entity(player.GETname(), player.GETx(), player.GETy(), player.GETcurrentHeading(), player.GETnextHeading(), player.GETvalue()),
+	_typeOfValue(player.GETtypeOfValue())
 {
 	logfileconsole("Pacman is alive");
 }
@@ -81,44 +118,87 @@ Pacman::~Pacman()
 }
 
 
-int Pacman::move(tile map[], unsigned int secondLoopPos) {
-	bool validMove = false;
+int Pacman::move(tile map[], unsigned int secondLoop) {
+	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
-	if (secondLoopPos == -1)
-		pos = _nextHeading;
-	else
-		pos = _currentHeading;
-
+	bool validMove = false;
 	
-	if (secondLoopPos == -1 ) {
-		if (tryToMove(map, _nextHeading) == validCondition)
-			validMove = true;
-		else
-			move(map, _currentHeading);
+	if (secondLoop == -1) {
+		switch (validTryToMove = search(map)) {
+		case Not_Valid:
+			break;
+		case validCondition:
+			if (tryToMove(map, this->GETcurrentHeading())) {
+				validMove = validCondition;
+				pos = this->GETcurrentHeading();
+			}
+			break;
+		case validNextHeading:
+			if (tryToMove(map, this->GETnextHeading())) {
+				validMove = validCondition;
+				pos = this->GETnextHeading();
+				this->SETcurrentHeading(this->GETnextHeading());
+			}
+			else
+				move(map, 1);
+			break;
+		}
 	}
 	else {
-		if (tryToMove(map, _currentHeading) == validCondition)
-			validMove = true;
+		if (validTryToMove = search(map)) {
+			if (tryToMove(map, this->GETcurrentHeading())) {
+				validMove = validCondition;
+				pos = this->GETcurrentHeading();
+			}
+		}
 	}
 
-
+	if (validMove) {
+		switch (map[this->GETtile()].entity) {
+		case nothing:
+			_typeOfValue = 0;
+			break;
+		case gold:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuegold);
+			_typeOfValue = valuegold;
+			break;
+		case cherry:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuecherry);
+			_typeOfValue = valuecherry;
+			break;
+		case strawberry:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuestrawberry);
+			_typeOfValue = valuestrawberry;
+			break;
+		case peach:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuepeach);
+			_typeOfValue = valuepeach;
+			break;
+		case key:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuekey);
+			_typeOfValue = valuekey;
+			break;
+		}
+	}
+	
 	if (validMove) {
 		switch (pos) {
 		case UP:
 			this->SETy(this->GETy() - vitesse);
-			_currentHeading = UP;
 			break;
 		case LEFT:
 			this->SETx(this->GETx() - vitesse);
-			_currentHeading = LEFT;
 			break;
 		case DOWN:
 			this->SETy(this->GETy() + vitesse);
-			_currentHeading = DOWN;
 			break;
 		case RIGHT:
 			this->SETx(this->GETx() + vitesse);
-			_currentHeading = RIGHT;
 			break;
 		}
 	}
@@ -126,57 +206,41 @@ int Pacman::move(tile map[], unsigned int secondLoopPos) {
 	return 0;
 }
 
-int Pacman::tryToMove(tile map[], unsigned int pos) {
-	unsigned int k = 0, pacmanTile = 0, nextTile = 0;
-	
+unsigned int Pacman::search(tile map[]) {
+	unsigned int k = 0, condition = 0;
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
+			if (this->GETcurrentHeading() != this->GETnextHeading()) {
+				if (this->GETx() == map[k].tile_x) {
+					if (this->GETy() == map[k].tile_y) {
+						this->SETtile(k);
+						condition = validNextHeading;
+						return condition;
+						break;
+					}
+				}
+			}
 			if (this->GETxc() >= map[k].tile_x && this->GETxc() < (map[k].tile_x + tileSize)) {
 				if (this->GETyc() >= map[k].tile_y && this->GETyc() < (map[k].tile_y + tileSize)) {
-					pacmanTile = k;
-					break;
+					this->SETtile(k);
+					condition = validCondition;
+					return condition;
 				}
 			}
 			k++;
 		}
 	}
+	return condition;
+}
 
-	switch (map[pacmanTile].entity) {
-	case nothing:
-		_typeOfValue = 0;
-		break;
-	case gold:
-		map[k].entity = nothing;
-		this->SETvalue(this->GETvalue() + valuegold);
-		_typeOfValue = valuegold;
-		break;
-	case cherry:
-		map[k].entity = nothing;
-		this->SETvalue(this->GETvalue() + valuecherry);
-		_typeOfValue = valuecherry;
-		break;
-	case strawberry:
-		map[k].entity = nothing;
-		this->SETvalue(this->GETvalue() + valuestrawberry);
-		_typeOfValue = valuestrawberry;
-		break;
-	case peach:
-		map[k].entity = nothing;
-		this->SETvalue(this->GETvalue() + valuepeach);
-		_typeOfValue = valuepeach;
-		break;
-	case key:
-		map[k].entity = nothing;
-		this->SETvalue(this->GETvalue() + valuekey);
-		_typeOfValue = valuekey;
-		break;
-	}
-
+int Pacman::tryToMove(tile map[], unsigned int pos) {
+	unsigned int k = 0, nextTile = 0;
+	
 	switch (pos) {
 	case UP:
-		nextTile = pacmanTile - 1;
+		nextTile = this->GETtile() - 1;
 		if (map[nextTile].wall) {
-			if (this->GETy() - vitesse > (map[nextTile].tile_y + tileSize))
+			if (this->GETy() - vitesse >= (map[nextTile].tile_y + tileSize))
 				return 1;
 			else
 				return 0;
@@ -185,9 +249,9 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 			return 1;
 		break;
 	case LEFT:
-		nextTile = pacmanTile - mapHeight;
+		nextTile = this->GETtile() - mapHeight;
 		if (map[nextTile].wall) {
-			if (this->GETx() - vitesse > (map[nextTile].tile_x + tileSize))
+			if (this->GETx() - vitesse >= (map[nextTile].tile_x + tileSize))
 				return 1;
 			else
 				return 0;
@@ -196,9 +260,9 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 			return 1;
 		break;
 	case DOWN:
-		nextTile = pacmanTile + 1;
+		nextTile = this->GETtile() + 1;
 		if (map[nextTile].wall) {
-			if (((this->GETy() + tileSize) + vitesse) < map[nextTile].tile_y)
+			if (((this->GETy() + tileSize) + vitesse) <= map[nextTile].tile_y)
 				return 1;
 			else
 				return 0;
@@ -207,9 +271,9 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 			return 1;
 		break;
 	case RIGHT:
-		nextTile = pacmanTile + mapHeight;
+		nextTile = this->GETtile() + mapHeight;
 		if (map[nextTile].wall) {
-			if (((this->GETx() + tileSize) + vitesse) < map[nextTile].tile_x)
+			if (((this->GETx() + tileSize) + vitesse) <= map[nextTile].tile_x)
 				return 1;
 			else
 				return 0;
@@ -224,27 +288,27 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {
 	for (unsigned int i = 0; i < tabTexture.size(); i++) {
-		switch (_currentHeading) {
+		switch (this->GETcurrentHeading()) {
 		case UP:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_U_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_U_2.png", this->GETx(), this->GETy());
 			break;
 		case LEFT:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_L_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_L_2.png", this->GETx(), this->GETy());
 			break;
 		case DOWN:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_D_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_D_2.png", this->GETx(), this->GETy());
 			break;
 		case RIGHT:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_R_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, "pacman_R_2.png", this->GETx(), this->GETy());
@@ -253,40 +317,16 @@ void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture)
 	}
 }
 
-unsigned int Pacman::GETxc()const {
-	return this->GETx() + tileSize / 2;
-}
-unsigned int Pacman::GETyc()const {
-	return this->GETy() + tileSize / 2;
-}
-unsigned int Pacman::GETcurrentHeading()const {
-	return _currentHeading;
-}
-unsigned int Pacman::GETnextHeading()const {
-	return _nextHeading;
-}
-bool Pacman::GETalternateSkin()const {
-	return _alternateSkin;
+unsigned int Pacman::GETlife()const {
+	return _life;
 }
 unsigned int Pacman::GETtypeOfValue()const {
 	return _typeOfValue;
 }
 
 
-void Pacman::SETxc(unsigned int xc) {
-	_xc = xc;
-}
-void Pacman::SETyc(unsigned int yc) {
-	_yc = yc;
-}
-void Pacman::SETcurrentHeading(unsigned int currentHeading) {
-	_currentHeading = currentHeading;
-}
-void Pacman::SETnextHeading(unsigned int nextHeading){
-	_nextHeading = nextHeading;
-}
-void Pacman::SETalternateSkin(bool alternateSkin) {
-	_alternateSkin = alternateSkin;
+void Pacman::SETlife(unsigned int life) {
+	_life = life;
 }
 void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 	_typeOfValue = typeOfValue;
@@ -297,7 +337,7 @@ void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 
 
 Ghost::Ghost(string name, unsigned int x, unsigned int y, unsigned int type, unsigned int value)
-	: Entity(name, x, y, value), _currentHeading(UP), _nextHeading(UP), _alternateSkin(false), _type(type)
+	: Entity(name, x, y, UP, UP,value), _type(type)
 {
 	logfileconsole(this->GETname() + " is alive");
 }
@@ -307,78 +347,96 @@ Ghost::~Ghost()
 }
 
 int Ghost::move(tile map[], unsigned int secondLoop) {
-	unsigned int testPos = 0;
-	if (_currentHeading != _nextHeading || secondLoop == -1)
-		testPos = _nextHeading;
-	else
-		testPos = _currentHeading;
+	unsigned int validTryToMove = 0;
+	unsigned int pos = 0;
+	bool validMove = false;
 
-
-	switch (testPos) {
-	case UP:
-		if (tryToMove(map, UP) == validCondition) {
-			this->SETy(this->GETy() - vitesse);
-			_currentHeading = UP;
+	if (secondLoop == -1) {
+		switch (validTryToMove = search(map)) {
+		case Not_Valid:
+			break;
+		case validCondition:
+			if (tryToMove(map, this->GETcurrentHeading())) {
+				validMove = validCondition;
+				pos = this->GETcurrentHeading();
+			}
+			break;
+		case validNextHeading:
+			if (tryToMove(map, this->GETnextHeading())) {
+				validMove = validCondition;
+				pos = this->GETnextHeading();
+				this->SETcurrentHeading(this->GETnextHeading());
+			}
+			else
+				move(map, 1);
+			break;
 		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	case LEFT:
-		if (tryToMove(map, LEFT) == validCondition) {
-			this->SETx(this->GETx() - vitesse);
-			_currentHeading = LEFT;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	case DOWN:
-		if (tryToMove(map, DOWN) == validCondition) {
-			this->SETy(this->GETy() + vitesse);
-			_currentHeading = DOWN;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
-	case RIGHT:
-		if (tryToMove(map, RIGHT) == validCondition) {
-			this->SETx(this->GETx() + vitesse);
-			_currentHeading = RIGHT;
-		}
-		else
-			tryToMoveSecondLoop(map, _currentHeading);
-		break;
 	}
+	else {
+		if (validTryToMove = search(map)) {
+			if (tryToMove(map, this->GETcurrentHeading())) {
+				validMove = validCondition;
+				pos = this->GETcurrentHeading();
+			}
+		}
+	}
+
+	
+	if (validMove) {
+		switch (pos) {
+		case UP:
+			this->SETy(this->GETy() - vitesse);
+			break;
+		case LEFT:
+			this->SETx(this->GETx() - vitesse);
+			break;
+		case DOWN:
+			this->SETy(this->GETy() + vitesse);
+			break;
+		case RIGHT:
+			this->SETx(this->GETx() + vitesse);
+			break;
+		}
+	}
+
 	return 0;
 }
-int Ghost::tryToMove(tile map[], unsigned int pos) {
-	unsigned int moyX = 0, moyY = 0, k = 0, ghostTile = 0, nextTile = 0;
-	for (unsigned int m = 0; m < SCREEN_WIDTH; m += tileSize) {
-		if (m >= this->GETx()) {
-			moyX = m;
-			break;
-		}
-	}
-	for (unsigned int m = 0; m < SCREEN_HEIGHT; m += tileSize) {
-		if (m >= this->GETy()) {
-			moyY = m;
-			break;
-		}
-	}
+
+unsigned int Ghost::search(tile map[]) {
+	unsigned int k = 0, condition = 0;
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
-			if (map[k].tile_x == moyX && map[k].tile_y == moyY) {
-				ghostTile = k;
-				break;
+			if (this->GETcurrentHeading() != this->GETnextHeading()) {
+				if (this->GETx() == map[k].tile_x) {
+					if (this->GETy() == map[k].tile_y) {
+						this->SETtile(k);
+						condition = validNextHeading;
+						return condition;
+						break;
+					}
+				}
+			}
+			if (this->GETxc() >= map[k].tile_x && this->GETxc() < (map[k].tile_x + tileSize)) {
+				if (this->GETyc() >= map[k].tile_y && this->GETyc() < (map[k].tile_y + tileSize)) {
+					this->SETtile(k);
+					condition = validCondition;
+					return condition;
+				}
 			}
 			k++;
 		}
 	}
+	return condition;
+}
+
+int Ghost::tryToMove(tile map[], unsigned int pos) {
+	unsigned int k = 0, nextTile = 0;
 
 	switch (pos) {
 	case UP:
-		nextTile = ghostTile - 1;
+		nextTile = this->GETtile() - 1;
 		if (map[nextTile].wall) {
-			if (this->GETy() - vitesse > map[nextTile].tile_y + tileSize)
+			if (this->GETy() - vitesse >= (map[nextTile].tile_y + tileSize))
 				return 1;
 			else
 				return 0;
@@ -387,9 +445,9 @@ int Ghost::tryToMove(tile map[], unsigned int pos) {
 			return 1;
 		break;
 	case LEFT:
-		nextTile = ghostTile - mapHeight;
+		nextTile = this->GETtile() - mapHeight;
 		if (map[nextTile].wall) {
-			if (this->GETx() - vitesse > map[nextTile].tile_x + tileSize)
+			if (this->GETx() - vitesse >= (map[nextTile].tile_x + tileSize))
 				return 1;
 			else
 				return 0;
@@ -398,9 +456,9 @@ int Ghost::tryToMove(tile map[], unsigned int pos) {
 			return 1;
 		break;
 	case DOWN:
-		nextTile = ghostTile + 1;
+		nextTile = this->GETtile() + 1;
 		if (map[nextTile].wall) {
-			if (this->GETy() + vitesse < map[nextTile].tile_y - tileSize)
+			if (((this->GETy() + tileSize) + vitesse) <= map[nextTile].tile_y)
 				return 1;
 			else
 				return 0;
@@ -409,51 +467,19 @@ int Ghost::tryToMove(tile map[], unsigned int pos) {
 			return 1;
 		break;
 	case RIGHT:
-		nextTile = ghostTile + mapHeight;
+		nextTile = this->GETtile() + mapHeight;
 		if (map[nextTile].wall) {
-			if (this->GETx() + vitesse < map[nextTile].tile_x - tileSize)
+			if (((this->GETx() + tileSize) + vitesse) <= map[nextTile].tile_x)
 				return 1;
 			else
 				return 0;
 		}
 		else
 			return 1;
-		break;
-	default:
-		logfileconsole("____ERROR : Entity : Pacman : tryToMove : pos");
-		return 0;
 		break;
 	}
 
-}
-int Ghost::tryToMoveSecondLoop(tile map[], unsigned int testPos) {
-	switch (testPos) {
-	case UP:
-		if (tryToMove(map, UP) == validCondition) {
-			this->SETy(this->GETy() - vitesse);
-			_currentHeading = UP;
-		}
-		break;
-	case LEFT:
-		if (tryToMove(map, LEFT) == validCondition) {
-			this->SETx(this->GETx() - vitesse);
-			_currentHeading = LEFT;
-		}
-		break;
-	case DOWN:
-		if (tryToMove(map, DOWN) == validCondition) {
-			this->SETy(this->GETy() + vitesse);
-			_currentHeading = DOWN;
-		}
-		break;
-	case RIGHT:
-		if (tryToMove(map, RIGHT) == validCondition) {
-			this->SETx(this->GETx() + vitesse);
-			_currentHeading = RIGHT;
-		}
-		break;
-	}
-	return 0;
+	return Not_Valid;
 }
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {
 	std::string ghost = "";
@@ -461,27 +487,27 @@ void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) 
 	ghostName.push_back("Red"); ghostName.push_back("Blue"); ghostName.push_back("Yellow"); ghostName.push_back("Pink");
 
 	for (unsigned int i = 0; i < tabTexture.size(); i++) {
-		switch (_currentHeading) {
+		switch (this->GETcurrentHeading()) {
 		case UP:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_2.png", this->GETx(), this->GETy());
 			break;
 		case LEFT:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_2.png", this->GETx(), this->GETy());
 			break;
 		case DOWN:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_2.png", this->GETx(), this->GETy());
 			break;
 		case RIGHT:
-			if (_alternateSkin)
+			if (this->GETalternateSkin())
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_1.png", this->GETx(), this->GETy());
 			else
 				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_2.png", this->GETx(), this->GETy());
@@ -490,24 +516,14 @@ void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) 
 	}
 }
 
-unsigned int Ghost::GETcurrentHeading()const {
-	return _currentHeading;
-}
-unsigned int Ghost::GETnextHeading()const {
-	return _nextHeading;
-}
-bool Ghost::GETalternateSkin()const {
-	return _alternateSkin;
+unsigned int Ghost::GETtype()const {
+	return _type;
 }
 
 
-void Ghost::SETcurrentHeading(unsigned int currentHeading) {
-	_currentHeading = currentHeading;
+
+void Ghost::SETtype(unsigned int type) {
+	_type = type;
 }
-void Ghost::SETnextHeading(unsigned int nextHeading) {
-	_nextHeading = nextHeading;
-}
-void Ghost::SETalternateSkin(bool alternateSkin) {
-	_alternateSkin = alternateSkin;
-}
+
 

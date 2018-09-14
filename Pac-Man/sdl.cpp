@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -107,7 +107,7 @@ SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::s
 	if(type == blended)
 		surf = TTF_RenderText_Blended(font, message.c_str(), color);
 	else if(type == shaded)
-		surf = TTF_RenderText_Shaded(font, message.c_str(), color, BackColorButton);
+		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
 	 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
 	if (texture == nullptr)

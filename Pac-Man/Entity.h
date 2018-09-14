@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -32,26 +32,45 @@
 class Entity { // classe abstraite
 public:
 	Entity() {};
-	Entity(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
+	Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value = 0);
 	~Entity();
+
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) = 0;
 
 	std::string GETname()const;
 	unsigned int GETx()const;
 	unsigned int GETy()const;
+	unsigned int GETxc()const;
+	unsigned int GETyc()const;
+	unsigned int GETtile()const;
+	unsigned int GETcurrentHeading()const;
+	unsigned int GETnextHeading()const;
+	bool GETalternateSkin()const;
 	unsigned int GETvalue()const;
 
 	void SETname(std::string name);
 	void SETx(unsigned int x);
 	void SETy(unsigned int y);
+	void SETxc(unsigned int);
+	void SETyc(unsigned int);
+	void SETtile(unsigned int tile);
+	void SETcurrentHeading(unsigned int);
+	void SETnextHeading(unsigned int);
+	void SETalternateSkin(bool);
 	void SETvalue(unsigned int value);
-
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) = 0;
-
 
 private:
 	std::string _name;
 	unsigned int _x;
 	unsigned int _y;
+	unsigned int _xc;
+	unsigned int _yc;
+	unsigned int _tile;
+
+	unsigned int _currentHeading;
+	unsigned int _nextHeading;
+	bool _alternateSkin;
+
 	unsigned int _value;
 };
 
@@ -61,32 +80,21 @@ public:
 	Pacman(Pacman& player);
 	~Pacman();
 
-	int move(tile map[], unsigned int secondLoopPos = -1);
+	int move(tile map[], unsigned int secondLoop = -1);
+	unsigned int search(tile map[]);
 	int tryToMove(tile map[], unsigned int pos);
+
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
-	unsigned int GETxc()const;
-	unsigned int GETyc()const;
-	unsigned int GETcurrentHeading()const;
-	unsigned int GETnextHeading()const;
-	bool GETalternateSkin()const;
+	unsigned int GETlife()const;
 	unsigned int GETtypeOfValue()const;
 
-	void SETxc(unsigned int);
-	void SETyc(unsigned int);
-	void SETcurrentHeading(unsigned int);
-	void SETnextHeading(unsigned int);
-	void SETalternateSkin(bool);
+	void SETlife(unsigned int life);
 	void SETtypeOfValue(unsigned int);
 
 private:
-	unsigned int _xc;
-	unsigned int _yc;
-
-	unsigned int _currentHeading;
-	unsigned int _nextHeading;
-	bool _alternateSkin;
-
+	
+	unsigned int _life;
 	unsigned int _typeOfValue;
 };
 
@@ -96,31 +104,16 @@ public:
 	~Ghost();
 
 	int move(tile map[], unsigned int secondLoop = -1);
+	unsigned int search(tile map[]);
 	int tryToMove(tile map[], unsigned int pos);
-	int tryToMoveSecondLoop(tile map[], unsigned int pos);
 
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
-	unsigned int GETcurrentHeading()const;
-	unsigned int GETnextHeading()const;
-	bool GETalternateSkin()const;
-
-	void SETcurrentHeading(unsigned int);
-	void SETnextHeading(unsigned int);
-	void SETalternateSkin(bool);
+	unsigned int GETtype()const;
+	void SETtype(unsigned int type);
 
 private:
-	unsigned int _currentHeading;
-	unsigned int _nextHeading;
-	bool _alternateSkin;
-	unsigned int _type;
-};
-class Gold : public Entity {
-public:
-	Gold();
-	~Gold();
-
-private:
+	
 	unsigned int _type;
 };
 

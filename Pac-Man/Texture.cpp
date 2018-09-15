@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.2
+	last modification on this file on version:0.8a
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -63,12 +63,12 @@ void Texture::renderTexture(SDL_Renderer*& renderer, int xc, int yc) {
 	render(renderer, xc, yc);
 }
 
-void Texture::renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc, int yc) {
+void Texture::renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, int xc, int yc) {
 	if (_statescreen == statescreen)
 		render(renderer, xc, yc);
 }
 
-void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc, int yc, unsigned int angle) {
+void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, int xc, int yc, unsigned int angle) {
 	if (_statescreen == statescreen) {
 		if (xc != -1 && yc != -1) {
 		_dst.x = xc;
@@ -90,7 +90,7 @@ bool Texture::renderTextureTestStringAndStates(SDL_Renderer*& renderer, const st
 	}
 	return false;	
 }
-bool Texture::TextureTestString(const std::string& msg, int xc, int yc) {
+bool Texture::TextureTestString(const std::string& msg) {
 	if (_name.compare(msg) == 0)
 		return true;
 	return false;

@@ -92,7 +92,7 @@ void initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]){
 
 		const std::string fontFile = "arial.ttf";
 
-		for (unsigned int i = 1; i < 80; i++)
+		for (unsigned int i = 1; i < (unsigned int)80; i++)
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
 		logfileconsole("SDL_Init Success");
@@ -119,7 +119,7 @@ SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::s
 void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt) {
 
 
-	int iW = 0, iH = 0, xc = 0, yc = 0;
+	int xc = 0, yc = 0;
 	if (x != -1 && y != -1)
 		xc = x, yc = y;
 
@@ -144,7 +144,7 @@ void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsig
 		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
 }
 
-void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
+void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt) {
 	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
@@ -152,7 +152,7 @@ void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsig
 	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
 
-void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton) {
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton) {
 	int iW = 0, iH = 0;
 	unsigned int i = 0;
 	int xc = 0, yc = 0;
@@ -201,7 +201,7 @@ void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbu
 	}
 }
 
-void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
+void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt) {
 	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 	loadAndWriteImage(information.ecran.renderer, image, x, y, cnt);
 	SDL_DestroyTexture(image);

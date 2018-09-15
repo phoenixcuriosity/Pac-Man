@@ -12,7 +12,7 @@ Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 Create Button n:1 msg = Pause Success
 Create Button n:2 msg = Initial Grid Success
-temps d'execution de alwaysrender : 0.088000
+temps d'execution de calculimage : 0.167000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -33,6 +33,7 @@ Pacman is dead
 *********_________ Start DeleteAll _________*********
 Delete ground Texture name = White.bmp Success
 Delete ground Texture name = Black.bmp Success
+Delete ground Texture name = map.png Success
 Delete ALL ground Texture Success
 Delete pacman Texture name = pacman_U_1.png Success
 Delete pacman Texture name = pacman_U_2.png Success
@@ -83,12 +84,14 @@ Delete collectibles Texture name = gold.bmp Success
 Delete collectibles Texture name = cherry.png Success
 Delete collectibles Texture name = strawberry.png Success
 Delete collectibles Texture name = peach.png Success
+Delete collectibles Texture name = apple.png Success
 Delete collectibles Texture name = key.png Success
 Delete ALL collectibles Texture Success
 Delete scoreValue Texture name = 100 Success
 Delete scoreValue Texture name = 200 Success
 Delete scoreValue Texture name = 400 Success
 Delete scoreValue Texture name = 800 Success
+Delete scoreValue Texture name = 1600 Success
 Delete scoreValue Texture name = 5000 Success
 Delete ALL scoreValue Texture Success
 Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success

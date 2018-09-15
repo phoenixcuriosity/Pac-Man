@@ -1,12 +1,2 @@
-﻿  Buttons.cpp
-  deleteAll.cpp
-  Entity.cpp
-  init.cpp
-  keyboardAndMouse.cpp
-  main.cpp
-  mainLoop.cpp
-  renduecran.cpp
-  sdl.cpp
-  Texture.cpp
-  Génération de code en cours...
+﻿  renduecran.cpp
   Pac-Man.vcxproj -> C:\Users\Robin\Documents\GitHub\Pac-Man\Debug\Pac-Man.exe

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	last modification on this file on version:0.8a
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -40,10 +40,10 @@ void ecrantitre(sysinfo& information){
 	SDL_RenderClear(information.ecran.renderer);
 
 	for (unsigned int i = 0; i < information.allTextures.txtecrantitre.size(); i++)
-		information.allTextures.txtecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+		information.allTextures.txtecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen);
 	
 	for (unsigned int i = 0; i < information.allTextures.imgecrantitre.size(); i++)
-		information.allTextures.imgecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+		information.allTextures.imgecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen);
 	
 	for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++)
 		information.allButton.buttonecrantitre[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
@@ -83,12 +83,13 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			
 
 		for (unsigned int i = 0; i < information.allTextures.txtplay.size(); i++) {
-			information.allTextures.txtplay[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+			information.allTextures.txtplay[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen);
 
 		}
 
 
 		//
+		player.afficherStats(information);
 		player.afficher(information.ecran.renderer, information.allTextures.pacman);
 		for (unsigned int i = 0; i < information.ghost.size(); i++) {
 			if(i == red)
@@ -108,14 +109,20 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			if(player.GETtypeOfValue() != 0)
 				information.variable.tempoScore = player.GETtypeOfValue();
 			switch (information.variable.tempoScore) {
-			case 100:
+			case valuegold:
 				information.allTextures.scoreValue[0]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
-			case 200:
+			case valuecherry:
 				information.allTextures.scoreValue[1]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
-			case 400:
+			case valuestrawberry:
 				information.allTextures.scoreValue[2]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				break;
+			case valuepeach:
+				information.allTextures.scoreValue[3]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				break;
+			case valueapple:
+				information.allTextures.scoreValue[4]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
 			}
 
@@ -127,10 +134,6 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			information.allButton.buttonplay[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
 
-		writetxt(information, blended, to_string(player.GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
-
-		writetxt(information, shaded, "Life remaining : " + to_string(player.GETlife()), { 255, 0, 0, 255 }, White, 32, 0, 250);
-
 		SDL_RenderPresent(information.ecran.renderer);
 		break;
 	}
@@ -140,8 +143,11 @@ void alwaysrender(sysinfo& information, Pacman& player){
 }
 
 void afficherMap(sysinfo& information) {
-	unsigned int k = 0;
+	/*
+		à utiliser si besoin de changer la map
+		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
 
+	unsigned int k = 0;
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
 			if (information.map[k].wall)
@@ -151,6 +157,19 @@ void afficherMap(sysinfo& information) {
 				if(information.map[k].entity != nothing)
 					information.allTextures.collectibles[information.map[k].entity - 1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			}
+			k++;
+		}
+	}
+	
+	*/
+
+	unsigned int k = 0;
+	information.allTextures.ground[2]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+
+	for (unsigned int i = 0; i < mapLength; i++) {
+		for (unsigned int j = 0; j < mapHeight; j++) {
+			if(!information.map[k].wall && information.map[k].entity != nothing)
+				information.allTextures.collectibles[information.map[k].entity - 1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			k++;
 		}
 	}

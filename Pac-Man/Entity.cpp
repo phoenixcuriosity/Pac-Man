@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	last modification on this file on version:0.8a
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -28,7 +28,7 @@ using namespace std;
 
 Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value)
 	: _name(name), _x(x), _y(y), _value(value), _xc(x + tileSize / 2),
-	_yc(y + tileSize / 2),  _currentHeading(currentHeading), _nextHeading(nextHeading)
+	_yc(y + tileSize / 2),  _currentHeading(currentHeading), _nextHeading(nextHeading), _invincible(false)
 {
 }
 
@@ -63,6 +63,9 @@ unsigned int Entity::GETnextHeading()const {
 bool Entity::GETalternateSkin()const {
 	return _alternateSkin;
 }
+bool Entity::GETinvincible()const {
+	return _invincible;
+}
 unsigned int Entity::GETvalue()const {
 	return _value;
 }
@@ -94,6 +97,9 @@ void Entity::SETnextHeading(unsigned int nextHeading) {
 void Entity::SETalternateSkin(bool alternateSkin) {
 	_alternateSkin = alternateSkin;
 }
+void Entity::SETinvincible(bool invincible) {
+	_invincible = invincible;
+}
 void Entity::SETvalue(unsigned int value) {
 	_value = value;
 }
@@ -102,7 +108,7 @@ void Entity::SETvalue(unsigned int value) {
 
 
 Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
-	: Entity(name, x, y, UP, UP, value), _life(3), _typeOfValue(0)
+	: Entity(name, x, y, UP, UP, value), _life(3), _powerUP(0), _typeOfValue(0)
 {
 	logfileconsole("Pacman is alive");
 }
@@ -153,37 +159,10 @@ int Pacman::move(tile map[], unsigned int secondLoop) {
 		}
 	}
 
-	if (validMove) {
-		switch (map[this->GETtile()].entity) {
-		case nothing:
-			_typeOfValue = 0;
-			break;
-		case gold:
-			map[this->GETtile()].entity = nothing;
-			this->SETvalue(this->GETvalue() + valuegold);
-			_typeOfValue = valuegold;
-			break;
-		case cherry:
-			map[this->GETtile()].entity = nothing;
-			this->SETvalue(this->GETvalue() + valuecherry);
-			_typeOfValue = valuecherry;
-			break;
-		case strawberry:
-			map[this->GETtile()].entity = nothing;
-			this->SETvalue(this->GETvalue() + valuestrawberry);
-			_typeOfValue = valuestrawberry;
-			break;
-		case peach:
-			map[this->GETtile()].entity = nothing;
-			this->SETvalue(this->GETvalue() + valuepeach);
-			_typeOfValue = valuepeach;
-			break;
-		case key:
-			map[this->GETtile()].entity = nothing;
-			this->SETvalue(this->GETvalue() + valuekey);
-			_typeOfValue = valuekey;
-			break;
-		}
+	value(map, validMove);
+	if (_powerUP == 3) {
+		this->SETinvincible(true);
+		_powerUP = 0;
 	}
 	
 	if (validMove) {
@@ -233,8 +212,52 @@ unsigned int Pacman::search(tile map[]) {
 	return condition;
 }
 
+void Pacman::value(tile map[], bool validMove) {
+	if (validMove) {
+		switch (map[this->GETtile()].entity) {
+		case nothing:
+			_typeOfValue = 0;
+			break;
+		case gold:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuegold);
+			_typeOfValue = valuegold;
+			break;
+		case cherry:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuecherry);
+			_typeOfValue = valuecherry;
+			_powerUP++;
+			break;
+		case strawberry:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuestrawberry);
+			_typeOfValue = valuestrawberry;
+			_powerUP++;
+			break;
+		case peach:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuepeach);
+			_typeOfValue = valuepeach;
+			_powerUP++;
+			break;
+		case apple:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valueapple);
+			_typeOfValue = valueapple;
+			_powerUP++;
+			break;
+		case key:
+			map[this->GETtile()].entity = nothing;
+			this->SETvalue(this->GETvalue() + valuekey);
+			_typeOfValue = valuekey;
+			break;
+		}
+	}
+}
+
 int Pacman::tryToMove(tile map[], unsigned int pos) {
-	unsigned int k = 0, nextTile = 0;
+	unsigned int nextTile = 0;
 	
 	switch (pos) {
 	case UP:
@@ -286,6 +309,12 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 	return Not_Valid;
 }
 
+void Pacman::afficherStats(sysinfo& information) {
+	writetxt(information, blended, to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
+	writetxt(information, shaded, "Life remaining : " + to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
+	writetxt(information, shaded, "PowerUP : " + to_string(_powerUP), { 255, 0, 0, 255 }, White, 32, 0, 300);
+}
+
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {
 	for (unsigned int i = 0; i < tabTexture.size(); i++) {
 		switch (this->GETcurrentHeading()) {
@@ -320,6 +349,9 @@ void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture)
 unsigned int Pacman::GETlife()const {
 	return _life;
 }
+unsigned int Pacman::GETpowerUP()const {
+	return _powerUP;
+}
 unsigned int Pacman::GETtypeOfValue()const {
 	return _typeOfValue;
 }
@@ -327,6 +359,9 @@ unsigned int Pacman::GETtypeOfValue()const {
 
 void Pacman::SETlife(unsigned int life) {
 	_life = life;
+}
+void Pacman::SETpowerUP(unsigned int powerUP) {
+	_powerUP = powerUP;
 }
 void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 	_typeOfValue = typeOfValue;
@@ -430,7 +465,7 @@ unsigned int Ghost::search(tile map[]) {
 }
 
 int Ghost::tryToMove(tile map[], unsigned int pos) {
-	unsigned int k = 0, nextTile = 0;
+	unsigned nextTile = 0;
 
 	switch (pos) {
 	case UP:

@@ -35,12 +35,12 @@ SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::s
 void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
 	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt = 0);
 void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg,
-	SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt = 0);
+	SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
 void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
-	SDL_Color color, SDL_Color backcolor, int size, int x, int y, int centerbutton = 0);
+	SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
 void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton);
 void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color,
-	SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt = 0);
+	SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
 void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);
 void centrage(int&, int&, int, int, int = 0);
 

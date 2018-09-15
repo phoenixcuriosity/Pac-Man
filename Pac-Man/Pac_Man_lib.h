@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8a
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -53,8 +53,8 @@ enum { red, blue, yellow, pink};
 enum { UP, LEFT, DOWN, RIGHT };
 enum { Not_Valid, validCondition, validNextHeading};
 
-enum { nothing, gold, cherry, strawberry, peach, key};
-enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valuekey = 5000};
+enum { nothing, gold, cherry, strawberry, peach, apple, key};
+enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, valuekey = 5000};
 
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, pause };	// spécifications de la séléction
@@ -64,6 +64,10 @@ struct screen {
 	SDL_Renderer *renderer = nullptr;
 
 	std::string stringTileSize = std::to_string(tileSize);
+};
+
+struct file {
+	const std::string log = "log.txt";
 };
 
 struct subcatWheel {
@@ -124,6 +128,7 @@ struct button {
 
 struct sysinfo {
 	screen ecran;
+	file files;
 	var variable;
 	tile map[mapHeight * mapLength];
 	button allButton;

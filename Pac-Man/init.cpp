@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8
+	last modification on this file on version:0.8a
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -30,10 +30,10 @@
 using namespace std;
 
 void initfile(sysinfo& information) {
-	ofstream log("log.txt");
+	ofstream log(information.files.log);
 	if (log) {}
 	else
-		cout << endl << "ERREUR: Impossible d'ouvrir le fichier : log.txt";
+		cout << endl << "ERREUR: Impossible d'ouvrir le fichier : " + information.files.log;
 }
 void initTile(tile& map, bool wall, unsigned int entity) {
 	map.wall = wall; map.entity = entity;
@@ -70,6 +70,13 @@ void initGrid(sysinfo& information) {
 	initTile(information.map[12], false, nothing);
 	//initTile(information.map[612], false, nothing);
 
+	// 
+	initTile(information.map[26], false, cherry);
+	initTile(information.map[48], false, strawberry);
+	initTile(information.map[576], false, peach);
+	initTile(information.map[598], false, apple);
+
+	// blocs de murs
 	forme(information.map, 4, 2, 52); // 1
 	forme(information.map, 2, 3, 55); // 2 
 	forme(information.map, 2, 1, 59); // 3 
@@ -136,6 +143,7 @@ void calculimage(sysinfo& information) {
 	information.variable.statescreen = STATEplay;
 	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1);
 	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "map.png", "map.png", (Uint8)255, -1, -1);
 
 
 
@@ -184,6 +192,7 @@ void calculimage(sysinfo& information) {
 	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1);
 	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1);
 	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/peach.png", "peach.png", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/apple.png", "apple.png", (Uint8)255, -1, -1);
 	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1);
 
 
@@ -219,10 +228,11 @@ void calculimage(sysinfo& information) {
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1);
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
+	loadwritetxt(information, information.allTextures.scoreValue, blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
 
 
 	t2 = clock();
-	logfileconsole("temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));
+	logfileconsole("temps d'execution de calculimage : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));
 	logfileconsole("_calculimage End_");
 }

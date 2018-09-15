@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	last modification on this file on version:0.8a
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -46,6 +46,7 @@ public:
 	unsigned int GETcurrentHeading()const;
 	unsigned int GETnextHeading()const;
 	bool GETalternateSkin()const;
+	bool GETinvincible()const;
 	unsigned int GETvalue()const;
 
 	void SETname(std::string name);
@@ -57,6 +58,7 @@ public:
 	void SETcurrentHeading(unsigned int);
 	void SETnextHeading(unsigned int);
 	void SETalternateSkin(bool);
+	void SETinvincible(bool);
 	void SETvalue(unsigned int value);
 
 private:
@@ -71,6 +73,7 @@ private:
 	unsigned int _nextHeading;
 	bool _alternateSkin;
 
+	bool _invincible;
 	unsigned int _value;
 };
 
@@ -82,19 +85,24 @@ public:
 
 	int move(tile map[], unsigned int secondLoop = -1);
 	unsigned int search(tile map[]);
+	void value(tile map[], bool validMove);
 	int tryToMove(tile map[], unsigned int pos);
 
+	void afficherStats(sysinfo& information);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
 
 	unsigned int GETlife()const;
+	unsigned int GETpowerUP()const;
 	unsigned int GETtypeOfValue()const;
 
 	void SETlife(unsigned int life);
+	void SETpowerUP(unsigned int powerUP);
 	void SETtypeOfValue(unsigned int);
 
 private:
 	
 	unsigned int _life;
+	unsigned int _powerUP;
 	unsigned int _typeOfValue;
 };
 

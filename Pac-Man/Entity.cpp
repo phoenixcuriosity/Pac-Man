@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8a
+	last modification on this file on version:0.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -112,7 +112,7 @@ Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
 {
 	logfileconsole("Pacman is alive");
 }
-Pacman::Pacman(Pacman& player)
+Pacman::Pacman(const Pacman& player)
 	: Entity(player.GETname(), player.GETx(), player.GETy(), player.GETcurrentHeading(), player.GETnextHeading(), player.GETvalue()),
 	_typeOfValue(player.GETtypeOfValue())
 {
@@ -124,7 +124,7 @@ Pacman::~Pacman()
 }
 
 
-int Pacman::move(tile map[], unsigned int secondLoop) {
+int Pacman::move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -146,7 +146,7 @@ int Pacman::move(tile map[], unsigned int secondLoop) {
 				this->SETcurrentHeading(this->GETnextHeading());
 			}
 			else
-				move(map, 1);
+				move(map, ghost, 1);
 			break;
 		}
 	}
@@ -160,7 +160,7 @@ int Pacman::move(tile map[], unsigned int secondLoop) {
 	}
 
 	value(map, validMove);
-	if (_powerUP == 3) {
+	if (_powerUP == 4) {
 		this->SETinvincible(true);
 		_powerUP = 0;
 	}
@@ -180,8 +180,8 @@ int Pacman::move(tile map[], unsigned int secondLoop) {
 			this->SETx(this->GETx() + vitesse);
 			break;
 		}
+		collideGhost(ghost);
 	}
-	
 	return 0;
 }
 
@@ -195,7 +195,6 @@ unsigned int Pacman::search(tile map[]) {
 						this->SETtile(k);
 						condition = validNextHeading;
 						return condition;
-						break;
 					}
 				}
 			}
@@ -308,6 +307,48 @@ int Pacman::tryToMove(tile map[], unsigned int pos) {
 
 	return Not_Valid;
 }
+void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
+	bool hit = false;
+	unsigned int l = 0;
+	for (l; l < ghost.size(); l++) {
+		// pacman gauche et ghost droite
+		if (((this->GETx() + tileSize) >= ghost[l]->GETx()) && ((this->GETx() + tileSize) <= (ghost[l]->GETx() + tileSize)) 
+			&& (this->GETy() >= ghost[l]->GETy()) && (this->GETy() <= (ghost[l]->GETy() + tileSize))) {
+			hit = true;
+			break;
+		}
+		// pacman bas et ghost haut
+		else if (((this->GETy()) >= ghost[l]->GETy()) && ((this->GETy()) <= (ghost[l]->GETy() + tileSize)) 
+			&& (this->GETx() >= ghost[l]->GETx()) && (this->GETx() <= (ghost[l]->GETx() + tileSize))){
+			hit = true;
+			break;
+		}
+		// pacman droite et ghost gauche
+		else if (((this->GETx()) >= ghost[l]->GETx()) && ((this->GETx()) <= (ghost[l]->GETx() + tileSize))
+			&& (this->GETy() >= ghost[l]->GETy()) && (this->GETy() <= (ghost[l]->GETy() + tileSize))) {
+			hit = true;
+			break;
+		}
+		// pacman haut et ghost bas
+		else if (((this->GETy() + tileSize) >= ghost[l]->GETy()) && ((this->GETy() + tileSize) <= (ghost[l]->GETy() + tileSize)) 
+			&& (this->GETx() >= ghost[l]->GETx()) && (this->GETx() <= (ghost[l]->GETx() + tileSize))) {
+			hit = true;
+			break;
+		}
+	}
+	if (hit) {
+		if (this->GETinvincible()) {
+			ghost[l]->SETx(SCREEN_WIDTH / 2);
+			ghost[l]->SETy(SCREEN_HEIGHT / 2);
+			this->SETvalue(this->GETvalue() + ghost1);
+		}
+		else {
+			this->SETx(SCREEN_WIDTH / 2);
+			this->SETy(SCREEN_HEIGHT / 2);
+			_life--;
+		}
+	}
+}
 
 void Pacman::afficherStats(sysinfo& information) {
 	writetxt(information, blended, to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
@@ -315,7 +356,7 @@ void Pacman::afficherStats(sysinfo& information) {
 	writetxt(information, shaded, "PowerUP : " + to_string(_powerUP), { 255, 0, 0, 255 }, White, 32, 0, 300);
 }
 
-void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {
+void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
 	for (unsigned int i = 0; i < tabTexture.size(); i++) {
 		switch (this->GETcurrentHeading()) {
 		case UP:
@@ -516,7 +557,7 @@ int Ghost::tryToMove(tile map[], unsigned int pos) {
 
 	return Not_Valid;
 }
-void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) {
+void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
 	std::string ghost = "";
 	std::vector<std::string> ghostName;
 	ghostName.push_back("Red"); ghostName.push_back("Blue"); ghostName.push_back("Yellow"); ghostName.push_back("Pink");

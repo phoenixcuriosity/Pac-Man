@@ -51,5 +51,9 @@ typedef struct texture texture;
 typedef struct button button;
 typedef struct sysinfo sysinfo;
 
+class Entity;
+class Pacman;
+class Ghost;
+
 
 #endif

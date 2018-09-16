@@ -138,7 +138,7 @@ void move(sysinfo& information, Pacman& Player) {
 		}
 		for (unsigned int i = 0; i < information.ghost.size(); i++)
 			information.ghost[i]->move(information.map);
-		Player.move(information.map);
+		Player.move(information.map, information.ghost);
 	}
 }
 

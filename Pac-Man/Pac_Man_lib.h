@@ -54,7 +54,7 @@ enum { UP, LEFT, DOWN, RIGHT };
 enum { Not_Valid, validCondition, validNextHeading};
 
 enum { nothing, gold, cherry, strawberry, peach, apple, key};
-enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, valuekey = 5000};
+enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, ghost1 = 800, ghost2 = 1600, ghost3 = 3200, ghost4 = 10000,valuekey = 5000};
 
 enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
 enum { selectnothing, pause };	// spécifications de la séléction

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8a
+	last modification on this file on version:0.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,7 +35,7 @@ public:
 	Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value = 0);
 	~Entity();
 
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture) = 0;
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
 
 	std::string GETname()const;
 	unsigned int GETx()const;
@@ -80,16 +80,17 @@ private:
 class Pacman : public Entity {
 public:
 	Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
-	Pacman(Pacman& player);
+	Pacman(const Pacman& player);
 	~Pacman();
 
-	int move(tile map[], unsigned int secondLoop = -1);
+	int move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
 	unsigned int search(tile map[]);
 	void value(tile map[], bool validMove);
 	int tryToMove(tile map[], unsigned int pos);
+	void collideGhost(std::vector<Ghost*>& ghost);
 
 	void afficherStats(sysinfo& information);
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 
 	unsigned int GETlife()const;
 	unsigned int GETpowerUP()const;
@@ -115,7 +116,7 @@ public:
 	unsigned int search(tile map[]);
 	int tryToMove(tile map[], unsigned int pos);
 
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture);
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 
 	unsigned int GETtype()const;
 	void SETtype(unsigned int type);

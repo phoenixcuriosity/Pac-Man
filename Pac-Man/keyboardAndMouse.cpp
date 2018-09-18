@@ -41,7 +41,6 @@ void mouse(sysinfo& information, SDL_Event event) {
 
 }
 void cliqueGauche(sysinfo& information, SDL_Event event) {
-	
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	
 	switch (information.variable.statescreen) {

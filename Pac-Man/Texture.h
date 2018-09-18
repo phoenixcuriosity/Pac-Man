@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8a
+	last modification on this file on version:0.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -65,20 +65,19 @@ public:
 
 	virtual SDL_Texture* GETtexture() const;
 	virtual SDL_Rect GETdst()const;
+	virtual int GETdstx()const;
+	virtual int GETdsty()const;
+	virtual int GETdstw()const;
+	virtual int GETdsth()const;
 	virtual std::string GETname() const;
 	virtual unsigned int GETstatescreen() const;
 	virtual unsigned int GETselect()const;
-	virtual int GETxc() const;
-	virtual int GETyc() const;
-	virtual int GETw() const;
-	virtual int GETh() const;
+	
 
 	virtual void SETdstx(int x);
 	virtual void SETdsty(int y);
-	virtual void SETxc(int xc);
-	virtual void SETyc(int yc);
-	virtual void SETw(int w);
-	virtual void SETh(int h);
+	virtual void SETdstw(int w);
+	virtual void SETdsth(int h);
 
 	SDL_Rect rectangle(int xc, int yc, int w, int h);
 
@@ -88,10 +87,6 @@ private:
 	std::string _name;
 	unsigned int _statescreen;
 	unsigned int _select;
-	int _xc;
-	int _yc;
-	int _w;
-	int _h;
 };
 
 

@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -33,12 +33,11 @@ void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
 
 void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
-	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt = 0);
+	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt = 0);
 void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg,
 	SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
 void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
 	SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
-void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton);
 void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color,
 	SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
 void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);

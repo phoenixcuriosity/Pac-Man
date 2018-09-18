@@ -38,6 +38,7 @@ void deleteAll(sysinfo& information){
 	deleteDyTabPlayerAndTextures(information.allTextures.blue, "blue Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.yellow, "yellow Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.pink, "pink Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.miscGhost, "miscGhost Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.collectibles, "collectibles Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.scoreValue, "scoreValue Texture");
 	deleteDyTabPlayerAndTextures(information.allTextures.txtecrantitre, "txtecrantitre Texture"); 

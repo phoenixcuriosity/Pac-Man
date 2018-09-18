@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	last modification on this file on version:0.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -92,7 +92,7 @@ void initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]){
 
 		const std::string fontFile = "arial.ttf";
 
-		for (unsigned int i = 1; i < (unsigned int)80; i++)
+		for (unsigned int i = 1; i < (unsigned int)160; i++)
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
 		logfileconsole("SDL_Init Success");
@@ -116,15 +116,25 @@ SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::s
 	return texture;
 }
 
-void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt) {
+void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select, 
+	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt) {
 
 
-	int xc = 0, yc = 0;
+	int xt = 0, yt = 0, wt = 0, ht = 0;
 	if (x != -1 && y != -1)
-		xc = x, yc = y;
+		xt = x, yt = y;
 
 	SDL_Texture* newTexture = NULL;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (w == 0 && h == 0) {
+		wt = loadedSurface->w;
+		ht = loadedSurface->h;
+	}
+	else {
+		wt = w;
+		ht = h;
+	}
+
 	if (loadedSurface != NULL) {
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
@@ -133,8 +143,8 @@ void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsig
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 					logSDLError(cout, "alpha : ");
 			}
-			centrage(xc, yc, loadedSurface->w, loadedSurface->h, cnt);
-			tabTexture.push_back(new Texture(newTexture, msg, statescreen, select, xc, yc, loadedSurface->w, loadedSurface->h));
+			centrage(xt, yt, wt, ht, cnt);
+			tabTexture.push_back(new Texture(newTexture, msg, statescreen, select, xt, yt, wt, ht));
 		}
 		else
 			logfileconsole("___________ERROR : loadImage : cannot create Texture from : " + path);
@@ -152,10 +162,10 @@ void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsig
 	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
 
-void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton) {
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int cnt) {
 	int iW = 0, iH = 0;
 	unsigned int i = 0;
-	int xc = 0, yc = 0;
+
 	SDL_Texture *image = nullptr;
 	SDL_Texture *imageOn = nullptr;
 
@@ -167,37 +177,12 @@ void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsign
 			image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 			imageOn = renderText(information.ecran.renderer, type, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
 			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-			searchcenter(x, y, xc, yc, iW, iH, centerbutton);
-			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH, imageOn, x, y, size, color, backcolor));
+			centrage(x, y, iW, iH, cnt);
+			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, x, y, iW, iH, imageOn, color, backcolor));
 
 			logfileconsole("Create Button n:" + to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
 			break;
 		}
-	}
-}
-
-void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton) {
-	switch (centerbutton) {
-	case nocenter:
-		xc = x + iW / 2;
-		yc = y + iH / 2;
-		break;
-	case center_x:
-		xc = x;
-		yc = y + iH / 2;
-		x = x - iW / 2;
-		break;
-	case center_y:
-		xc = x + iW / 2;
-		yc = y;
-		y = y - iH / 2;
-		break;
-	case center:
-		xc = x;
-		yc = y;
-		x = x - iW / 2;
-		y = y - iH / 2;
-		break;
 	}
 }
 

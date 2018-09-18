@@ -68,7 +68,7 @@ void initGrid(sysinfo& information) {
 	unsigned int space = 0;
 	// ouverture
 	initTile(information.map[12], false, nothing);
-	//initTile(information.map[612], false, nothing);
+	initTile(information.map[612], false, nothing);
 
 	// 
 	initTile(information.map[26], false, cherry);
@@ -141,9 +141,12 @@ void calculimage(sysinfo& information) {
 	string IPath = "image/";
 
 	information.variable.statescreen = STATEplay;
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select, IPath + "map.png", "map.png", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "map.png", "map.png", (Uint8)255, -1, -1, NULL, NULL);
 
 
 
@@ -154,7 +157,8 @@ void calculimage(sysinfo& information) {
 
 	for (unsigned int i = 0; i < Pos.size(); i++) {
 		for (unsigned int j = 1; j < 3; j++)
-			loadImage(information.ecran.renderer, information.allTextures.pacman, information.variable.statescreen, information.variable.select, IPath + "pacman/pacman_" + Pos[i] + "_" + to_string(j) + ".png", "pacman_" + Pos[i] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
+			loadImage(information.ecran.renderer, information.allTextures.pacman, information.variable.statescreen, information.variable.select,
+				IPath + "pacman/pacman_" + Pos[i] + "_" + to_string(j) + ".png", "pacman_" + Pos[i] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 	}
 
 	for (unsigned int i = 0; i < ghostName.size(); i++) {
@@ -164,22 +168,22 @@ void calculimage(sysinfo& information) {
 				case 0:
 					loadImage(information.ecran.renderer, information.allTextures.red, information.variable.statescreen,
 						information.variable.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png",
-						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
+						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 					break;
 				case 1:
 					loadImage(information.ecran.renderer, information.allTextures.blue, information.variable.statescreen,
 						information.variable.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png",
-						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
+						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 					break;
 				case 2:
 					loadImage(information.ecran.renderer, information.allTextures.yellow, information.variable.statescreen,
 						information.variable.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png",
-						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
+						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 					break;
 				case 3:
 					loadImage(information.ecran.renderer, information.allTextures.pink, information.variable.statescreen,
 						information.variable.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png",
-						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1);
+						ghostName[i] + "_" + Pos[k] + "_" + to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 					break;
 				}
 
@@ -187,42 +191,71 @@ void calculimage(sysinfo& information) {
 			}
 		}
 	}
+	loadImage(information.ecran.renderer, information.allTextures.miscGhost, information.variable.statescreen, information.variable.select,
+		IPath + "Ghost/not_Invincible.png", "not_Invincible.png", (Uint8)255, -1, -1, tileSize, tileSize);
 
-	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/gold.bmp", "gold.bmp", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/peach.png", "peach.png", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/apple.png", "apple.png", (Uint8)255, -1, -1);
-	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select, IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+		IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+		IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+		IPath + "collectibles/lemon.png", "lemon.png", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+		IPath + "collectibles/pear.png", "pear.png", (Uint8)255, -1, -1, tileSize, tileSize);
+	loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+		IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1, tileSize, tileSize);
 
 
 	information.variable.statescreen = STATEecrantitre;
-	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2, center);
-	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2 + 400, center);
-	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2, center);
-	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 + 400, center);
-	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, IPath + "ecrantitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, center);
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select, 
+		IPath + "ecrantitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2, NULL, NULL, center);
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+		IPath + "ecrantitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2 + 400, NULL, NULL, center);
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+		IPath + "ecrantitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2, NULL, NULL, center);
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+		IPath + "ecrantitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 + 400, NULL, NULL, center);
+	loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+		IPath + "ecrantitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
 	int spacemenu = 64, initspacemenu = 400;
 
 	// ______Buttons_____
 	information.variable.statescreen = STATEecrantitre;
-	createbutton(information, information.allButton.buttonecrantitre, shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
-	createbutton(information, information.allButton.buttonecrantitre, shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	createbutton(information, information.allButton.buttonecrantitre, shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	createbutton(information, information.allButton.buttonecrantitre, shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre,
+		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre,
+		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre,
+		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	createbutton(information, information.allButton.buttonecrantitre, 
+		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	
 	information.variable.statescreen = STATEplay;
-	createbutton(information, information.allButton.buttonplay, shaded, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
-	createbutton(information, information.allButton.buttonplay, shaded, "Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
-	createbutton(information, information.allButton.buttonplay, shaded, "Initial Grid", WriteColorButton, BackColorButton, 32, 0, 64);
+	createbutton(information, information.allButton.buttonplay, shaded,
+		"Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
+	createbutton(information, information.allButton.buttonplay, shaded,
+		"Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
+	createbutton(information, information.allButton.buttonplay, shaded,
+		"Initial Grid", WriteColorButton, BackColorButton, 32, 0, 64);
 
 	// ______Writetxt_____ 
 	information.variable.statescreen = STATEecrantitre;
-	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0);
-	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30);
-	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
-	loadwritetxt(information, information.allTextures.txtecrantitre, blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, center_x);
+	loadwritetxt(information, information.allTextures.txtecrantitre,
+		blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0);
+	loadwritetxt(information, information.allTextures.txtecrantitre,
+		blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30);
+	loadwritetxt(information, information.allTextures.txtecrantitre,
+		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
+	loadwritetxt(information, information.allTextures.txtecrantitre,
+		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, center_x);
+	
 	information.variable.statescreen = STATEplay;
-	loadwritetxt(information, information.allTextures.txtplay, blended, "Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, center_x);
+	loadwritetxt(information, information.allTextures.txtplay, blended,
+		"Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, center_x);
+	loadwritetxt(information, information.allTextures.txtplay, blended,
+		"YOU DIED", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, center);
 
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1);
 	loadwritetxt(information, information.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);

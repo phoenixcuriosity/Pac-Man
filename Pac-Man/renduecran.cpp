@@ -83,8 +83,9 @@ void alwaysrender(sysinfo& information, Pacman& player){
 			
 
 		for (unsigned int i = 0; i < information.allTextures.txtplay.size(); i++) {
-			information.allTextures.txtplay[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen);
-
+			information.allTextures.txtplay[i]->renderTextureTestString(information.ecran.renderer, "Your Score");
+			if (player.GETlife() == 0)
+				information.allTextures.txtplay[i]->renderTextureTestString(information.ecran.renderer, "YOU DIED");
 		}
 
 
@@ -93,14 +94,16 @@ void alwaysrender(sysinfo& information, Pacman& player){
 		player.afficher(information.ecran.renderer, information.allTextures.pacman);
 		for (unsigned int i = 0; i < information.ghost.size(); i++) {
 			if(i == red)
-				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.red);
+				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.red, information.allTextures.miscGhost);
 			else if(i == blue)
-				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.blue);
+				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.blue, information.allTextures.miscGhost);
 			else if(i == yellow)
-				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.yellow);
+				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.yellow, information.allTextures.miscGhost);
 			else
-				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.pink);
+				information.ghost[i]->afficher(information.ecran.renderer, information.allTextures.pink, information.allTextures.miscGhost);
 		}
+		
+
 
 
 		
@@ -146,25 +149,25 @@ void afficherMap(sysinfo& information) {
 	/*
 		à utiliser si besoin de changer la map
 		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
-
+		
 	unsigned int k = 0;
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
 			if (information.map[k].wall)
-				information.allTextures.ground[1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+				information.allTextures.ground[blackTile]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			else {
-				information.allTextures.ground[0]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+				information.allTextures.ground[whiteTile]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 				if(information.map[k].entity != nothing)
 					information.allTextures.collectibles[information.map[k].entity - 1]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 			}
 			k++;
 		}
 	}
-	
 	*/
+	
 
 	unsigned int k = 0;
-	information.allTextures.ground[2]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
+	information.allTextures.ground[mapTile]->render(information.ecran.renderer, information.map[k].tile_x, information.map[k].tile_y);
 
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
@@ -173,4 +176,5 @@ void afficherMap(sysinfo& information) {
 			k++;
 		}
 	}
+
 }

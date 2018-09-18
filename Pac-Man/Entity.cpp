@@ -28,12 +28,65 @@ using namespace std;
 
 Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value)
 	: _name(name), _x(x), _y(y), _value(value), _xc(x + tileSize / 2),
-	_yc(y + tileSize / 2),  _currentHeading(currentHeading), _nextHeading(nextHeading), _invincible(false)
+	_yc(y + tileSize / 2),  _currentHeading(currentHeading), _nextHeading(nextHeading), _invincible(true), _timeInvincible(tempoInvincible)
 {
 }
 
 Entity::~Entity()
 {
+}
+
+int Entity::tryToMove(tile map[], unsigned int pos) {
+	unsigned int nextTile = 0;
+
+	switch (pos) {
+	case UP:
+		nextTile = this->GETtile() - 1;
+		if (map[nextTile].wall) {
+			if (this->GETy() - vitesse >= (map[nextTile].tile_y + tileSize))
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	case LEFT:
+		nextTile = this->GETtile() - mapHeight;
+		if (map[nextTile].wall) {
+			if (this->GETx() - vitesse >= (map[nextTile].tile_x + tileSize))
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	case DOWN:
+		nextTile = this->GETtile() + 1;
+		if (map[nextTile].wall) {
+			if (((this->GETy() + tileSize) + vitesse) <= map[nextTile].tile_y)
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	case RIGHT:
+		nextTile = this->GETtile() + mapHeight;
+		if (map[nextTile].wall) {
+			if (((this->GETx() + tileSize) + vitesse) <= map[nextTile].tile_x)
+				return 1;
+			else
+				return 0;
+		}
+		else
+			return 1;
+		break;
+	}
+
+	return Not_Valid;
 }
 
 string Entity::GETname()const {
@@ -65,6 +118,9 @@ bool Entity::GETalternateSkin()const {
 }
 bool Entity::GETinvincible()const {
 	return _invincible;
+}
+unsigned int Entity::GETtimeInvincible()const {
+	return _timeInvincible;
 }
 unsigned int Entity::GETvalue()const {
 	return _value;
@@ -99,6 +155,9 @@ void Entity::SETalternateSkin(bool alternateSkin) {
 }
 void Entity::SETinvincible(bool invincible) {
 	_invincible = invincible;
+}
+void Entity::SETtimeInvincible(unsigned int timeInvincible) {
+	_timeInvincible = timeInvincible;
 }
 void Entity::SETvalue(unsigned int value) {
 	_value = value;
@@ -159,11 +218,24 @@ int Pacman::move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop
 		}
 	}
 
+	if (this->GETinvincible()) {
+		if (this->GETtimeInvincible() > 0)
+			this->SETtimeInvincible(this->GETtimeInvincible() - 1);
+		else {
+			this->SETtimeInvincible(tempoInvincible);
+			this->SETinvincible(false);
+			for (unsigned int i = 0; i < ghost.size(); i++)
+				ghost[i]->SETinvincible(true);
+		}
+	}
 	value(map, validMove);
-	if (_powerUP == 4) {
+	if (_powerUP) {
 		this->SETinvincible(true);
+		for (unsigned int i = 0; i < ghost.size(); i++)
+			ghost[i]->SETinvincible(false);
 		_powerUP = 0;
 	}
+	
 	
 	if (validMove) {
 		switch (pos) {
@@ -182,6 +254,10 @@ int Pacman::move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop
 		}
 		collideGhost(ghost);
 	}
+	if (this->GETx() <= 592 && this->GETy() == 544) 
+		this->SETx(1306);
+	else if (this->GETx() >= 1328 && this->GETy() == 544) 
+		this->SETx(594);
 	return 0;
 }
 
@@ -255,58 +331,6 @@ void Pacman::value(tile map[], bool validMove) {
 	}
 }
 
-int Pacman::tryToMove(tile map[], unsigned int pos) {
-	unsigned int nextTile = 0;
-	
-	switch (pos) {
-	case UP:
-		nextTile = this->GETtile() - 1;
-		if (map[nextTile].wall) {
-			if (this->GETy() - vitesse >= (map[nextTile].tile_y + tileSize))
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	case LEFT:
-		nextTile = this->GETtile() - mapHeight;
-		if (map[nextTile].wall) {
-			if (this->GETx() - vitesse >= (map[nextTile].tile_x + tileSize))
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	case DOWN:
-		nextTile = this->GETtile() + 1;
-		if (map[nextTile].wall) {
-			if (((this->GETy() + tileSize) + vitesse) <= map[nextTile].tile_y)
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	case RIGHT:
-		nextTile = this->GETtile() + mapHeight;
-		if (map[nextTile].wall) {
-			if (((this->GETx() + tileSize) + vitesse) <= map[nextTile].tile_x)
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	}
-
-	return Not_Valid;
-}
 void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 	bool hit = false;
 	unsigned int l = 0;
@@ -340,20 +364,24 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 		if (this->GETinvincible()) {
 			ghost[l]->SETx(SCREEN_WIDTH / 2);
 			ghost[l]->SETy(SCREEN_HEIGHT / 2);
+			ghost[l]->SETinvincible(true);
 			this->SETvalue(this->GETvalue() + ghost1);
 		}
 		else {
 			this->SETx(SCREEN_WIDTH / 2);
 			this->SETy(SCREEN_HEIGHT / 2);
-			_life--;
+			if(_life > 0)
+				_life--;
 		}
 	}
 }
 
 void Pacman::afficherStats(sysinfo& information) {
 	writetxt(information, blended, to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
-	writetxt(information, shaded, "Life remaining : " + to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
-	writetxt(information, shaded, "PowerUP : " + to_string(_powerUP), { 255, 0, 0, 255 }, White, 32, 0, 300);
+	writetxt(information, shaded, "Remaining life  : " + to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
+	writetxt(information, blended, to_string(this->GETx()) + " , " + to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
+	if(this->GETinvincible())
+		writetxt(information, blended, "Remaining time Invincible : " + to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
 }
 
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
@@ -474,6 +502,10 @@ int Ghost::move(tile map[], unsigned int secondLoop) {
 			break;
 		}
 	}
+	if (this->GETx() <= 592 && this->GETy() == 544)
+		this->SETx(1306);
+	else if (this->GETx() >= 1328 && this->GETy() == 544)
+		this->SETx(594);
 
 	return 0;
 }
@@ -488,7 +520,6 @@ unsigned int Ghost::search(tile map[]) {
 						this->SETtile(k);
 						condition = validNextHeading;
 						return condition;
-						break;
 					}
 				}
 			}
@@ -505,89 +536,48 @@ unsigned int Ghost::search(tile map[]) {
 	return condition;
 }
 
-int Ghost::tryToMove(tile map[], unsigned int pos) {
-	unsigned nextTile = 0;
-
-	switch (pos) {
-	case UP:
-		nextTile = this->GETtile() - 1;
-		if (map[nextTile].wall) {
-			if (this->GETy() - vitesse >= (map[nextTile].tile_y + tileSize))
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	case LEFT:
-		nextTile = this->GETtile() - mapHeight;
-		if (map[nextTile].wall) {
-			if (this->GETx() - vitesse >= (map[nextTile].tile_x + tileSize))
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	case DOWN:
-		nextTile = this->GETtile() + 1;
-		if (map[nextTile].wall) {
-			if (((this->GETy() + tileSize) + vitesse) <= map[nextTile].tile_y)
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	case RIGHT:
-		nextTile = this->GETtile() + mapHeight;
-		if (map[nextTile].wall) {
-			if (((this->GETx() + tileSize) + vitesse) <= map[nextTile].tile_x)
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 1;
-		break;
-	}
-
-	return Not_Valid;
-}
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
+
+}
+
+void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc) {
 	std::string ghost = "";
 	std::vector<std::string> ghostName;
 	ghostName.push_back("Red"); ghostName.push_back("Blue"); ghostName.push_back("Yellow"); ghostName.push_back("Pink");
 
-	for (unsigned int i = 0; i < tabTexture.size(); i++) {
-		switch (this->GETcurrentHeading()) {
-		case UP:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_2.png", this->GETx(), this->GETy());
-			break;
-		case LEFT:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_2.png", this->GETx(), this->GETy());
-			break;
-		case DOWN:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_2.png", this->GETx(), this->GETy());
-			break;
-		case RIGHT:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_2.png", this->GETx(), this->GETy());
-			break;
+	if (this->GETinvincible()) {
+		for (unsigned int i = 0; i < tabTexture.size(); i++) {
+			switch (this->GETcurrentHeading()) {
+			case UP:
+				if (this->GETalternateSkin())
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_1.png", this->GETx(), this->GETy());
+				else
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_2.png", this->GETx(), this->GETy());
+				break;
+			case LEFT:
+				if (this->GETalternateSkin())
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_1.png", this->GETx(), this->GETy());
+				else
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_2.png", this->GETx(), this->GETy());
+				break;
+			case DOWN:
+				if (this->GETalternateSkin())
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_1.png", this->GETx(), this->GETy());
+				else
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_2.png", this->GETx(), this->GETy());
+				break;
+			case RIGHT:
+				if (this->GETalternateSkin())
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_1.png", this->GETx(), this->GETy());
+				else
+					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_2.png", this->GETx(), this->GETy());
+				break;
+			}
+		}
+	}
+	else{
+		for (unsigned int i = 0; i < misc.size(); i++) {
+			misc[i]->renderTextureTestString(renderer, "not_Invincible.png", this->GETx(), this->GETy());
 		}
 	}
 }

@@ -12,7 +12,7 @@ Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 Create Button n:1 msg = Pause Success
 Create Button n:2 msg = Initial Grid Success
-temps d'execution de calculimage : 0.206000
+temps d'execution de calculimage : 0.147000
 _calculimage End_
 _Ecrantitres Start_
 _Ecrantitres End_
@@ -31,8 +31,8 @@ Pink is dead
 _mainLoop End_
 Pacman is dead
 *********_________ Start DeleteAll _________*********
-Delete ground Texture name = White.bmp Success
 Delete ground Texture name = Black.bmp Success
+Delete ground Texture name = White.bmp Success
 Delete ground Texture name = map.png Success
 Delete ALL ground Texture Success
 Delete pacman Texture name = pacman_U_1.png Success
@@ -80,11 +80,13 @@ Delete pink Texture name = Pink_L_2.png Success
 Delete pink Texture name = Pink_D_2.png Success
 Delete pink Texture name = Pink_R_2.png Success
 Delete ALL pink Texture Success
-Delete collectibles Texture name = gold.bmp Success
+Delete miscGhost Texture name = not_Invincible.png Success
+Delete ALL miscGhost Texture Success
+Delete collectibles Texture name = gold.png Success
 Delete collectibles Texture name = cherry.png Success
 Delete collectibles Texture name = strawberry.png Success
-Delete collectibles Texture name = peach.png Success
-Delete collectibles Texture name = apple.png Success
+Delete collectibles Texture name = lemon.png Success
+Delete collectibles Texture name = pear.png Success
 Delete collectibles Texture name = key.png Success
 Delete ALL collectibles Texture Success
 Delete scoreValue Texture name = 100 Success
@@ -100,6 +102,7 @@ Delete txtecrantitre Texture name = New Super Pac-Man Plus DELUX Pro Turbo Editi
 Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!! Success
 Delete ALL txtecrantitre Texture Success
 Delete txtplay Texture name = Your Score Success
+Delete txtplay Texture name = YOU DIED Success
 Delete ALL txtplay Texture Success
 Delete imgecrantitre Texture name = linux.jpg Success
 Delete imgecrantitre Texture name = c++.jpg Success

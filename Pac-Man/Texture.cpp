@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8a
+	last modification on this file on version:0.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -28,8 +28,8 @@
 using namespace std;
 
 
-Texture::Texture(SDL_Texture* image, const string& msg, unsigned int statescreen, unsigned int select, unsigned int xc, unsigned int yc, int w, int h)
-	: _texture(image), _dst(rectangle(xc,yc,w,h)),_name(msg), _statescreen(statescreen), _select(select), _xc(xc), _yc(yc), _w(w), _h(h)
+Texture::Texture(SDL_Texture* image, const string& msg, unsigned int statescreen, unsigned int select, unsigned int x, unsigned int y, int w, int h)
+	: _texture(image), _dst(rectangle(x,y,w,h)),_name(msg), _statescreen(statescreen), _select(select)
 {
 }
 
@@ -41,39 +41,39 @@ Texture::~Texture() {
 }
 
 
-SDL_Rect Texture::rectangle(int xc, int yc, int w, int h){
+SDL_Rect Texture::rectangle(int x, int y, int w, int h){
 	SDL_Rect rectangle;
-	rectangle.x = xc;
-	rectangle.y = yc;
+	rectangle.x = x;
+	rectangle.y = y;
 	rectangle.w = w;
 	rectangle.h = h;
 	return rectangle;
 }
 
 
-void Texture::render(SDL_Renderer*& renderer, int xc, int yc) {
-	if (xc != -1 && yc != -1) {
-		_dst.x = xc;
-		_dst.y = yc;
+void Texture::render(SDL_Renderer*& renderer, int x, int y) {
+	if (x != -1 && y != -1) {
+		_dst.x = x;
+		_dst.y = y;
 	}
 	SDL_RenderCopy(renderer, _texture, NULL, &_dst);
 }
 
-void Texture::renderTexture(SDL_Renderer*& renderer, int xc, int yc) {
-	render(renderer, xc, yc);
+void Texture::renderTexture(SDL_Renderer*& renderer, int x, int y) {
+	render(renderer, x, y);
 }
 
-void Texture::renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, int xc, int yc) {
+void Texture::renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, int x, int y) {
 	if (_statescreen == statescreen)
-		render(renderer, xc, yc);
+		render(renderer, x, y);
 }
 
-void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, int xc, int yc, unsigned int angle) {
+void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, int x, int y, unsigned int angle) {
 	if (_statescreen == statescreen) {
-		if (xc != -1 && yc != -1) {
-		_dst.x = xc;
-		_dst.y = yc;
-	}
+		if (x != -1 && y != -1) {
+			_dst.x = x;
+			_dst.y = y;
+		}
 		SDL_RenderCopyEx(renderer, _texture, NULL, &_dst, angle, NULL, SDL_FLIP_NONE);
 	}
 }
@@ -112,6 +112,18 @@ SDL_Texture* Texture::GETtexture() const{
 SDL_Rect Texture::GETdst()const {
 	return _dst;
 }
+int Texture::GETdstx()const {
+	return _dst.x;
+}
+int Texture::GETdsty()const {
+	return _dst.y;
+}
+int Texture::GETdstw()const {
+	return _dst.w;
+}
+int Texture::GETdsth()const {
+	return _dst.h;
+}
 string Texture::GETname() const{
 	return _name;
 }
@@ -121,18 +133,6 @@ unsigned int Texture::GETstatescreen() const {
 unsigned int Texture::GETselect() const {
 	return _select;
 }
-int Texture::GETxc() const {
-	return _xc;
-}
-int Texture::GETyc() const {
-	return _yc;
-}
-int Texture::GETw() const {
-	return _w;
-}
-int Texture::GETh() const {
-	return _h;
-}
 
 
 void Texture::SETdstx(int x) {
@@ -141,15 +141,10 @@ void Texture::SETdstx(int x) {
 void Texture::SETdsty(int y) {
 	_dst.y = y;
 }
-void Texture::SETxc(int xc) {
-	_xc = xc;
+void Texture::SETdstw(int w) {
+	_dst.w = w;
 }
-void Texture::SETyc(int yc) {
-	_yc = yc;
+void Texture::SETdsth(int h) {
+	_dst.h = h;
 }
-void Texture::SETw(int w) {
-	_w = w;
-}
-void Texture::SETh(int h) {
-	_h = h;
-}
+

@@ -35,7 +35,8 @@ const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
 const int mapHeight = 25;
 const int mapLength = 25;
-const unsigned int vitesse = 1;
+const unsigned int vitesse = 2;
+const unsigned int tempoInvincible = 600;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -47,7 +48,8 @@ const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 const SDL_Color NoColor = { 0, 0, 0, 0 };
 
 enum { normal, blended, shaded};
-enum { nocenter, center_x, center_y, center };
+enum { nocenter, center_x, center_y, center }; // centrage des textures et boutons
+enum { blackTile, whiteTile, mapTile}; // allTexture.ground
 
 enum { red, blue, yellow, pink};
 enum { UP, LEFT, DOWN, RIGHT };
@@ -111,6 +113,7 @@ struct texture {
 	std::vector<Texture*> blue;
 	std::vector<Texture*> yellow;
 	std::vector<Texture*> pink;
+	std::vector<Texture*> miscGhost;
 	std::vector<Texture*> collectibles;
 	std::vector<Texture*> scoreValue;
 
@@ -118,7 +121,7 @@ struct texture {
 	std::vector<Texture*> txtecrantitre;
 	std::vector<Texture*> txtplay;
 
-	TTF_Font *font[80];
+	TTF_Font *font[160];
 };
 
 struct button {

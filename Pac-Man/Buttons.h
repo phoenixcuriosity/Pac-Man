@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.1
+	last modification on this file on version:0.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -54,8 +54,8 @@
 class Buttons : public Texture {
 public:
 	Buttons() {};
-	Buttons(SDL_Texture*, const std::string&, unsigned int, unsigned int, int, int, int, int,
-		SDL_Texture*, int, int, int, SDL_Color, SDL_Color, bool = false);
+	Buttons(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, int x, int y, int w, int h,
+		SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on = false);
 	~Buttons();
 
 	virtual unsigned int testcolor(SDL_Color, SDL_Color) const;
@@ -70,9 +70,6 @@ public:
 	virtual void changeOn();
 
 	virtual SDL_Texture* GETimageOn() const;
-	virtual int GETx() const;
-	virtual int GETy() const;
-	virtual int GETsize() const;
 	virtual SDL_Color GETtxtcolor() const;
 	virtual SDL_Color GETbackcolor() const;
 	virtual bool GETon() const;
@@ -81,9 +78,6 @@ public:
 
 private:
 	SDL_Texture* _imageOn;
-	int _x;
-	int _y;
-	int _size;
 	SDL_Color _txtcolor;
 	SDL_Color _backcolor;
 	bool _on;

@@ -35,6 +35,8 @@ public:
 	Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value = 0);
 	~Entity();
 
+	
+	int tryToMove(tile map[], unsigned int pos);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
 
 	std::string GETname()const;
@@ -47,6 +49,7 @@ public:
 	unsigned int GETnextHeading()const;
 	bool GETalternateSkin()const;
 	bool GETinvincible()const;
+	unsigned int GETtimeInvincible()const;
 	unsigned int GETvalue()const;
 
 	void SETname(std::string name);
@@ -59,6 +62,7 @@ public:
 	void SETnextHeading(unsigned int);
 	void SETalternateSkin(bool);
 	void SETinvincible(bool);
+	void SETtimeInvincible(unsigned int);
 	void SETvalue(unsigned int value);
 
 private:
@@ -74,6 +78,7 @@ private:
 	bool _alternateSkin;
 
 	bool _invincible;
+	unsigned int _timeInvincible;
 	unsigned int _value;
 };
 
@@ -86,11 +91,11 @@ public:
 	int move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
 	unsigned int search(tile map[]);
 	void value(tile map[], bool validMove);
-	int tryToMove(tile map[], unsigned int pos);
 	void collideGhost(std::vector<Ghost*>& ghost);
 
 	void afficherStats(sysinfo& information);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
+	
 
 	unsigned int GETlife()const;
 	unsigned int GETpowerUP()const;
@@ -114,9 +119,8 @@ public:
 
 	int move(tile map[], unsigned int secondLoop = -1);
 	unsigned int search(tile map[]);
-	int tryToMove(tile map[], unsigned int pos);
-
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc);
 
 	unsigned int GETtype()const;
 	void SETtype(unsigned int type);

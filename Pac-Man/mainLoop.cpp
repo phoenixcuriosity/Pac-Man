@@ -66,7 +66,10 @@ void mainLoop(sysinfo& information) {
 
 	int SDL_EnableUNICODE(1); // on azerty
 
+	//clock_t t1, t2;
 	while (information.variable.continuer) {
+		
+		//t1 = clock();
 		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_QUIT:	// permet de quitter le jeu
@@ -104,6 +107,8 @@ void mainLoop(sysinfo& information) {
 		}
 		move(information, Player);
 		alwaysrender(information, Player);
+		//t2 = clock();
+		//cout << endl << "temps d'execution d'une boucle : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	}
 
 	for (unsigned int i = 0; i < information.ghost.size(); i++)
@@ -139,6 +144,8 @@ void move(sysinfo& information, Pacman& Player) {
 		for (unsigned int i = 0; i < information.ghost.size(); i++)
 			information.ghost[i]->move(information.map);
 		Player.move(information.map, information.ghost);
+		if(Player.GETlife() == 0)
+			information.variable.select = pause;
 	}
 }
 

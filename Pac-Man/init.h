@@ -27,6 +27,9 @@
 #include "lib.h"
 
 void initfile(sysinfo& information);
+void logfileconsole(const std::string &msg);
+void logSDLError(std::ostream &os, const std::string &msg);
+void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 void initGrid(sysinfo& information);
 void calculimage(sysinfo&);
 

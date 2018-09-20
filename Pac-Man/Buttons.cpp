@@ -22,7 +22,7 @@
 */
 
 #include "Buttons.h"
-#include "sdl.h"
+#include "init.h"
 #include "mainLoop.h"
 
 using namespace std;
@@ -43,8 +43,29 @@ Buttons::~Buttons() {
 	}
 }
 
+void Buttons::createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int cnt) {
+	int iW = 0, iH = 0;
+	unsigned int i = 0;
 
+	SDL_Texture *image = nullptr;
+	SDL_Texture *imageOn = nullptr;
 
+	if (tabbutton.size() > 0) {
+		i++;
+	}
+	for (i; i <= tabbutton.size(); i++) {
+		if (i == tabbutton.size()) {
+			image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
+			imageOn = renderText(information.ecran.renderer, type, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
+			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+			centrage(x, y, iW, iH, cnt);
+			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, x, y, iW, iH, imageOn, color, backcolor));
+
+			logfileconsole("Create Button n:" + to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
+			break;
+		}
+	}
+}
 
 
 unsigned int Buttons::testcolor(SDL_Color txt, SDL_Color back) const {

@@ -23,12 +23,12 @@
 
 
 #include "Texture.h"
-#include "sdl.h"
+#include "Pac_Man_lib.h"
 
 using namespace std;
 
 
-Texture::Texture(SDL_Texture* image, const string& msg, unsigned int statescreen, unsigned int select, unsigned int x, unsigned int y, int w, int h)
+Texture::Texture(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, unsigned int x, unsigned int y, int w, int h)
 	: _texture(image), _dst(rectangle(x,y,w,h)),_name(msg), _statescreen(statescreen), _select(select)
 {
 }
@@ -48,6 +48,107 @@ SDL_Rect Texture::rectangle(int x, int y, int w, int h){
 	rectangle.w = w;
 	rectangle.h = h;
 	return rectangle;
+}
+
+
+
+SDL_Texture* Texture::renderText(SDL_Renderer*& renderer, unsigned int type, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font) {
+	SDL_Surface *surf = nullptr;
+
+	if (type == blended)
+		surf = TTF_RenderText_Blended(font, message.c_str(), color);
+	else if (type == shaded)
+		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
+	if (texture == nullptr)
+		logfileconsole("___________ERROR : renderTextShaded nullptr for : " + message);
+	SDL_FreeSurface(surf);
+	return texture;
+}
+
+void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
+	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt) {
+
+
+	int xt = 0, yt = 0, wt = 0, ht = 0;
+	if (x != -1 && y != -1)
+		xt = x, yt = y;
+
+	SDL_Texture* newTexture = NULL;
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (w == 0 && h == 0) {
+		wt = loadedSurface->w;
+		ht = loadedSurface->h;
+	}
+	else {
+		wt = w;
+		ht = h;
+	}
+
+	if (loadedSurface != NULL) {
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+		if (newTexture != NULL) {
+			if (alpha != (Uint8)255) {
+				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
+					logSDLError(cout, "alpha : ");
+			}
+			centrage(xt, yt, wt, ht, cnt);
+			tabTexture.push_back(new Texture(newTexture, msg, statescreen, select, xt, yt, wt, ht));
+		}
+		else
+			logfileconsole("___________ERROR : loadImage : cannot create Texture from : " + path);
+		SDL_FreeSurface(loadedSurface);
+	}
+	else
+		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
+}
+
+void Texture::loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt) {
+	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
+	int xc = x, yc = y, iW = 0, iH = 0;
+	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+	centrage(xc, yc, iW, iH, cnt);
+	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
+}
+
+
+void Texture::writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt) {
+	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
+	loadAndWriteImage(information.ecran.renderer, image, x, y, cnt);
+	SDL_DestroyTexture(image);
+}
+
+void Texture::loadAndWriteImage(SDL_Renderer*& renderer, SDL_Texture *image, unsigned int x, unsigned int y, int cnt) {
+	int xc = x, yc = y, iW = 0, iH = 0;
+	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+	centrage(xc, yc, iW, iH, cnt);
+
+	SDL_Rect dst;
+	dst.x = xc;
+	dst.y = yc;
+	dst.w = iW;
+	dst.h = iH;
+	SDL_RenderCopy(renderer, image, NULL, &dst);
+}
+
+
+void Texture::centrage(int& xc, int& yc, int iW, int iH, int cnt) {
+	switch (cnt) {
+	case nocenter:
+		break;
+	case center_x:
+		xc = xc - (iW / 2);
+		break;
+	case center_y:
+		yc = yc - (iH / 2);
+		break;
+	case center:
+		xc = xc - (iW / 2);
+		yc = yc - (iH / 2);
+		break;
+	}
 }
 
 

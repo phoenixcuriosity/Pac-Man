@@ -22,7 +22,7 @@
 */
 
 #include "Entity.h"
-#include "sdl.h"
+#include "Pac_Man_lib.h"
 
 using namespace std;
 
@@ -377,11 +377,11 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 }
 
 void Pacman::afficherStats(sysinfo& information) {
-	writetxt(information, blended, to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
-	writetxt(information, shaded, "Remaining life  : " + to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
-	writetxt(information, blended, to_string(this->GETx()) + " , " + to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
+	Texture::writetxt(information, blended, to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
+	Texture::writetxt(information, shaded, "Remaining life  : " + to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
+	Texture::writetxt(information, blended, to_string(this->GETx()) + " , " + to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
 	if(this->GETinvincible())
-		writetxt(information, blended, "Remaining time Invincible : " + to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
+		Texture::writetxt(information, blended, "Remaining time Invincible : " + to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
 }
 
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
@@ -441,7 +441,7 @@ void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 
 
 Ghost::Ghost(string name, unsigned int x, unsigned int y, unsigned int type, unsigned int value)
-	: Entity(name, x, y, UP, UP,value), _type(type)
+	: Entity(name, x, y, UP, RIGHT,value), _type(type)
 {
 	logfileconsole(this->GETname() + " is alive");
 }
@@ -502,10 +502,26 @@ int Ghost::move(tile map[], unsigned int secondLoop) {
 			break;
 		}
 	}
+
+
 	if (this->GETx() <= 592 && this->GETy() == 544)
 		this->SETx(1306);
 	else if (this->GETx() >= 1328 && this->GETy() == 544)
 		this->SETx(594);
+
+
+
+	unsigned int randomNextHeading = 0;
+	randomNextHeading = rand() % 4;
+	bool continuer = true;
+	while (continuer) {
+		if (tryToMove(map, randomNextHeading)) {
+			continuer = false;
+			break;
+		}
+		randomNextHeading = rand() % 4;
+	}
+	this->SETnextHeading(randomNextHeading);
 
 	return 0;
 }
@@ -518,7 +534,10 @@ unsigned int Ghost::search(tile map[]) {
 				if (this->GETx() == map[k].tile_x) {
 					if (this->GETy() == map[k].tile_y) {
 						this->SETtile(k);
-						condition = validNextHeading;
+						if(((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+							condition = validCondition; // évite de changer de revenir en arrière
+						else
+							condition = validNextHeading;
 						return condition;
 					}
 				}

@@ -25,7 +25,7 @@
 #define keyboardAndMouse_H
 
 #include "Pac_Man_lib.h"
-#include "sdl.h"
+#include "init.h"
 #include "Entity.h"
 
 void mouse(sysinfo&, SDL_Event event);

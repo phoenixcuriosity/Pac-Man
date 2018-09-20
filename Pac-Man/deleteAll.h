@@ -25,8 +25,7 @@
 #define deleteAll_H
 
 #include "Pac_Man_lib.h"
-
-#include "sdl.h"
+#include "init.h"
 
 void deleteAll(sysinfo&);
 

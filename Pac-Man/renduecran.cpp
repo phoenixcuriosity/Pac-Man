@@ -22,7 +22,6 @@
 */
 
 #include "renduecran.h"
-#include "sdl.h"
 #include "mainLoop.h"
 
 using namespace std;

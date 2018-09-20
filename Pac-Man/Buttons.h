@@ -28,8 +28,6 @@
 
 	Un Buttons est défini par une image et une imageOn qui sont contenu dans SDL_Texture* de la classe mère et celle-ci 
 	Cet objet hérite de tous les attributs de la classe Texture
-	_x et _y représente forcément le coin haut gauche de la texture du boutons
-	_size représente la taille de la police d'écriture
 	_txtcolor représente la couleur de l'écriture
 	_backcolor représente la couleur du fond du bouton
 	_on représente l'état du bouton l'image est normal ou On
@@ -47,7 +45,6 @@
 #define Buttons_H
 
 #include "Texture.h"
-
 #include "lib.h"
 
 
@@ -57,6 +54,9 @@ public:
 	Buttons(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, int x, int y, int w, int h,
 		SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on = false);
 	~Buttons();
+
+	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
+		SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
 
 	virtual unsigned int testcolor(SDL_Color, SDL_Color) const;
 	virtual unsigned int searchButton(std::string msg, unsigned int statescreen, signed int x, signed int y);

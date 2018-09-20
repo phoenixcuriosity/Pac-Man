@@ -25,7 +25,6 @@
 #include "Pac_Man_lib.h"
 #include "mainLoop.h"
 #include "renduecran.h"
-#include "sdl.h"
 #include "init.h"
 #include "deleteAll.h"
 

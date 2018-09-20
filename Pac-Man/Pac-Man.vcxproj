@@ -27,7 +27,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainLoop.cpp" />
     <ClCompile Include="renduecran.cpp" />
-    <ClCompile Include="sdl.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -40,7 +39,6 @@
     <ClInclude Include="mainLoop.h" />
     <ClInclude Include="Pac_Man_lib.h" />
     <ClInclude Include="renduecran.h" />
-    <ClInclude Include="sdl.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

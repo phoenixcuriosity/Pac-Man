@@ -22,8 +22,6 @@
 */
 
 #include "mainLoop.h"
-
-#include "sdl.h"
 #include "renduecran.h"
 #include "keyboardAndMouse.h"
 #include "Entity.h"
@@ -121,26 +119,6 @@ void move(sysinfo& information, Pacman& Player) {
 	unsigned int randomPos1 = 0, randomPos2 = 0, randomPos3 = 0, randomPos4 = 0;
 
 	if (information.variable.statescreen == STATEplay && information.variable.select != pause) {
-		information.variable.moduloPos = (information.variable.moduloPos + 1) % 60;
-		if (information.variable.moduloPos == 0) {
-			randomPos1 = rand() % 4; randomPos2 = rand() % 4; randomPos3 = rand() % 4; randomPos4 = rand() % 4;
-			for (unsigned int i = 0; i < information.ghost.size(); i++) {
-				switch (i) {
-				case 0:
-					information.ghost[i]->SETnextHeading(randomPos1);
-					break;
-				case 1:
-					information.ghost[i]->SETnextHeading(randomPos2);
-					break;
-				case 2:
-					information.ghost[i]->SETnextHeading(randomPos3);
-					break;
-				case 3:
-					information.ghost[i]->SETnextHeading(randomPos4);
-					break;
-				}
-			}
-		}
 		for (unsigned int i = 0; i < information.ghost.size(); i++)
 			information.ghost[i]->move(information.map);
 		Player.move(information.map, information.ghost);

@@ -30,11 +30,7 @@
 	Le nom de la texture est le nom de l'image dans le dossier
 	_statescreen permet de différencier sur lequel des écrans la texture est affichée(STATEecrantitre, STATEecrannewgame, STATEmainmap ...)
 	_select permet de différencier l'état de séléction (selectnothing, NotToSelect, selectcreate, ...)
-	_xc et _yc sont la position de la texture:
-			les options nocenter, center_x, center_y et center permettent de changer l'affectation de xc et yc
-			si center alors xc et yc représentent le milieu le point milieu de l'image
-			si nocenter alors xc et yc représentent le coin haut gauche de l'image
-	_w et _h représente la hauteur et la largeur de l'image sur l'ecran
+	
 
 
 
@@ -45,13 +41,26 @@
 #ifndef Texture_H
 #define Texture_H
 
-#include "LIB.h"
+#include "lib.h"
 
 class Texture{
 public:
 	Texture(){};
-	Texture(SDL_Texture*, const std::string&, unsigned int, unsigned int, unsigned int, unsigned int, int, int);
+	Texture(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select,
+		unsigned int x, unsigned int y, int w, int h);
 	~Texture();
+
+	static SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type,
+		const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
+	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
+		const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt = 0);
+	static void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg,
+		SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
+	static void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color,
+		SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
+	static void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);
+	static void centrage(int&, int&, int, int, int = 0);
+
 
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTexture(SDL_Renderer*&, int = -1, int = -1);

@@ -25,6 +25,7 @@
 #define Entity_H
 
 #include "lib.h"
+#include "init.h"
 #include "Texture.h"
 
 

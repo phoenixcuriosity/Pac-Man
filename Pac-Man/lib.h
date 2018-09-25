@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.4
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -51,6 +51,9 @@ typedef struct texture texture;
 typedef struct button button;
 typedef struct sysinfo sysinfo;
 
+class IHM;
+class Texture;
+class Buttons;
 class Entity;
 class Pacman;
 class Ghost;

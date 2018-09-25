@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,6 +35,33 @@ Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int cu
 Entity::~Entity()
 {
 }
+
+
+void Entity::move(sysinfo& information, Pacman& Player) {
+
+	if (information.variable.statescreen == STATEplay && information.variable.select != pause) {
+		for (unsigned int i = 0; i < information.ghost.size(); i++)
+			information.ghost[i]->move(information.map, Player);
+		Player.move(information.map, information.ghost);
+
+		unsigned int k = 0;
+		information.variable.win = true;
+		for (unsigned int i = 0; i < mapLength; i++) {
+			for (unsigned int j = 0; j < mapHeight; j++) {
+				if (information.map[k].entity) {
+					information.variable.win = false;
+					break;
+				}
+				k++;
+			}
+		}
+		if (Player.GETlife() == 0 || information.variable.win) {
+			information.variable.select = pause;
+			IHM::logfileconsole("End Game");
+		}
+	}
+}
+
 
 int Entity::tryToMove(tile map[], unsigned int pos) {
 	unsigned int nextTile = 0;
@@ -87,6 +114,30 @@ int Entity::tryToMove(tile map[], unsigned int pos) {
 	}
 
 	return Not_Valid;
+}
+void Entity::makeTheMove(bool validMove, unsigned int pos) {
+	if (validMove) {
+		switch (pos) {
+		case UP:
+			this->SETy(this->GETy() - vitesse);
+			break;
+		case LEFT:
+			this->SETx(this->GETx() - vitesse);
+			break;
+		case DOWN:
+			this->SETy(this->GETy() + vitesse);
+			break;
+		case RIGHT:
+			this->SETx(this->GETx() + vitesse);
+			break;
+		}
+	}
+}
+void Entity::teleport(){
+	if (this->GETx() <= 592 && this->GETy() == 544)
+		this->SETx(1306);
+	else if (this->GETx() >= 1328 && this->GETy() == 544)
+		this->SETx(594);
 }
 
 string Entity::GETname()const {
@@ -169,17 +220,17 @@ void Entity::SETvalue(unsigned int value) {
 Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
 	: Entity(name, x, y, UP, UP, value), _life(3), _powerUP(0), _typeOfValue(0)
 {
-	logfileconsole("Pacman is alive");
+	IHM::logfileconsole("Pacman is alive");
 }
 Pacman::Pacman(const Pacman& player)
 	: Entity(player.GETname(), player.GETx(), player.GETy(), player.GETcurrentHeading(), player.GETnextHeading(), player.GETvalue()),
 	_typeOfValue(player.GETtypeOfValue())
 {
-	logfileconsole("Pacman is alive");
+	IHM::logfileconsole("Pacman is alive");
 }
 Pacman::~Pacman()
 {
-	logfileconsole("Pacman is dead");
+	IHM::logfileconsole("Pacman is dead");
 }
 
 
@@ -235,29 +286,11 @@ int Pacman::move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop
 			ghost[i]->SETinvincible(false);
 		_powerUP = 0;
 	}
-	
-	
-	if (validMove) {
-		switch (pos) {
-		case UP:
-			this->SETy(this->GETy() - vitesse);
-			break;
-		case LEFT:
-			this->SETx(this->GETx() - vitesse);
-			break;
-		case DOWN:
-			this->SETy(this->GETy() + vitesse);
-			break;
-		case RIGHT:
-			this->SETx(this->GETx() + vitesse);
-			break;
-		}
+
+	makeTheMove(validMove, pos);
+	if(validMove)
 		collideGhost(ghost);
-	}
-	if (this->GETx() <= 592 && this->GETy() == 544) 
-		this->SETx(1306);
-	else if (this->GETx() >= 1328 && this->GETy() == 544) 
-		this->SETx(594);
+	teleport();
 	return 0;
 }
 
@@ -337,25 +370,25 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 	for (l; l < ghost.size(); l++) {
 		// pacman gauche et ghost droite
 		if (((this->GETx() + tileSize) >= ghost[l]->GETx()) && ((this->GETx() + tileSize) <= (ghost[l]->GETx() + tileSize)) 
-			&& (this->GETy() >= ghost[l]->GETy()) && (this->GETy() <= (ghost[l]->GETy() + tileSize))) {
+			&& (this->GETy() == ghost[l]->GETy())) {
 			hit = true;
 			break;
 		}
 		// pacman bas et ghost haut
 		else if (((this->GETy()) >= ghost[l]->GETy()) && ((this->GETy()) <= (ghost[l]->GETy() + tileSize)) 
-			&& (this->GETx() >= ghost[l]->GETx()) && (this->GETx() <= (ghost[l]->GETx() + tileSize))){
+			&& (this->GETx() == ghost[l]->GETx())){
 			hit = true;
 			break;
 		}
 		// pacman droite et ghost gauche
 		else if (((this->GETx()) >= ghost[l]->GETx()) && ((this->GETx()) <= (ghost[l]->GETx() + tileSize))
-			&& (this->GETy() >= ghost[l]->GETy()) && (this->GETy() <= (ghost[l]->GETy() + tileSize))) {
+			&& (this->GETy() == ghost[l]->GETy())) {
 			hit = true;
 			break;
 		}
 		// pacman haut et ghost bas
 		else if (((this->GETy() + tileSize) >= ghost[l]->GETy()) && ((this->GETy() + tileSize) <= (ghost[l]->GETy() + tileSize)) 
-			&& (this->GETx() >= ghost[l]->GETx()) && (this->GETx() <= (ghost[l]->GETx() + tileSize))) {
+			&& (this->GETx() == ghost[l]->GETx())) {
 			hit = true;
 			break;
 		}
@@ -366,12 +399,14 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 			ghost[l]->SETy(SCREEN_HEIGHT / 2);
 			ghost[l]->SETinvincible(true);
 			this->SETvalue(this->GETvalue() + ghost1);
+			IHM::logfileconsole("Pacman hit a Ghost successfully");
 		}
 		else {
-			this->SETx(SCREEN_WIDTH / 2);
-			this->SETy(SCREEN_HEIGHT / 2);
+			this->SETx(608);
+			this->SETy(544);
 			if(_life > 0)
 				_life--;
+			IHM::logfileconsole("Pacman lost a life");
 		}
 	}
 }
@@ -443,14 +478,14 @@ void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 Ghost::Ghost(string name, unsigned int x, unsigned int y, unsigned int type, unsigned int value)
 	: Entity(name, x, y, UP, RIGHT,value), _type(type)
 {
-	logfileconsole(this->GETname() + " is alive");
+	IHM::logfileconsole(this->GETname() + " is alive");
 }
 Ghost::~Ghost()
 {
-	logfileconsole(this->GETname() + " is dead");
+	IHM::logfileconsole(this->GETname() + " is dead");
 }
 
-int Ghost::move(tile map[], unsigned int secondLoop) {
+int Ghost::move(tile map[], Pacman& pacman, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -472,7 +507,7 @@ int Ghost::move(tile map[], unsigned int secondLoop) {
 				this->SETcurrentHeading(this->GETnextHeading());
 			}
 			else
-				move(map, 1);
+				move(map, pacman, 1);
 			break;
 		}
 	}
@@ -485,43 +520,9 @@ int Ghost::move(tile map[], unsigned int secondLoop) {
 		}
 	}
 
-	
-	if (validMove) {
-		switch (pos) {
-		case UP:
-			this->SETy(this->GETy() - vitesse);
-			break;
-		case LEFT:
-			this->SETx(this->GETx() - vitesse);
-			break;
-		case DOWN:
-			this->SETy(this->GETy() + vitesse);
-			break;
-		case RIGHT:
-			this->SETx(this->GETx() + vitesse);
-			break;
-		}
-	}
-
-
-	if (this->GETx() <= 592 && this->GETy() == 544)
-		this->SETx(1306);
-	else if (this->GETx() >= 1328 && this->GETy() == 544)
-		this->SETx(594);
-
-
-
-	unsigned int randomNextHeading = 0;
-	randomNextHeading = rand() % 4;
-	bool continuer = true;
-	while (continuer) {
-		if (tryToMove(map, randomNextHeading)) {
-			continuer = false;
-			break;
-		}
-		randomNextHeading = rand() % 4;
-	}
-	this->SETnextHeading(randomNextHeading);
+	makeTheMove(validMove, pos);
+	teleport();
+	makeNextHeading(map, pacman);
 
 	return 0;
 }
@@ -534,11 +535,17 @@ unsigned int Ghost::search(tile map[]) {
 				if (this->GETx() == map[k].tile_x) {
 					if (this->GETy() == map[k].tile_y) {
 						this->SETtile(k);
-						if(((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
-							condition = validCondition; // évite de changer de revenir en arrière
-						else
+						if (_type == red) {
 							condition = validNextHeading;
-						return condition;
+							return condition;
+						}
+						else {
+							if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+								condition = validCondition; // évite de changer de revenir en arrière
+							else
+								condition = validNextHeading;
+							return condition;
+						}
 					}
 				}
 			}
@@ -555,8 +562,60 @@ unsigned int Ghost::search(tile map[]) {
 	return condition;
 }
 
-void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
+void Ghost::makeNextHeading(tile map[], Pacman& pacman) {
+	int deltaX = 0, deltaY = 0;
+	unsigned int posi = 0;
+	unsigned int randomNextHeading = 0;
+	bool continuer = true;
+	switch (_type) {
+	case red:
+		deltaX = this->GETxc() - pacman.GETxc();
+		deltaY = this->GETyc() - pacman.GETyc();
+		if (abs(deltaX) > abs(deltaY)) {
+			if (this->GETxc() > pacman.GETxc())
+				this->SETnextHeading(LEFT);
+			else
+				this->SETnextHeading(RIGHT);
+		}
+		else {
+			if (this->GETyc() > pacman.GETyc())
+				this->SETnextHeading(UP);
+			else
+				this->SETnextHeading(DOWN);
+		}
+		break;
+	case blue:
+		posi = pacman.GETcurrentHeading() + 2;
+		posi = posi % 4;
+		this->SETnextHeading(posi);
+		break;
+	case yellow:
+		randomNextHeading = rand() % 4;
+		while (continuer) {
+			if (tryToMove(map, randomNextHeading)) {
+				continuer = false;
+				break;
+			}
+			randomNextHeading = rand() % 4;
+		}
+		this->SETnextHeading(randomNextHeading);
+		break;
+	case pink:
+		randomNextHeading = rand() % 4;
+		while (continuer) {
+			if (tryToMove(map, randomNextHeading)) {
+				continuer = false;
+				break;
+			}
+			randomNextHeading = rand() % 4;
+		}
+		this->SETnextHeading(randomNextHeading);
+		break;
+	}
+}
 
+void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
+	
 }
 
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc) {

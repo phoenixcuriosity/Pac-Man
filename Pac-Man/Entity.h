@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -25,10 +25,6 @@
 #define Entity_H
 
 #include "lib.h"
-#include "init.h"
-#include "Texture.h"
-
-
 
 class Entity { // classe abstraite
 public:
@@ -36,8 +32,11 @@ public:
 	Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value = 0);
 	~Entity();
 
+	static void move(sysinfo& information, Pacman& Player);
 	
 	int tryToMove(tile map[], unsigned int pos);
+	void makeTheMove(bool, unsigned int);
+	void teleport();
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
 
 	std::string GETname()const;
@@ -118,8 +117,9 @@ public:
 	Ghost(std::string name, unsigned int x, unsigned int y, unsigned int type,unsigned int value = 0);
 	~Ghost();
 
-	int move(tile map[], unsigned int secondLoop = -1);
+	int move(tile map[], Pacman& pacman, unsigned int secondLoop = -1);
 	unsigned int search(tile map[]);
+	void makeNextHeading(tile map[], Pacman& pacman);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc);
 

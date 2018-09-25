@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8a
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -26,8 +26,7 @@
 
 #include "lib.h"  // include lib et typedef
 
-#include "Buttons.h"
-#include "Texture.h"
+#include "IHM.h"
 #include "Entity.h"
 
 const unsigned int SCREEN_WIDTH = 1920;
@@ -35,6 +34,7 @@ const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
 const int mapHeight = 25;
 const int mapLength = 25;
+const unsigned int FONTMAX = 160;
 const unsigned int vitesse = 2;
 const unsigned int tempoInvincible = 600;
 
@@ -64,8 +64,6 @@ enum { selectnothing, pause };	// spécifications de la séléction
 struct screen {
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
-
-	std::string stringTileSize = std::to_string(tileSize);
 };
 
 struct file {
@@ -85,9 +83,9 @@ struct var {
 	unsigned int select = selectnothing;
 	unsigned int statescreen = 0; // selectnothing par défaut
 	unsigned int score = 0;
+	bool win = false;
 
 	unsigned int modulo = 0;
-	unsigned int moduloPos = 0;
 	unsigned int moduloScore = 0;
 
 	unsigned int tempoScore = 0;
@@ -121,7 +119,7 @@ struct texture {
 	std::vector<Texture*> txtecrantitre;
 	std::vector<Texture*> txtplay;
 
-	TTF_Font *font[160];
+	TTF_Font *font[FONTMAX];
 };
 
 struct button {

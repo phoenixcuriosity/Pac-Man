@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -21,11 +21,7 @@
 
 */
 
-#include "lib.h"
 #include "Pac_Man_lib.h"
-
-
-using namespace std;
 
 void mainLoop(sysinfo& information);
 
@@ -36,22 +32,23 @@ int main(int argc, char** argv) {
 	t1 = clock();
 
 	srand((unsigned int)time(NULL));
-	IHM::initfile(information);
+	IHM::initfile(information.files.log);
 
 	IHM::logfileconsole("________PROGRAMME START________");
 
 	IHM::initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
-	IHM::initGrid(information);
+	IHM::initGrid(information.map);
+	IHM::loadScore(information.files.score, information.variable.tabScorePlayer);
 	IHM::calculimage(information);
-
+	
 	t2 = clock();
-	IHM::logfileconsole("temps d'execution de l'initialisation : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC) + " secondes");
+	IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC) + " secondes");
 
 	IHM::ecrantitre(information);
 
 	mainLoop(information);
 
-
+	IHM::saveScore(information.files.score, information.variable.tabScorePlayer);
 	IHM::deleteAll(information);
 	TTF_Quit();
 	IMG_Quit();
@@ -65,7 +62,7 @@ void mainLoop(sysinfo& information) {
 	IHM::logfileconsole("_mainLoop Start_");
 	SDL_Event event;
 
-	Pacman Player((string)"robin", 832, 544);
+	Pacman Player("player", 832, 544);
 	information.ghost.push_back(new Ghost("Red", 640, 512, red));
 	information.ghost.push_back(new Ghost("Blue", 1280, 512, blue));
 	information.ghost.push_back(new Ghost("Yellow", 1280, 564, yellow));
@@ -104,7 +101,7 @@ void mainLoop(sysinfo& information) {
 					break;
 				}
 			case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
-				IHM::mouse(information, event);
+				IHM::mouse(information, Player, event);
 				break;
 			case SDL_MOUSEWHEEL:
 				//wheel(information, event.wheel.y);
@@ -118,6 +115,7 @@ void mainLoop(sysinfo& information) {
 		//cout << endl << "temps d'execution d'une boucle : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	}
 
+	
 	for (unsigned int i = 0; i < information.ghost.size(); i++)
 		delete information.ghost[i];
 	IHM::logfileconsole("_mainLoop End_");

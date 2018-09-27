@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -37,6 +37,9 @@ const int mapLength = 25;
 const unsigned int FONTMAX = 160;
 const unsigned int vitesse = 2;
 const unsigned int tempoInvincible = 600;
+const unsigned int MAXGHOST = 4;
+const unsigned int MAXPOS = 4;
+const unsigned int MAXSKIN = 2;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -58,25 +61,27 @@ enum { Not_Valid, validCondition, validNextHeading};
 enum { nothing, gold, cherry, strawberry, peach, apple, key};
 enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, ghost1 = 800, ghost2 = 1600, ghost3 = 3200, ghost4 = 10000,valuekey = 5000};
 
-enum { STATEnothing, STATEecrantitre, STATEplay };  // différents état de l'écran
+enum { STATEnothing, STATEecrantitre, STATEplay, STATEscore };  // différents état de l'écran
 enum { selectnothing, pause };	// spécifications de la séléction
 
+struct scorePlayer {
+	unsigned int score = 0;
+	std::string name = "";
+};
 struct screen {
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
 };
-
 struct file {
 	const std::string log = "log.txt";
+	const std::string score = "save/scores.txt";
 };
-
 struct subcatWheel {
 	unsigned int mouse_x = 0;
 	unsigned int mouse_y = 0;
 	unsigned int ywheel = 0;
 	unsigned int xwheel = 0;
 };
-
 struct var {
 	bool continuer = true;
 	
@@ -87,22 +92,20 @@ struct var {
 
 	unsigned int modulo = 0;
 	unsigned int moduloScore = 0;
-
 	unsigned int tempoScore = 0;
 
+	std::vector<scorePlayer> tabScorePlayer;
 	subcatWheel s_wheel;
 };
-
 struct tile{
 	unsigned int tile_nb = 0;
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
 
 	bool wall = false;
-	unsigned int entity = 1;
+	unsigned int entity = gold;
 	
 };
-
 struct texture {
 	std::vector<Texture*> ground;
 
@@ -114,38 +117,28 @@ struct texture {
 	std::vector<Texture*> miscGhost;
 	std::vector<Texture*> collectibles;
 	std::vector<Texture*> scoreValue;
+	std::vector<Texture*> tabScore;
 
 	std::vector<Texture*> imgecrantitre;
 	std::vector<Texture*> txtecrantitre;
 	std::vector<Texture*> txtplay;
+	std::vector<Texture*> txtscore;
 
 	TTF_Font *font[FONTMAX];
 };
-
 struct button {
 	std::vector<Buttons*> buttonecrantitre;
 	std::vector<Buttons*> buttonplay;
+	std::vector<Buttons*> buttonscore;
 };
-
 struct sysinfo {
 	screen ecran;
 	file files;
 	var variable;
-	tile map[mapHeight * mapLength];
+	std::vector<tile> map;
 	button allButton;
 	texture allTextures;
 	std::vector<Ghost*> ghost;
 };
-
-
-
-
-
-
-
-
-
-
-
 
 #endif

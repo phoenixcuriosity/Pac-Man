@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -24,19 +24,9 @@
 #include "Entity.h"
 #include "Pac_Man_lib.h"
 
-using namespace std;
 
-Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value)
-	: _name(name), _x(x), _y(y), _value(value), _xc(x + tileSize / 2),
-	_yc(y + tileSize / 2),  _currentHeading(currentHeading), _nextHeading(nextHeading), _invincible(true), _timeInvincible(tempoInvincible)
-{
-}
-
-Entity::~Entity()
-{
-}
-
-
+///////////////////////////// ENTITY //////////////////////////////
+/* ENTITY :: STATIC */
 void Entity::move(sysinfo& information, Pacman& Player) {
 
 	if (information.variable.statescreen == STATEplay && information.variable.select != pause) {
@@ -44,15 +34,11 @@ void Entity::move(sysinfo& information, Pacman& Player) {
 			information.ghost[i]->move(information.map, Player);
 		Player.move(information.map, information.ghost);
 
-		unsigned int k = 0;
 		information.variable.win = true;
-		for (unsigned int i = 0; i < mapLength; i++) {
-			for (unsigned int j = 0; j < mapHeight; j++) {
-				if (information.map[k].entity) {
-					information.variable.win = false;
-					break;
-				}
-				k++;
+		for (unsigned int i = 0; i < information.map.size(); i++) {
+			if (information.map[i].entity) {
+				information.variable.win = false;
+				break;
 			}
 		}
 		if (Player.GETlife() == 0 || information.variable.win) {
@@ -62,8 +48,16 @@ void Entity::move(sysinfo& information, Pacman& Player) {
 	}
 }
 
-
-int Entity::tryToMove(tile map[], unsigned int pos) {
+/* ENTITY :: METHODES */
+Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value)
+	: _name(name), _x(x), _y(y), _value(value), _xc(x + tileSize / 2),
+	_yc(y + tileSize / 2), _currentHeading(currentHeading), _nextHeading(nextHeading), _invincible(true), _timeInvincible(tempoInvincible)
+{
+}
+Entity::~Entity()
+{
+}
+int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
 	unsigned int nextTile = 0;
 
 	switch (pos) {
@@ -139,8 +133,7 @@ void Entity::teleport(){
 	else if (this->GETx() >= 1328 && this->GETy() == 544)
 		this->SETx(594);
 }
-
-string Entity::GETname()const {
+std::string Entity::GETname()const {
 	return _name;
 }
 unsigned int Entity::GETx()const {
@@ -177,7 +170,7 @@ unsigned int Entity::GETvalue()const {
 	return _value;
 }
 
-void Entity::SETname(string name) {
+void Entity::SETname(std::string name) {
 	_name = name;
 }
 void Entity::SETx(unsigned int x) {
@@ -216,8 +209,9 @@ void Entity::SETvalue(unsigned int value) {
 
 
 
-
-Pacman::Pacman(string name, unsigned int x, unsigned int y, unsigned int value)
+///////////////////////////// PACMAN //////////////////////////////
+/*  PACMAN :: METHODES */
+Pacman::Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value)
 	: Entity(name, x, y, UP, UP, value), _life(3), _powerUP(0), _typeOfValue(0)
 {
 	IHM::logfileconsole("Pacman is alive");
@@ -232,9 +226,7 @@ Pacman::~Pacman()
 {
 	IHM::logfileconsole("Pacman is dead");
 }
-
-
-int Pacman::move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop) {
+int Pacman::move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -293,34 +285,29 @@ int Pacman::move(tile map[], std::vector<Ghost*>& ghost, unsigned int secondLoop
 	teleport();
 	return 0;
 }
-
-unsigned int Pacman::search(tile map[]) {
-	unsigned int k = 0, condition = 0;
-	for (unsigned int i = 0; i < mapLength; i++) {
-		for (unsigned int j = 0; j < mapHeight; j++) {
-			if (this->GETcurrentHeading() != this->GETnextHeading()) {
-				if (this->GETx() == map[k].tile_x) {
-					if (this->GETy() == map[k].tile_y) {
-						this->SETtile(k);
-						condition = validNextHeading;
-						return condition;
-					}
-				}
-			}
-			if (this->GETxc() >= map[k].tile_x && this->GETxc() < (map[k].tile_x + tileSize)) {
-				if (this->GETyc() >= map[k].tile_y && this->GETyc() < (map[k].tile_y + tileSize)) {
-					this->SETtile(k);
-					condition = validCondition;
+unsigned int Pacman::search(std::vector<tile>& map) {
+	unsigned int condition = 0;
+	for (unsigned int i = 0; i < map.size(); i++) {
+		if (this->GETcurrentHeading() != this->GETnextHeading()) {
+			if (this->GETx() == map[i].tile_x) {
+				if (this->GETy() == map[i].tile_y) {
+					this->SETtile(i);
+					condition = validNextHeading;
 					return condition;
 				}
 			}
-			k++;
+		}
+		if (this->GETxc() >= map[i].tile_x && this->GETxc() < (map[i].tile_x + tileSize)) {
+			if (this->GETyc() >= map[i].tile_y && this->GETyc() < (map[i].tile_y + tileSize)) {
+				this->SETtile(i);
+				condition = validCondition;
+				return condition;
+			}
 		}
 	}
 	return condition;
 }
-
-void Pacman::value(tile map[], bool validMove) {
+void Pacman::value(std::vector<tile>& map, bool validMove) {
 	if (validMove) {
 		switch (map[this->GETtile()].entity) {
 		case nothing:
@@ -363,7 +350,6 @@ void Pacman::value(tile map[], bool validMove) {
 		}
 	}
 }
-
 void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 	bool hit = false;
 	unsigned int l = 0;
@@ -410,46 +396,24 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 		}
 	}
 }
-
 void Pacman::afficherStats(sysinfo& information) {
-	Texture::writetxt(information, blended, to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
-	Texture::writetxt(information, shaded, "Remaining life  : " + to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
-	Texture::writetxt(information, blended, to_string(this->GETx()) + " , " + to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
-	if(this->GETinvincible())
-		Texture::writetxt(information, blended, "Remaining time Invincible : " + to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
+	Texture::writetxt(information, blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
+	Texture::writetxt(information, shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
+	Texture::writetxt(information, blended, std::to_string(this->GETx()) + " , " + std::to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
+	if (this->GETinvincible())
+		Texture::writetxt(information, blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
 }
-
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
+	std::string pacmanPos[MAXPOS] = { "U", "L", "D", "R" }, pacmanSkin[MAXSKIN] = { "1", "2" };
+	unsigned int skin = 0;
+	if (this->GETalternateSkin())
+		skin = 1;
 	for (unsigned int i = 0; i < tabTexture.size(); i++) {
-		switch (this->GETcurrentHeading()) {
-		case UP:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_U_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_U_2.png", this->GETx(), this->GETy());
-			break;
-		case LEFT:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_L_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_L_2.png", this->GETx(), this->GETy());
-			break;
-		case DOWN:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_D_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_D_2.png", this->GETx(), this->GETy());
-			break;
-		case RIGHT:
-			if (this->GETalternateSkin())
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_R_1.png", this->GETx(), this->GETy());
-			else
-				tabTexture[i]->renderTextureTestString(renderer, "pacman_R_2.png", this->GETx(), this->GETy());
-			break;
-		}
+		if (tabTexture[i]->renderTextureTestString(renderer, "pacman_" + pacmanPos[this->GETcurrentHeading()]
+			+ "_" + pacmanSkin[skin] + ".png", this->GETx(), this->GETy()))
+			return;
 	}
 }
-
 unsigned int Pacman::GETlife()const {
 	return _life;
 }
@@ -459,8 +423,6 @@ unsigned int Pacman::GETpowerUP()const {
 unsigned int Pacman::GETtypeOfValue()const {
 	return _typeOfValue;
 }
-
-
 void Pacman::SETlife(unsigned int life) {
 	_life = life;
 }
@@ -472,10 +434,9 @@ void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 }
 
 
-
-
-
-Ghost::Ghost(string name, unsigned int x, unsigned int y, unsigned int type, unsigned int value)
+///////////////////////////// GHOST //////////////////////////////
+/*  GHOST :: METHODES */
+Ghost::Ghost(std::string name, unsigned int x, unsigned int y, unsigned int type, unsigned int value)
 	: Entity(name, x, y, UP, RIGHT,value), _type(type)
 {
 	IHM::logfileconsole(this->GETname() + " is alive");
@@ -484,8 +445,7 @@ Ghost::~Ghost()
 {
 	IHM::logfileconsole(this->GETname() + " is dead");
 }
-
-int Ghost::move(tile map[], Pacman& pacman, unsigned int secondLoop) {
+int Ghost::move(std::vector<tile>& map, Pacman& pacman, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -526,43 +486,38 @@ int Ghost::move(tile map[], Pacman& pacman, unsigned int secondLoop) {
 
 	return 0;
 }
-
-unsigned int Ghost::search(tile map[]) {
-	unsigned int k = 0, condition = 0;
-	for (unsigned int i = 0; i < mapLength; i++) {
-		for (unsigned int j = 0; j < mapHeight; j++) {
-			if (this->GETcurrentHeading() != this->GETnextHeading()) {
-				if (this->GETx() == map[k].tile_x) {
-					if (this->GETy() == map[k].tile_y) {
-						this->SETtile(k);
-						if (_type == red) {
+unsigned int Ghost::search(std::vector<tile>& map) {
+	unsigned int condition = 0;
+	for (unsigned int i = 0; i < map.size(); i++) {
+		if (this->GETcurrentHeading() != this->GETnextHeading()) {
+			if (this->GETx() == map[i].tile_x) {
+				if (this->GETy() == map[i].tile_y) {
+					this->SETtile(i);
+					if (_type == red) {
+						condition = validNextHeading;
+						return condition;
+					}
+					else {
+						if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+							condition = validCondition; // évite de changer de revenir en arrière
+						else
 							condition = validNextHeading;
-							return condition;
-						}
-						else {
-							if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
-								condition = validCondition; // évite de changer de revenir en arrière
-							else
-								condition = validNextHeading;
-							return condition;
-						}
+						return condition;
 					}
 				}
 			}
-			if (this->GETxc() >= map[k].tile_x && this->GETxc() < (map[k].tile_x + tileSize)) {
-				if (this->GETyc() >= map[k].tile_y && this->GETyc() < (map[k].tile_y + tileSize)) {
-					this->SETtile(k);
-					condition = validCondition;
-					return condition;
-				}
+		}
+		if (this->GETxc() >= map[i].tile_x && this->GETxc() < (map[i].tile_x + tileSize)) {
+			if (this->GETyc() >= map[i].tile_y && this->GETyc() < (map[i].tile_y + tileSize)) {
+				this->SETtile(i);
+				condition = validCondition;
+				return condition;
 			}
-			k++;
 		}
 	}
 	return condition;
 }
-
-void Ghost::makeNextHeading(tile map[], Pacman& pacman) {
+void Ghost::makeNextHeading(std::vector<tile>& map, Pacman& pacman) {
 	int deltaX = 0, deltaY = 0;
 	unsigned int posi = 0;
 	unsigned int randomNextHeading = 0;
@@ -613,44 +568,20 @@ void Ghost::makeNextHeading(tile map[], Pacman& pacman) {
 		break;
 	}
 }
-
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
 	
 }
-
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc) {
-	std::string ghost = "";
-	std::vector<std::string> ghostName;
-	ghostName.push_back("Red"); ghostName.push_back("Blue"); ghostName.push_back("Yellow"); ghostName.push_back("Pink");
+	std::string ghostName[MAXGHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAXPOS] = { "U", "L", "D", "R" }, ghostSkin[MAXSKIN] = {"1", "2"};
+	unsigned int skin = 0;
+	if (this->GETalternateSkin())
+		skin = 1;
 
 	if (this->GETinvincible()) {
 		for (unsigned int i = 0; i < tabTexture.size(); i++) {
-			switch (this->GETcurrentHeading()) {
-			case UP:
-				if (this->GETalternateSkin())
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_1.png", this->GETx(), this->GETy());
-				else
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_U_2.png", this->GETx(), this->GETy());
-				break;
-			case LEFT:
-				if (this->GETalternateSkin())
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_1.png", this->GETx(), this->GETy());
-				else
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_L_2.png", this->GETx(), this->GETy());
-				break;
-			case DOWN:
-				if (this->GETalternateSkin())
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_1.png", this->GETx(), this->GETy());
-				else
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_D_2.png", this->GETx(), this->GETy());
-				break;
-			case RIGHT:
-				if (this->GETalternateSkin())
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_1.png", this->GETx(), this->GETy());
-				else
-					tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_R_2.png", this->GETx(), this->GETy());
-				break;
-			}
+			if (tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
+				"_" + ghostSkin[skin] + ".png", this->GETx(), this->GETy()))
+				return;
 		}
 	}
 	else{
@@ -659,15 +590,9 @@ void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture,
 		}
 	}
 }
-
 unsigned int Ghost::GETtype()const {
 	return _type;
 }
-
-
-
 void Ghost::SETtype(unsigned int type) {
 	_type = type;
 }
-
-

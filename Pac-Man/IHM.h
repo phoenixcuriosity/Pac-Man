@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -28,32 +28,41 @@
 
 class IHM {
 public:
-	IHM() {};
-	~IHM();
 
-
-	static void initfile(sysinfo& information);
+	static void initfile(const std::string& log);
 	static void logfileconsole(const std::string &msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
 	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 	static void initTile(tile& map, bool wall, unsigned int entity);
-	static void forme(tile map[], unsigned int length, unsigned int height, unsigned int space);
-	static void initGrid(sysinfo& information);
+	static void forme(std::vector<tile>& map, unsigned int length, unsigned int height, unsigned int space);
+	static void initGrid(std::vector<tile>& map);
 	static void calculimage(sysinfo&);
 
 
-	static void mouse(sysinfo&, SDL_Event event);
-	static void cliqueGauche(sysinfo&, SDL_Event event);
+	static void mouse(sysinfo& information, Pacman& Player, SDL_Event event);
+	static void cliqueGauche(sysinfo& information, Pacman& Player, SDL_Event event);
+
+	static std::string getName(sysinfo& information, unsigned int position);
 
 	static void ecrantitre(sysinfo&);
+	static void ecranScore(sysinfo&, Pacman& player);
 	static void alwaysrender(sysinfo&, Pacman& player);
 	static void afficherMap(sysinfo& information);
+
+	static int topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score);
+	static void loadScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer);
+	static void saveScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer);
 
 	static void deleteAll(sysinfo&);
 
 };
-
-
+template<class T>
+T max(T& a, T& b) {
+	if (a > b)
+		return a;
+	else
+		return b;
+}
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 	unsigned int size = dytab.size();
@@ -69,7 +78,6 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 	else
 		IHM::logfileconsole("Delete ALL " + name + " Success");
 }
-
 /*
 
 	Texture : 
@@ -86,14 +94,8 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 	la méthode changeAlpha permet de changer la transparance de l'image entre 0 et 255 (255 étant visibilité max)
 	
 */
-
 class Texture{
 public:
-	Texture(){};
-	Texture(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select,
-		unsigned int x, unsigned int y, int w, int h);
-	~Texture();
-
 	static SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type,
 		const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
 	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
@@ -106,15 +108,21 @@ public:
 	static void centrage(int&, int&, int, int, int = 0);
 
 
+	Texture() {};
+	Texture(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select,
+		unsigned int x, unsigned int y, int w, int h);
+	~Texture();
+
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
-	virtual void renderTexture(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, int xc = -1, int yc = -1);
 	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, int xc = -1, int yc = -1, unsigned int angle = 0);
-	virtual void renderTextureTestString(SDL_Renderer*&, const std::string&, int = -1, int = -1);
+	virtual bool renderTextureTestString(SDL_Renderer*&, const std::string&, int = -1, int = -1);
 	virtual bool renderTextureTestStringAndStates(SDL_Renderer*&, const std::string&, unsigned int, int = -1, int = -1);
 	virtual bool TextureTestString(const std::string&);
 
 	virtual void changeAlpha(Uint8);
+	virtual void changeTextureMsg(sysinfo& information, unsigned int type, const std::string &msg,
+		SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
 
 	virtual SDL_Texture* GETtexture() const;
 	virtual SDL_Rect GETdst()const;
@@ -141,8 +149,6 @@ private:
 	unsigned int _statescreen;
 	unsigned int _select;
 };
-
-
 /*
 
 	Buttons :
@@ -164,13 +170,13 @@ private:
 */
 class Buttons : public Texture {
 public:
+	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
+		SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
+
 	Buttons() {};
 	Buttons(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, int x, int y, int w, int h,
 		SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on = false);
 	~Buttons();
-
-	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
-		SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
 
 	virtual unsigned int testcolor(SDL_Color, SDL_Color) const;
 	virtual unsigned int searchButton(std::string msg, unsigned int statescreen, signed int x, signed int y);
@@ -199,4 +205,3 @@ private:
 };
 
 #endif
-

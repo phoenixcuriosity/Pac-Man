@@ -58,7 +58,7 @@ public:
 };
 template<class T>
 T max(T& a, T& b) {
-	if (a > b)
+	if (a >= b)
 		return a;
 	else
 		return b;

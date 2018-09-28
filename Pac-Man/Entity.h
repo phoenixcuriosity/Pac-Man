@@ -89,6 +89,8 @@ public:
 	Pacman(const Pacman& player);
 	~Pacman();
 
+	Pacman& operator = (const Pacman&);
+
 	int move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
 	unsigned int search(std::vector<tile>& map);
 	void value(std::vector<tile>& map, bool validMove);

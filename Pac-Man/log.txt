@@ -16,7 +16,7 @@ Create Button n:1 msg = Initial Grid Success
 Create Button n:2 msg = Go to leader board (END GAME) Success
 Create Button n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.339000 secondes
+temps d'execution de l'initialisation : 1.231000 secondes
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
@@ -25,6 +25,11 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
+Pacman lost a life
+Pacman hit a Ghost successfully
+Pacman lost a life
+Pacman lost a life
+End Game
 _Ecrantitres Start_
 _Ecrantitres End_
 _Ecrantitres Start_
@@ -103,21 +108,16 @@ Delete scoreValue Texture name = 800 Success
 Delete scoreValue Texture name = 1600 Success
 Delete scoreValue Texture name = 5000 Success
 Delete ALL scoreValue Texture Success
-Delete tabScore Texture name = robin      6600 Success
-Delete tabScore Texture name = thibaut      3900 Success
-Delete tabScore Texture name = fhY\]123      2600 Success
-Delete tabScore Texture name = jean      1700 Success
-Delete tabScore Texture name = qref      1400 Success
-Delete tabScore Texture name = rdhsrt      900 Success
-Delete tabScore Texture name = zegg      700 Success
-Delete tabScore Texture name = zethh      52 Success
-Delete tabScore Texture name = zfth      41 Success
-Delete tabScore Texture name = zugs      32 Success
+Delete tabScore Texture name = qhrghq      36521 Success
+Delete tabScore Texture name = robin      19400 Success
+Delete tabScore Texture name = 9robin09X      15000 Success
+Delete tabScore Texture name = 9g9      900 Success
 Delete ALL tabScore Texture Success
 Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success
 Delete txtecrantitre Texture name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
 Delete txtecrantitre Texture name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
 Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!! Success
+Delete txtecrantitre Texture name = Use your mouse to select Success
 Delete ALL txtecrantitre Texture Success
 Delete txtplay Texture name = Your Score Success
 Delete txtplay Texture name = YOU DIED Success

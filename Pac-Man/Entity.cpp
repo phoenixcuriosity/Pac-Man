@@ -226,6 +226,26 @@ Pacman::~Pacman()
 {
 	IHM::logfileconsole("Pacman is dead");
 }
+Pacman& Pacman::operator = (const Pacman& a) {
+	if (this != &a) {
+		this->SETname(this->GETname());
+		this->SETx(this->GETx());
+		this->SETy(this->GETy());
+		this->SETxc(this->GETxc());
+		this->SETyc(this->GETyc());
+		this->SETtile(this->GETtile());
+		this->SETcurrentHeading(this->GETcurrentHeading());
+		this->SETnextHeading(this->GETnextHeading());
+		this->SETalternateSkin(this->GETalternateSkin());
+		this->SETtimeInvincible(this->GETtimeInvincible());
+		this->SETinvincible(this->GETinvincible());
+		this->SETvalue(this->GETvalue());
+		_life = a.GETlife();
+		_powerUP = a.GETpowerUP();
+		_typeOfValue = a.GETtypeOfValue();
+	}
+	return *this;
+}
 int Pacman::move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;

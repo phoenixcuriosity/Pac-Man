@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
 	IHM::logfileconsole("________PROGRAMME START________");
 
 	IHM::initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
-	IHM::initGrid(information.map);
 	IHM::loadScore(information.files.score, information.variable.tabScorePlayer);
 	IHM::calculimage(information);
 	

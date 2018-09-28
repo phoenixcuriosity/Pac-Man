@@ -1,11 +1,5 @@
-numberOfScore=	10
-robin					6600
-thibaut					3900
-fhY123					2600
-jean					1700
-qref					1400
-rdhsrt					900
-zegg					700
-zethh					52
-zfth					41
-zugs					32
+numberOfScore=	4
+qhrghq					36521
+robin					19400
+9robin09X					15000
+9g9					900

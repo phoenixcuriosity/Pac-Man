@@ -63,7 +63,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		window = SDL_CreateWindow("Pacman",
 			0, 0,
 			SCREEN_WIDTH, SCREEN_HEIGHT,
-			SDL_WINDOW_OPENGL);
+			SDL_WINDOW_OPENGL| SDL_WINDOW_FULLSCREEN);
 
 		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
 		if (window == nullptr) {
@@ -113,8 +113,12 @@ void IHM::forme(std::vector<tile>& map, unsigned int length, unsigned int height
 	}
 }
 void IHM::initGrid(std::vector<tile>& map) {
+	/*
+		Initialisation d'un niveau unique de Pacman
+	*/
 	unsigned int k = 0;
 	tile kTile;
+	map.clear();
 	for (unsigned int i = 0; i < mapLength; i++) {
 		for (unsigned int j = 0; j < mapHeight; j++) {
 
@@ -277,7 +281,7 @@ void IHM::calculimage(sysinfo& information) {
 	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
 		"Initial Grid", WriteColorButton, BackColorButton, 32, 0, 64);
 	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
-		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 1650, 128, center_x);
+		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0);
 
 	information.variable.statescreen = STATEscore;
 	Buttons::createbutton(information, information.allButton.buttonscore, shaded,
@@ -293,6 +297,9 @@ void IHM::calculimage(sysinfo& information) {
 		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
 	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
 		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, center_x);
+	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
+		blended, "Use your mouse to select", { 0, 255, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 350, center_x);
+
 
 	information.variable.statescreen = STATEplay;
 	Texture::loadwritetxt(information, information.allTextures.txtplay, blended,
@@ -316,6 +323,8 @@ void IHM::calculimage(sysinfo& information) {
 		blended, "Enter your name", { 0, 255, 0, 255 }, NoColor, 24, 100, 200);
 	Texture::loadwritetxt(information, information.allTextures.txtscore,
 		blended, "with your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 224);
+	Texture::loadwritetxt(information, information.allTextures.txtscore,
+		blended, "and press return when finish", { 0, 255, 0, 255 }, NoColor, 24, 100, 248);
 
 	logfileconsole("_calculimage End_");
 }
@@ -361,6 +370,7 @@ void IHM::cliqueGauche(sysinfo& information, Pacman& Player,SDL_Event event) {
 		for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++) {
 			if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.statescreen = STATEplay;
+				initGrid(information.map);
 				return;
 			}
 			else if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
@@ -388,6 +398,10 @@ void IHM::cliqueGauche(sysinfo& information, Pacman& Player,SDL_Event event) {
 	}
 }
 std::string IHM::getName(sysinfo& information, unsigned int position) {
+	/*
+		Demande au joueur son pseudo pour etre placé dans le tableau des scores
+		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
+	*/
 	SDL_Event event;
 	std::string name;
 	unsigned int initspacemenu = 200;
@@ -460,7 +474,9 @@ void IHM::ecranScore(sysinfo& information, Pacman& player) {
 	information.variable.tabScorePlayer.push_back(p);
 	position = topScore(information.variable.tabScorePlayer, p.score);
 	
-
+	for (unsigned int i = 0; i < information.allTextures.tabScore.size(); i++)
+		delete information.allTextures.tabScore[i];
+	information.allTextures.tabScore.clear();
 	unsigned int initspacemenu = 200;
 	for (unsigned int i = 0; i < information.variable.tabScorePlayer.size(); i++)
 		Texture::loadwritetxt(information, information.allTextures.tabScore,
@@ -481,7 +497,13 @@ void IHM::ecranScore(sysinfo& information, Pacman& player) {
 		SDL_RenderPresent(information.ecran.renderer);
 		information.variable.tabScorePlayer[position].name = getName(information, position);
 	}
-	
+
+	SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
+	SDL_RenderClear(information.ecran.renderer);
+	for (unsigned int i = 0; i < information.allTextures.tabScore.size(); i++)
+		information.allTextures.tabScore[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen);
+	for (unsigned int i = 0; i < information.allTextures.txtscore.size(); i++)
+		information.allTextures.txtscore[i]->renderTextureTestString(information.ecran.renderer, "TOP 10 SCORES");
 	for (unsigned int i = 0; i < information.allButton.buttonscore.size(); i++)
 		information.allButton.buttonscore[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 	SDL_RenderPresent(information.ecran.renderer);
@@ -570,7 +592,7 @@ void IHM::alwaysrender(sysinfo& information, Pacman& player) {
 }
 void IHM::afficherMap(sysinfo& information) {
 	/*
-		à utiliser si besoin de changer la map
+		à utiliser si besoin de changer la map -> commententer l'autre partie du code
 		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
 
 
@@ -592,17 +614,27 @@ void IHM::afficherMap(sysinfo& information) {
 	}
 }
 int IHM::topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score) {
+	/*
+		Tri du tableau des scores dans le sens décroissant
+		recherche si le score fait lors de cette partie est dans le TOP10
+	*/
 	std::vector<scorePlayer> newTabScore;
 	scorePlayer player;
-	unsigned int maxScorePrecedent = 0, scoreToDestroy = 0;
-
-	while(newTabScore.size() < 10){ // TOP 10 SCORES
+	unsigned int scoreToDestroy = 0, maxSize = 0;
+	
+	if (tabScorePlayer.size() > 10)
+		maxSize = 10;
+	else {
+		maxSize = tabScorePlayer.size();
+		if (score == 0)
+			maxSize--;
+	}
+	while(newTabScore.size() < maxSize){ // TOP 10 SCORES
 		for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
-			player.score = max(tabScorePlayer[i].score, player.score);
-			if (player.score != maxScorePrecedent) {
+			if (tabScorePlayer[i].score > player.score) {
 				scoreToDestroy = i;
+				player.score = tabScorePlayer[i].score;
 				player.name = tabScorePlayer[i].name;
-				maxScorePrecedent = player.score;
 			}
 		}
 		tabScorePlayer.erase(tabScorePlayer.begin() + scoreToDestroy);
@@ -611,26 +643,29 @@ int IHM::topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score) 
 	}
 	tabScorePlayer = newTabScore;
 
+	int positionToReturn = -1;
 	for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
 		if (tabScorePlayer[i].score == score)
-			return i;
+			positionToReturn = i;
 	}
-	return -1;
-
+	return positionToReturn;
 }
 void IHM::loadScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer) {
+	/*
+		charge le tableau de score TOP10 à partir d'un fichier formaté avec un format particulier
+	*/
 	logfileconsole("_loadScore Start_");
 	std::string destroy;
 	scorePlayer player;
-	unsigned int MAXSCORE = 0;
+	unsigned int maxScore = 0;
 	unsigned int k = 0;
 
 	std::ifstream loadScore(score);
 	if (loadScore) {
 		loadScore >> destroy;
 		if (destroy.compare("numberOfScore=") == 0) {
-			loadScore >> MAXSCORE;
-			for (unsigned int i = 0; i < MAXSCORE; i++) {
+			loadScore >> maxScore;
+			for (unsigned int i = 0; i < maxScore; i++) {
 				loadScore >> player.name;
 				loadScore >> player.score;
 				tabScorePlayer.push_back(player);
@@ -645,8 +680,10 @@ void IHM::loadScore(const std::string& score, std::vector<scorePlayer>& tabScore
 	logfileconsole("_loadScore End_");
 }
 void IHM::saveScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer) {
+	/*
+		Enregistre le tableau des scores dans un fichier avec un format particulier
+	*/
 	logfileconsole("_saveScore Start_");
-
 	std::ofstream saveScore(score);
 	if (saveScore) {
 		saveScore << "numberOfScore=\t";
@@ -656,10 +693,12 @@ void IHM::saveScore(const std::string& score, std::vector<scorePlayer>& tabScore
 	}
 	else
 		logfileconsole("________ERROR : loadScore : cannot open file : " + score);
-
 	logfileconsole("_saveScore End_");
 }
 void IHM::deleteAll(sysinfo& information) {
+	/*
+		Destruction des allocations dynamiques et de la fenetre
+	*/
 	logfileconsole("*********_________ Start DeleteAll _________*********");
 
 	for (unsigned int i = 1; i < FONTMAX; i++)
@@ -716,7 +755,7 @@ void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTextu
 	if (x != -1 && y != -1)
 		xt = x, yt = y;
 
-	SDL_Texture* newTexture = NULL;
+	SDL_Texture* newTexture = nullptr;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (w == 0 && h == 0) {
 		wt = loadedSurface->w;
@@ -727,10 +766,10 @@ void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTextu
 		ht = h;
 	}
 
-	if (loadedSurface != NULL) {
+	if (loadedSurface != nullptr) {
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-		if (newTexture != NULL) {
+		if (newTexture != nullptr) {
 			if (alpha != (Uint8)255) {
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 					IHM::logSDLError(std::cout, "alpha : ");
@@ -788,8 +827,11 @@ void Texture::centrage(int& xc, int& yc, int iW, int iH, int cnt) {
 }
 
 /* TEXTURE :: METHODES */
-Texture::Texture(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, unsigned int x, unsigned int y, int w, int h)
-	: _texture(image), _dst(rectangle(x, y, w, h)), _name(msg), _statescreen(statescreen), _select(select)
+Texture::Texture(SDL_Texture* image, const std::string& msg,
+	unsigned int statescreen, unsigned int select,
+	unsigned int x, unsigned int y, int w, int h)
+	: _texture(image), _dst(rectangle(x, y, w, h)), _name(msg),
+	_statescreen(statescreen), _select(select)
 {
 }
 Texture::~Texture() {

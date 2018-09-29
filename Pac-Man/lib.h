@@ -44,7 +44,6 @@
 typedef struct scorePlayer scorePlayer;
 typedef struct screen screen;
 typedef struct file file;
-typedef struct subcatWheel subcatWheel;
 typedef struct var var;
 typedef struct tile tile;
 typedef struct texture texture;

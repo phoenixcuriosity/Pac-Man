@@ -1,5 +1,11 @@
-numberOfScore=	4
+numberOfScore=	10
 qhrghq					36521
+lol					22400
 robin					19400
+apple					15500
+google					15500
 9robin09X					15000
-9g9					900
+gog					10500
+amazon					7700
+sfsg					2200
+hhsfl					2100

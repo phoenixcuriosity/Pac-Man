@@ -23,13 +23,14 @@
 
 #include "Entity.h"
 #include "Pac_Man_lib.h"
+#include "Texture.h"
 
 
 ///////////////////////////// ENTITY //////////////////////////////
 /* ENTITY :: STATIC */
 void Entity::move(sysinfo& information, Pacman& Player) {
 
-	if (information.variable.statescreen == STATEplay && information.variable.select != pause) {
+	if (information.variable.statescreen == STATEplay && information.variable.select == selectnothing) {
 		for (unsigned int i = 0; i < information.ghost.size(); i++)
 			information.ghost[i]->move(information.map, Player);
 		Player.move(information.map, information.ghost);
@@ -41,8 +42,12 @@ void Entity::move(sysinfo& information, Pacman& Player) {
 				break;
 			}
 		}
-		if (Player.GETlife() == 0 || information.variable.win) {
-			information.variable.select = pause;
+		if (Player.GETlife() == 0) {
+			information.variable.select = lost;
+			IHM::logfileconsole("End Game");
+		}
+		if(information.variable.win) {
+			information.variable.select = win;
 			IHM::logfileconsole("End Game");
 		}
 	}

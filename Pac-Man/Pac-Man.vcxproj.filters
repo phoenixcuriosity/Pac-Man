@@ -30,6 +30,9 @@
     <ClCompile Include="IHM.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib.h">
@@ -42,6 +45,9 @@
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
     <ClInclude Include="IHM.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
   </ItemGroup>

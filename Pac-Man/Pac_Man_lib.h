@@ -62,7 +62,7 @@ enum { nothing, gold, cherry, strawberry, peach, apple, key};
 enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, ghost1 = 800, ghost2 = 1600, ghost3 = 3200, ghost4 = 10000,valuekey = 5000};
 
 enum { STATEnothing, STATEecrantitre, STATEplay, STATEscore };  // différents état de l'écran
-enum { selectnothing, pause };	// spécifications de la séléction
+enum { selectnothing, pause, win, lost };	// spécifications de la séléction
 
 struct scorePlayer {
 	unsigned int score = 0;
@@ -75,12 +75,6 @@ struct screen {
 struct file {
 	const std::string log = "log.txt";
 	const std::string score = "save/scores.txt";
-};
-struct subcatWheel {
-	unsigned int mouse_x = 0;
-	unsigned int mouse_y = 0;
-	unsigned int ywheel = 0;
-	unsigned int xwheel = 0;
 };
 struct var {
 	bool continuer = true;
@@ -95,7 +89,6 @@ struct var {
 	unsigned int tempoScore = 0;
 
 	std::vector<scorePlayer> tabScorePlayer;
-	subcatWheel s_wheel;
 };
 struct tile{
 	unsigned int tile_nb = 0;

@@ -67,7 +67,7 @@ void mainLoop(sysinfo& information) {
 	information.ghost.push_back(new Ghost("Yellow", 1280, 564, yellow));
 	information.ghost.push_back(new Ghost("Pink", 1280, 628, pink));
 
-	int SDL_EnableUNICODE(1); // on azerty
+	int SDL_EnableUNICODE(SDL_ENABLE); // on azerty
 
 	//clock_t t1, t2;
 	while (information.variable.continuer) {

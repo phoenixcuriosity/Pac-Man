@@ -49,9 +49,9 @@ public:
 		const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
 	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, Uint8 statescreen, Uint8 select,
 		const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint8 cnt = 0);
-	static void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, Uint8 type, const std::string &msg,
+	static void loadwritetxt(Sysinfo& sysinfo, std::vector<Texture*>& tabTexture, Uint8 type, const std::string &msg,
 		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 cnt = 0);
-	static void writetxt(sysinfo& information, Uint8 type, const std::string &msg, SDL_Color color,
+	static void writetxt(Sysinfo& sysinfo, Uint8 type, const std::string &msg, SDL_Color color,
 		SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt = 0);
 	static void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, Uint8 = 0);
 	static void centrage(int&, int&, int, int, Uint8 = 0);
@@ -70,7 +70,7 @@ public:
 	virtual bool TextureTestString(const std::string&);
 
 	virtual void changeAlpha(Uint8);
-	virtual void changeTextureMsg(sysinfo& information, Uint8 type, const std::string &msg,
+	virtual void changeTextureMsg(Sysinfo& sysinfo, Uint8 type, const std::string &msg,
 		SDL_Color color, SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt = 0);
 
 	virtual SDL_Texture* GETtexture() const;
@@ -119,7 +119,7 @@ private:
 */
 class Buttons : public Texture {
 public:
-	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, Uint8 type, const std::string& msg,
+	static void createbutton(Sysinfo& sysinfo, std::vector<Buttons*>& tabbutton, Uint8 type, const std::string& msg,
 		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 centerbutton = 0);
 
 	Buttons() {};

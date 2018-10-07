@@ -17,7 +17,7 @@ Create Button n:2 msg = Go to leader board (END GAME) Success
 Create Button n:3 msg = Save and Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 2.073000 secondes
+temps d'execution de l'initialisation : 1.497000 secondes
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
@@ -26,8 +26,6 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
-_Reload Start_
-_Reload End_
 _Ecrantitres Start_
 _Ecrantitres End_
 _Ecrantitres Start_

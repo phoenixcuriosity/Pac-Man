@@ -31,15 +31,16 @@
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
-const int tileSize = 32;
-const int MAP_HEIGHT = 25;
-const int MAP_LENGTH = 25;
-const Uint8 FONTMAX = 160;
-const unsigned int vitesse = 2;
-const unsigned int tempoInvincible = 600;
 const unsigned int MAXGHOST = 4;
 const unsigned int MAXPOS = 4;
 const unsigned int MAXSKIN = 2;
+const Uint8 FONTMAX = 160;
+
+// to do : intégration Sysinfo
+const int tileSize = 32;
+const unsigned int vitesse = 2;
+const unsigned int tempoInvincible = 600;
+
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -64,29 +65,42 @@ enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valu
 enum : Uint8 { STATEnothing, STATEecrantitre, STATEplay, STATEscore };  // différents état de l'écran
 enum : Uint8 { selectnothing, pause, win, lost };	// spécifications de la séléction
 
-struct scorePlayer {
-	unsigned int score = 0;
-	std::string name = "";
-};
-struct screen {
-	SDL_Window *window = nullptr;
-	SDL_Renderer *renderer = nullptr;
-};
-struct file {
-	const std::string log = "log.txt";
-	const std::string score = "save/scores.txt";
-	std::string saveMap = "save/saveMap.txt";
-	std::string saveEntity = "save/saveEntity.txt";
-};
+
+//////////////////////// Structure niveau 2 ///////////////////////
 struct GameTime {
 	Uint8 hours = 0;
 	Uint8 minutes = 0;
 	Uint8 seconds = 0;
 	Uint8 frame = 0;
 };
-struct var {
+
+struct ScorePlayer {
+	unsigned int score = 0;
+	std::string name = "";
+};
+struct Tile {
+	unsigned int tile_nbx = 0;
+	unsigned int tile_nby = 0;
+	unsigned int tile_x = 0;
+	unsigned int tile_y = 0;
+
+	bool wall = false;
+	Uint8 entity = gold;
+};
+//////////////////////// Structure niveau 1 ///////////////////////
+struct Screen {
+	SDL_Window *window = nullptr;
+	SDL_Renderer *renderer = nullptr;
+};
+struct File {
+	const std::string log = "log.txt";
+	const std::string score = "save/scores.txt";
+	std::string saveMap = "save/saveMap.txt";
+	std::string saveEntity = "save/saveEntity.txt";
+};
+struct Var {
 	bool continuer = true;
-	
+
 	Uint8 select = selectnothing;
 	Uint8 statescreen = 0; // selectnothing par défaut
 	unsigned int score = 0;
@@ -97,18 +111,9 @@ struct var {
 	unsigned int tempoScore = 0;
 
 	GameTime onTime;
-	std::vector<scorePlayer> tabScorePlayer;
+	std::vector<ScorePlayer> tabScorePlayer;
 };
-struct tile{
-	unsigned int tile_nbx = 0;
-	unsigned int tile_nby = 0;
-	unsigned int tile_x = 0;
-	unsigned int tile_y = 0;
-
-	bool wall = false;
-	Uint8 entity = gold;
-};
-struct texture {
+struct AllTextures {
 	std::vector<Texture*> ground;
 
 	std::vector<Texture*> pacman;
@@ -128,18 +133,24 @@ struct texture {
 
 	TTF_Font *font[FONTMAX];
 };
-struct button {
-	std::vector<Buttons*> buttonecrantitre;
-	std::vector<Buttons*> buttonplay;
-	std::vector<Buttons*> buttonscore;
+struct AllButtons {
+	std::vector<Buttons*> buttonEcrantitre;
+	std::vector<Buttons*> buttonPlay;
+	std::vector<Buttons*> buttonScore;
 };
-struct sysinfo {
-	screen ecran;
-	file files;
-	var variable;
-	std::vector<std::vector<tile>> map;
-	button allButton;
-	texture allTextures;
+struct Map {
+	std::vector<std::vector<Tile>> matriceMap;
+	unsigned int map_length = 25;
+	unsigned int map_height = 25;
+};
+//////////////////////// Structure niveau 0 ///////////////////////
+struct Sysinfo {
+	Screen screen;
+	File file;
+	Var var;
+	AllTextures allTextures;
+	AllButtons allButtons;
+	Map map;
 	std::vector<Ghost*> ghost;
 };
 

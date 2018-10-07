@@ -28,16 +28,16 @@
 
 class Entity { // classe abstraite
 public:
-	static void move(sysinfo& information, Pacman& Player);
+	static void move(Sysinfo& sysinfo, Pacman& Player);
 	
 
 	Entity() {};
 	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
 	~Entity();
 
-	int tryToMove(std::vector<std::vector<tile>>& map, unsigned int pos);
-	bool isOnFullTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j);
-	bool isOnTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j);
+	int tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos);
+	bool isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
+	bool isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
 	void makeTheMove(bool, unsigned int);
 	void teleport();
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
@@ -96,12 +96,12 @@ public:
 
 	Pacman& operator = (const Pacman&);
 
-	int move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
-	Uint8 search(std::vector<std::vector<tile>>& map);
-	void value(std::vector<std::vector<tile>>& map, bool validMove);
+	int move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
+	Uint8 search(Map& map);
+	void value(std::vector<std::vector<Tile>>& map, bool validMove);
 	void collideGhost(std::vector<Ghost*>& ghost);
 
-	void afficherStats(sysinfo& information);
+	void afficherStats(Sysinfo& sysinfo);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 	
 
@@ -125,9 +125,9 @@ public:
 	Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type,unsigned int value = 0);
 	~Ghost();
 
-	int move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned int secondLoop = -1);
-	Uint8 search(std::vector<std::vector<tile>>& map);
-	void makeNextHeading(std::vector<std::vector<tile>>& map, Pacman& pacman);
+	int move(Map& map, Pacman& pacman, unsigned int secondLoop = -1);
+	Uint8 search(Map& map);
+	void makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman& pacman);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc);
 

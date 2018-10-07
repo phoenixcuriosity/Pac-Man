@@ -33,29 +33,26 @@ public:
 	static void logfileconsole(const std::string &msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
 	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
-	static void initTile(tile& map, bool wall, Uint8 entity);
-	static void forme(tile& tmap, std::vector<std::vector<tile>>& map, unsigned int length, unsigned int height);
-	static void initGrid(std::vector<std::vector<tile>>& map);
-	static void calculimage(sysinfo&);
+	static void initTile(Tile& map, bool wall, Uint8 entity);
+	static void forme(Tile& tmap, std::vector<std::vector<Tile>>& map, unsigned int length, unsigned int height, bool wall = true);
+	static void initGrid(Map& map);
+	static void calculimage(Sysinfo&);
 
 
-	static void mouse(sysinfo& information, Pacman& Player, SDL_Event event);
-	static void cliqueGauche(sysinfo& information, Pacman& Player, SDL_Event event);
+	static void mouse(Sysinfo& sysinfo, Pacman& Player, SDL_Event event);
+	static void cliqueGauche(Sysinfo& sysinfo, Pacman& Player, SDL_Event event);
 
-	static std::string getName(sysinfo& information, unsigned int position);
+	static std::string getName(Sysinfo& sysinfo, unsigned int position);
 
-	static void ecrantitre(sysinfo&);
-	static void ecranScore(sysinfo&, Pacman& player);
-	static void alwaysrender(sysinfo&, Pacman& player);
-	static void afficherMap(sysinfo& information);
-	static void calculTime(sysinfo& information);
+	static void ecrantitre(Sysinfo&);
+	static void ecranScore(Sysinfo&, Pacman& player);
+	static void alwaysrender(Sysinfo&, Pacman& player);
+	static void afficherMap(Sysinfo& sysinfo);
+	static void calculTime(Sysinfo& sysinfo);
 
-	static int topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score);
+	static int topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score);
 
-	static void deleteAll(sysinfo&);
-
-protected:
-	bool assertIndexMap(int nbx, int nby);
+	static void deleteAll(Sysinfo&);
 
 };
 template<class T>

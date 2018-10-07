@@ -41,15 +41,16 @@
 #include "SDL2-2.0.8/include/SDL_ttf.h"
 #include "SDL2-2.0.8/include/SDL_image.h"
 
-typedef struct scorePlayer scorePlayer;
-typedef struct screen screen;
-typedef struct file file;
+typedef struct ScorePlayer ScorePlayer;
+typedef struct Screen Screen;
+typedef struct File File;
 typedef struct GameTime GameTime;
-typedef struct var var;
-typedef struct tile tile;
-typedef struct texture texture;
-typedef struct button button;
-typedef struct sysinfo sysinfo;
+typedef struct Var Var;
+typedef struct Tile Tile;
+typedef struct AllTextures AllTextures;
+typedef struct AllButtons AllButtons;
+typedef struct Map Map;
+typedef struct Sysinfo Sysinfo;
 
 class IHM;
 class Texture;

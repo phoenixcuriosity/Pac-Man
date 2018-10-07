@@ -103,31 +103,35 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		logfileconsole("SDL_Init Success");
 	}
 }
-void IHM::initTile(tile& map, bool wall, Uint8 entity) {
+void IHM::initTile(Tile& map, bool wall, Uint8 entity) {
 	map.wall = wall; map.entity = entity;
 }
-void IHM::forme(tile& tmap, std::vector<std::vector<tile>>& map, unsigned int length, unsigned int height) {
+void IHM::forme(Tile& tmap, std::vector<std::vector<Tile>>& map, unsigned int length, unsigned int height, bool wall) {
 	for (unsigned int i = 0; i < length; i++) {
-		for (unsigned int j = 0; j < height; j++)
-			initTile(map[tmap.tile_nbx + i][tmap.tile_nby + j], true, nothing);
+		for (unsigned int j = 0; j < height; j++) {
+			if(wall)
+				initTile(map[tmap.tile_nbx + i][tmap.tile_nby + j], true, nothing);
+			else
+				initTile(map[tmap.tile_nbx + i][tmap.tile_nby + j], false, nothing);
+		}
 	}
 }
-void IHM::initGrid(std::vector<std::vector<tile>>& map) {
+void IHM::initGrid(Map& map) {
 	/*
 		Initialisation d'un niveau unique de Pacman
 	*/
-	tile kTile;
-	map.clear();
-	std::vector<tile> blank;
-	for (unsigned int x = 0; x < MAP_LENGTH; x++) {
-		map.push_back(blank);
-		for (unsigned int y = 0; y < MAP_HEIGHT; y++) {
+	Tile kTile;
+	map.matriceMap.clear();
+	std::vector<Tile> blank;
+	for (unsigned int x = 0; x < map.map_length; x++) {
+		map.matriceMap.push_back(blank);
+		for (unsigned int y = 0; y < map.map_height; y++) {
 
 			kTile.tile_nbx = x;
 			kTile.tile_nby = y;
-			kTile.tile_x = tileSize * x + (SCREEN_WIDTH / 2 - (MAP_LENGTH / 2 * tileSize));
-			kTile.tile_y = tileSize * y + (SCREEN_HEIGHT / 2 - (MAP_HEIGHT / 2 * tileSize));
-			if (x == 0 || x == MAP_LENGTH - 1 || y == 0 || y == MAP_HEIGHT - 1) {
+			kTile.tile_x = tileSize * x + (SCREEN_WIDTH / 2 - (map.map_length / 2 * tileSize));
+			kTile.tile_y = tileSize * y + (SCREEN_HEIGHT / 2 - (map.map_height / 2 * tileSize));
+			if (x == 0 || x == map.map_length - 1 || y == 0 || y == map.map_height - 1) {
 				kTile.wall = true;
 				kTile.entity = nothing;
 			}
@@ -135,214 +139,218 @@ void IHM::initGrid(std::vector<std::vector<tile>>& map) {
 				kTile.wall = false;
 				kTile.entity = gold;
 			}
-			map[x].push_back(kTile);
+			map.matriceMap[x].push_back(kTile);
 		}
 	}
 	// ouverture
-	initTile(map[0][12], false, nothing);
-	initTile(map[MAP_LENGTH - 1][12], false, nothing);
+	initTile(map.matriceMap[0][12], false, nothing);
+	initTile(map.matriceMap[map.map_length - 1][12], false, nothing);
 
 	// 
-	initTile(map[1][1], false, cherry);
-	initTile(map[1][MAP_HEIGHT - 2], false, strawberry);
-	initTile(map[MAP_LENGTH - 2][1], false, peach);
-	initTile(map[MAP_LENGTH - 2][MAP_HEIGHT - 2], false, apple);
+	initTile(map.matriceMap[1][1], false, cherry);
+	initTile(map.matriceMap[1][map.map_height - 2], false, strawberry);
+	initTile(map.matriceMap[map.map_length - 2][1], false, peach);
+	initTile(map.matriceMap[map.map_length - 2][map.map_height - 2], false, apple);
+
+	// ghost spawn
+	forme(map.matriceMap[11][11], map.matriceMap, 3, 3, false);
+	initTile(map.matriceMap[12][10], false, nothing);
 
 	// blocs de murs
-	forme(map[1][11], map, 4, 1); // 1
-	forme(map[1][13], map, 4, 1); // 2
-	forme(map[2][2], map, 4, 2); // 3
-	forme(map[2][5], map, 2, 3); // 4
-	forme(map[2][9], map, 2, 1); // 5
-	forme(map[2][15], map, 4, 2); // 6
-	forme(map[2][18], map, 1, 5); // 7
-	forme(map[4][18], map, 2, 2); // 8
-	forme(map[4][21], map, 2, 2); // 9
-	forme(map[5][5], map, 1, 5); // 10
-	initTile(map[6][11], true, nothing); // 11a
-	initTile(map[6][13], true, nothing); // 12a
-	forme(map[7][2], map, 1, 3); // 13
-	forme(map[7][6], map, 1, 2); // 11b
-	forme(map[7][8], map, 2, 4); // 11c
-	forme(map[7][13], map, 2, 4); // 12b
-	forme(map[7][18], map, 2, 3); // 14
-	forme(map[7][22], map, 4, 1); // 15a
-	forme(map[9][2], map, 2, 5); // 16
-	forme(map[10][8], map, 5, 1); // 17a
-	forme(map[10][10], map, 2, 1); // 18a
-	forme(map[10][11], map, 1, 4); // 18b
-	initTile(map[10][16], true, nothing); // 19
-	forme(map[10][18], map, 5, 1); // 20a
-	forme(map[10][20], map, 1, 2); // 15b
-	forme(map[11][14], map, 3, 1); // 18c
-	forme(map[12][1], map, 1, 4); // 21
-	forme(map[12][6], map, 1, 2); // 17b
-	forme(map[12][16], map, 1, 2); // 20b
-	forme(map[12][20], map, 1, 4); // 22
-	forme(map[13][10], map, 2, 1); // 18d
-	forme(map[14][2], map, 2, 5); // 23
-	forme(map[14][11], map, 1, 4); // 18e
-	initTile(map[14][16], true, nothing); // 24
-	forme(map[14][20], map, 1, 2); // 25a
-	forme(map[14][22], map, 4, 1); // 25b
-	forme(map[16][8], map, 2, 4); // 26a
-	forme(map[16][13], map, 2, 4); // 27a
-	forme(map[16][18], map, 2, 3); // 28
-	forme(map[17][2], map, 1, 3); // 29
-	forme(map[17][6], map, 1, 2); // 26b
-	initTile(map[18][11], true, nothing); // 26c
-	initTile(map[18][13], true, nothing); // 27b
-	forme(map[19][2], map, 4, 2); // 30
-	forme(map[19][5], map, 1, 5); // 31
-	forme(map[19][15], map, 4, 2); // 32
-	forme(map[19][18], map, 2, 2); // 33
-	forme(map[19][21], map, 2, 2); // 34
-	forme(map[20][11], map, 4, 1); // 35
-	forme(map[20][13], map, 4, 1); // 36
-	forme(map[21][5], map, 2, 3); // 37
-	forme(map[21][9], map, 2, 1); // 38
-	forme(map[22][18], map, 1, 5); // 39
+	forme(map.matriceMap[1][11], map.matriceMap, 4, 1); // 1
+	forme(map.matriceMap[1][13], map.matriceMap, 4, 1); // 2
+	forme(map.matriceMap[2][2], map.matriceMap, 4, 2); // 3
+	forme(map.matriceMap[2][5], map.matriceMap, 2, 3); // 4
+	forme(map.matriceMap[2][9], map.matriceMap, 2, 1); // 5
+	forme(map.matriceMap[2][15], map.matriceMap, 4, 2); // 6
+	forme(map.matriceMap[2][18], map.matriceMap, 1, 5); // 7
+	forme(map.matriceMap[4][18], map.matriceMap, 2, 2); // 8
+	forme(map.matriceMap[4][21], map.matriceMap, 2, 2); // 9
+	forme(map.matriceMap[5][5], map.matriceMap, 1, 5); // 10
+	initTile(map.matriceMap[6][11], true, nothing); // 11a
+	initTile(map.matriceMap[6][13], true, nothing); // 12a
+	forme(map.matriceMap[7][2], map.matriceMap, 1, 3); // 13
+	forme(map.matriceMap[7][6], map.matriceMap, 1, 2); // 11b
+	forme(map.matriceMap[7][8], map.matriceMap, 2, 4); // 11c
+	forme(map.matriceMap[7][13], map.matriceMap, 2, 4); // 12b
+	forme(map.matriceMap[7][18], map.matriceMap, 2, 3); // 14
+	forme(map.matriceMap[7][22], map.matriceMap, 4, 1); // 15a
+	forme(map.matriceMap[9][2], map.matriceMap, 2, 5); // 16
+	forme(map.matriceMap[10][8], map.matriceMap, 5, 1); // 17a
+	forme(map.matriceMap[10][10], map.matriceMap, 2, 1); // 18a
+	forme(map.matriceMap[10][11], map.matriceMap, 1, 4); // 18b
+	initTile(map.matriceMap[10][16], true, nothing); // 19
+	forme(map.matriceMap[10][18], map.matriceMap, 5, 1); // 20a
+	forme(map.matriceMap[10][20], map.matriceMap, 1, 2); // 15b
+	forme(map.matriceMap[11][14], map.matriceMap, 3, 1); // 18c
+	forme(map.matriceMap[12][1], map.matriceMap, 1, 4); // 21
+	forme(map.matriceMap[12][6], map.matriceMap, 1, 2); // 17b
+	forme(map.matriceMap[12][16], map.matriceMap, 1, 2); // 20b
+	forme(map.matriceMap[12][20], map.matriceMap, 1, 4); // 22
+	forme(map.matriceMap[13][10], map.matriceMap, 2, 1); // 18d
+	forme(map.matriceMap[14][2], map.matriceMap, 2, 5); // 23
+	forme(map.matriceMap[14][11], map.matriceMap, 1, 4); // 18e
+	initTile(map.matriceMap[14][16], true, nothing); // 24
+	forme(map.matriceMap[14][20], map.matriceMap, 1, 2); // 25a
+	forme(map.matriceMap[14][22], map.matriceMap, 4, 1); // 25b
+	forme(map.matriceMap[16][8], map.matriceMap, 2, 4); // 26a
+	forme(map.matriceMap[16][13], map.matriceMap, 2, 4); // 27a
+	forme(map.matriceMap[16][18], map.matriceMap, 2, 3); // 28
+	forme(map.matriceMap[17][2], map.matriceMap, 1, 3); // 29
+	forme(map.matriceMap[17][6], map.matriceMap, 1, 2); // 26b
+	initTile(map.matriceMap[18][11], true, nothing); // 26c
+	initTile(map.matriceMap[18][13], true, nothing); // 27b
+	forme(map.matriceMap[19][2], map.matriceMap, 4, 2); // 30
+	forme(map.matriceMap[19][5], map.matriceMap, 1, 5); // 31
+	forme(map.matriceMap[19][15], map.matriceMap, 4, 2); // 32
+	forme(map.matriceMap[19][18], map.matriceMap, 2, 2); // 33
+	forme(map.matriceMap[19][21], map.matriceMap, 2, 2); // 34
+	forme(map.matriceMap[20][11], map.matriceMap, 4, 1); // 35
+	forme(map.matriceMap[20][13], map.matriceMap, 4, 1); // 36
+	forme(map.matriceMap[21][5], map.matriceMap, 2, 3); // 37
+	forme(map.matriceMap[21][9], map.matriceMap, 2, 1); // 38
+	forme(map.matriceMap[22][18], map.matriceMap, 1, 5); // 39
 
 	
 }
-void IHM::calculimage(sysinfo& information) {
+void IHM::calculimage(Sysinfo& sysinfo) {
 	logfileconsole("_calculimage Start_");
 
 	std::string IPath = "image/";
-	information.variable.statescreen = STATEplay;
-	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+	sysinfo.var.statescreen = STATEplay;
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "map.png", "map.png", (Uint8)255, -1, -1, NULL, NULL);
 
 	std::string ghostName[MAXGHOST] = { "Red", "Blue", "Yellow", "Pink" }, Pos[MAXPOS] = { "U", "L", "D", "R" };
 	for (unsigned int i = 0; i < MAXPOS; i++) {
 		for (unsigned int j = 1; j < 3; j++)
-			Texture::loadImage(information.ecran.renderer, information.allTextures.pacman, information.variable.statescreen, information.variable.select,
+			Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.pacman, sysinfo.var.statescreen, sysinfo.var.select,
 				IPath + "pacman/pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", "pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 	}
 
 	// permet de charger les 32 Textures des Ghost (8 par Ghost, dont 4 pour les position avec le 1er skin et les 4 autres pour l'autre skin(alternateskin))
-	std::vector<Texture*>* ghostTab[MAXGHOST] = { &information.allTextures.red, &information.allTextures.blue,
-		&information.allTextures.yellow, &information.allTextures.pink };
+	std::vector<Texture*>* ghostTab[MAXGHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
+		&sysinfo.allTextures.yellow, &sysinfo.allTextures.pink };
 	for (unsigned int i = 0; i < MAXGHOST; i++) { // nb de ghost
 		for (unsigned int j = 1; j < 3; j++) { // skin or alternate skin
 			for (unsigned int k = 0; k < MAXPOS; k++) // UP, LEFT, DOWN, RIGHT
-				Texture::loadImage(information.ecran.renderer, *ghostTab[i], information.variable.statescreen,
-						information.variable.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png",
+				Texture::loadImage(sysinfo.screen.renderer, *ghostTab[i], sysinfo.var.statescreen,
+						sysinfo.var.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png",
 						ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
 		}
 	}
-	Texture::loadImage(information.ecran.renderer, information.allTextures.miscGhost, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "Ghost/not_Invincible.png", "not_Invincible.png", (Uint8)255, -1, -1, tileSize, tileSize);
 
-	Texture::loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/lemon.png", "lemon.png", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/pear.png", "pear.png", (Uint8)255, -1, -1, tileSize, tileSize);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.collectibles, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1, tileSize, tileSize);
 
 
-	information.variable.statescreen = STATEecrantitre;
-	Texture::loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+	sysinfo.var.statescreen = STATEecrantitre;
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecrantitre, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ecrantitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2, NULL, NULL, center);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecrantitre, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ecrantitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2 + 400, NULL, NULL, center);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecrantitre, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ecrantitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2, NULL, NULL, center);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecrantitre, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ecrantitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 + 400, NULL, NULL, center);
-	Texture::loadImage(information.ecran.renderer, information.allTextures.imgecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecrantitre, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ecrantitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
 	int spacemenu = 64, initspacemenu = 400;
 
 	// ______Buttons_____
-	information.variable.statescreen = STATEecrantitre;
-	Buttons::createbutton(information, information.allButton.buttonecrantitre,
+	sysinfo.var.statescreen = STATEecrantitre;
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
 		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
-	Buttons::createbutton(information, information.allButton.buttonecrantitre,
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
 		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	Buttons::createbutton(information, information.allButton.buttonecrantitre,
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
 		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	Buttons::createbutton(information, information.allButton.buttonecrantitre,
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
 		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 
-	information.variable.statescreen = STATEplay;
-	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
+	sysinfo.var.statescreen = STATEplay;
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
 		"Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
-	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
 		"Initial Grid", WriteColorButton, BackColorButton, 32, 0, 128);
-	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
 		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0);
-	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
 		"Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64);
 
-	information.variable.statescreen = STATEscore;
-	Buttons::createbutton(information, information.allButton.buttonscore, shaded,
+	sysinfo.var.statescreen = STATEscore;
+	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonScore, shaded,
 		"Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
 
 	// ______Writetxt_____ 
-	information.variable.statescreen = STATEecrantitre;
-	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
+	sysinfo.var.statescreen = STATEecrantitre;
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
 		blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0);
-	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
 		blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30);
-	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
 		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
-	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
 		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, center_x);
-	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
 		blended, "Use your mouse to select", { 0, 255, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 350, center_x);
 
 
-	information.variable.statescreen = STATEplay;
-	Texture::loadwritetxt(information, information.allTextures.txtplay, blended,
+	sysinfo.var.statescreen = STATEplay;
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
 		"Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, center_x);
-	Texture::loadwritetxt(information, information.allTextures.txtplay, blended,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
 		"You can move Pacman", { 0, 255, 0, 255 }, NoColor, 24, 100, 500);
-	Texture::loadwritetxt(information, information.allTextures.txtplay, blended,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
 		"by pressing arrows on your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 524);
-	information.variable.select = lost;
-	Texture::loadwritetxt(information, information.allTextures.txtplay, blended,
+	sysinfo.var.select = lost;
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
 		"YOU DIED", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, center);
-	information.variable.select = win;
-	Texture::loadwritetxt(information, information.allTextures.txtplay, blended,
+	sysinfo.var.select = win;
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
 		"YOU WIN", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, center);
 
-	information.variable.select = selectnothing;
-	Texture::loadwritetxt(information, information.allTextures.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(information, information.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(information, information.allTextures.scoreValue, blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(information, information.allTextures.scoreValue, blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(information, information.allTextures.scoreValue, blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(information, information.allTextures.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	sysinfo.var.select = selectnothing;
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1);
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1);
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
 
-	information.variable.statescreen = STATEscore;
-	information.variable.select = pause;
-	Texture::loadwritetxt(information, information.allTextures.txtscore,
+	sysinfo.var.statescreen = STATEscore;
+	sysinfo.var.select = pause;
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
 		blended, "TOP 10 SCORES", { 255, 0, 0, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
-	Texture::loadwritetxt(information, information.allTextures.txtscore,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
 		blended, "Enter your name", { 0, 255, 0, 255 }, NoColor, 24, 100, 200);
-	Texture::loadwritetxt(information, information.allTextures.txtscore,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
 		blended, "with your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 224);
-	Texture::loadwritetxt(information, information.allTextures.txtscore,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
 		blended, "Remove last letter with backspace", { 0, 255, 0, 255 }, NoColor, 24, 100, 248);
-	Texture::loadwritetxt(information, information.allTextures.txtscore,
+	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
 		blended, "Press return when finish", { 0, 255, 0, 255 }, NoColor, 24, 100, 272);
 
-	information.variable.select = selectnothing;
+	sysinfo.var.select = selectnothing;
 	logfileconsole("_calculimage End_");
 }
-void IHM::mouse(sysinfo& information, Pacman& Player, SDL_Event event) {
+void IHM::mouse(Sysinfo& sysinfo, Pacman& Player, SDL_Event event) {
 	/*
 	Handle Mouse Event
 	BUTTON_LEFT
@@ -351,74 +359,74 @@ void IHM::mouse(sysinfo& information, Pacman& Player, SDL_Event event) {
 	*/
 
 	if (event.button.button == SDL_BUTTON_LEFT)
-		cliqueGauche(information, Player, event);
+		cliqueGauche(sysinfo, Player, event);
 
 
 }
-void IHM::cliqueGauche(sysinfo& information, Pacman& Player,SDL_Event event) {
+void IHM::cliqueGauche(Sysinfo& sysinfo, Pacman& Player,SDL_Event event) {
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 
-	switch (information.variable.statescreen) {
+	switch (sysinfo.var.statescreen) {
 	case STATEplay:
-		for (unsigned int i = 0; i < information.allButton.buttonplay.size(); i++) { // recherche si une bouton est dans ces coordonnées
-			if (information.allButton.buttonplay[i]->searchButton((std::string)"Pause", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.allButton.buttonplay[i]->changeOn();
-				if (information.allButton.buttonplay[i]->GETon())
-					information.variable.select = pause;
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonPlay.size(); i++) { // recherche si une bouton est dans ces coordonnées
+			if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Pause", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				sysinfo.allButtons.buttonPlay[i]->changeOn();
+				if (sysinfo.allButtons.buttonPlay[i]->GETon())
+					sysinfo.var.select = pause;
 				else
-					information.variable.select = selectnothing;
+					sysinfo.var.select = selectnothing;
 				return;
 			}
-			else if (information.allButton.buttonplay[i]->searchButton((std::string)"Initial Grid", information.variable.statescreen, event.button.x, event.button.y)) {
-				initGrid(information.map);
+			else if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Initial Grid", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				initGrid(sysinfo.map);
 				return;
 			}
-			else if (information.allButton.buttonplay[i]->searchButton((std::string)"Save and Quit", information.variable.statescreen, event.button.x, event.button.y)) {
-				SaveReload::save(information, Player);
-				information.variable.continuer = false;
+			else if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Save and Quit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				SaveReload::save(sysinfo, Player);
+				sysinfo.var.continuer = false;
 				return;
 			}
-			else if (information.allButton.buttonplay[i]->searchButton((std::string)"Go to leader board (END GAME)", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.statescreen = STATEscore;
-				information.variable.select = pause;
-				ecranScore(information, Player);
+			else if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Go to leader board (END GAME)", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				sysinfo.var.statescreen = STATEscore;
+				sysinfo.var.select = pause;
+				ecranScore(sysinfo, Player);
 				return;
 			}
 		}
 		break;
 	case STATEecrantitre:
-		for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++) {
-			if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.statescreen = STATEplay;
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonEcrantitre.size(); i++) {
+			if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"New Game", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				sysinfo.var.statescreen = STATEplay;
 				return;
 			}
-			else if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
-				SaveReload::reload(information, Player);
-				information.variable.statescreen = STATEplay;
+			else if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"Reload", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				SaveReload::reload(sysinfo, Player);
+				sysinfo.var.statescreen = STATEplay;
 				return;
 			}
-			else if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.continuer = false;
+			else if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"Option", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				sysinfo.var.continuer = false;
 				return;
 			}
-			else if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.continuer = false;
+			else if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"Quit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				sysinfo.var.continuer = false;
 				return;
 			}
 		}
 		break;
 	case STATEscore:
-		for (unsigned int i = 0; i < information.allButton.buttonscore.size(); i++) {
-			if (information.allButton.buttonscore[i]->searchButton((std::string)"Return to Title Screen", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.select = selectnothing;
-				ecrantitre(information);
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonScore.size(); i++) {
+			if (sysinfo.allButtons.buttonScore[i]->searchButton((std::string)"Return to Title Screen", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				sysinfo.var.select = selectnothing;
+				ecrantitre(sysinfo);
 				return;
 			}
 		}
 		break;
 	}
 }
-std::string IHM::getName(sysinfo& information, unsigned int position) {
+std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
 	/*
 		Demande au joueur son pseudo pour etre placé dans le tableau des scores
 		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
@@ -432,7 +440,7 @@ std::string IHM::getName(sysinfo& information, unsigned int position) {
 		SDL_WaitEvent(&event);
 		switch (event.type) {
 		case SDL_QUIT:	// permet de quitter le jeu
-			information.variable.continuer = 0;
+			sysinfo.var.continuer = 0;
 			break;
 		case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 			switch (event.key.keysym.sym) {
@@ -459,17 +467,17 @@ std::string IHM::getName(sysinfo& information, unsigned int position) {
 				if(validCharacter)
 					name += (char)event.key.keysym.sym;
 
-				SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
-				SDL_RenderClear(information.ecran.renderer);
-				information.allTextures.tabScore[position]->changeTextureMsg(information, blended,
-					name + "      " + std::to_string(information.variable.tabScorePlayer[position].score),
+				SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
+				SDL_RenderClear(sysinfo.screen.renderer);
+				sysinfo.allTextures.tabScore[position]->changeTextureMsg(sysinfo, blended,
+					name + "      " + std::to_string(sysinfo.var.tabScorePlayer[position].score),
 					{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += ((1 + position) * 32), center_x);
 				initspacemenu = 200;
-				for (unsigned int i = 0; i < information.allTextures.tabScore.size(); i++)
-					information.allTextures.tabScore[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-				for (unsigned int i = 0; i < information.allTextures.txtscore.size(); i++)
-					information.allTextures.txtscore[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-				SDL_RenderPresent(information.ecran.renderer);
+				for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
+					sysinfo.allTextures.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+				for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++)
+					sysinfo.allTextures.txtscore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+				SDL_RenderPresent(sysinfo.screen.renderer);
 			}
 			validCharacter = false;
 			validChange = false;
@@ -478,7 +486,7 @@ std::string IHM::getName(sysinfo& information, unsigned int position) {
 	}
 
 }
-void IHM::ecrantitre(sysinfo& information) {
+void IHM::ecrantitre(Sysinfo& sysinfo) {
 	/*
 
 		affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEecrantitre
@@ -486,200 +494,203 @@ void IHM::ecrantitre(sysinfo& information) {
 	*/
 	logfileconsole("_Ecrantitres Start_");
 
-	information.variable.statescreen = STATEecrantitre;
-	SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
-	SDL_RenderClear(information.ecran.renderer);
+	sysinfo.var.statescreen = STATEecrantitre;
+	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
+	SDL_RenderClear(sysinfo.screen.renderer);
 
-	for (unsigned int i = 0; i < information.allTextures.txtecrantitre.size(); i++)
-		information.allTextures.txtecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+	for (unsigned int i = 0; i < sysinfo.allTextures.txtecrantitre.size(); i++)
+		sysinfo.allTextures.txtecrantitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 
-	for (unsigned int i = 0; i < information.allTextures.imgecrantitre.size(); i++)
-		information.allTextures.imgecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+	for (unsigned int i = 0; i < sysinfo.allTextures.imgecrantitre.size(); i++)
+		sysinfo.allTextures.imgecrantitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 
-	for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++)
-		information.allButton.buttonecrantitre[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+	for (unsigned int i = 0; i < sysinfo.allButtons.buttonEcrantitre.size(); i++)
+		sysinfo.allButtons.buttonEcrantitre[i]->renderButton(sysinfo.screen.renderer, sysinfo.var.statescreen);
 
 
-	SDL_RenderPresent(information.ecran.renderer);
+	SDL_RenderPresent(sysinfo.screen.renderer);
 
 	logfileconsole("_Ecrantitres End_");
 }
-void IHM::ecranScore(sysinfo& information, Pacman& player) {
+void IHM::ecranScore(Sysinfo& sysinfo, Pacman& player) {
 	logfileconsole("_Ecrantitres Start_");
 
-	information.variable.statescreen = STATEscore;
+	sysinfo.var.statescreen = STATEscore;
 	int position = 0;
-	scorePlayer p; p.name = ""; p.score = player.GETvalue();
-	information.variable.tabScorePlayer.push_back(p);
-	position = topScore(information.variable.tabScorePlayer, p.score);
+	ScorePlayer p; p.name = ""; p.score = player.GETvalue();
+	sysinfo.var.tabScorePlayer.push_back(p);
+	position = topScore(sysinfo.var.tabScorePlayer, p.score);
 	
-	for (unsigned int i = 0; i < information.allTextures.tabScore.size(); i++)
-		delete information.allTextures.tabScore[i];
-	information.allTextures.tabScore.clear();
+	for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
+		delete sysinfo.allTextures.tabScore[i];
+	sysinfo.allTextures.tabScore.clear();
 	unsigned int initspacemenu = 200;
-	for (unsigned int i = 0; i < information.variable.tabScorePlayer.size(); i++)
-		Texture::loadwritetxt(information, information.allTextures.tabScore,
-			blended, information.variable.tabScorePlayer[i].name + "      " + std::to_string(information.variable.tabScorePlayer[i].score),
+	for (unsigned int i = 0; i < sysinfo.var.tabScorePlayer.size(); i++)
+		Texture::loadwritetxt(sysinfo, sysinfo.allTextures.tabScore,
+			blended, sysinfo.var.tabScorePlayer[i].name + "      " + std::to_string(sysinfo.var.tabScorePlayer[i].score),
 			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, center_x);
 
 
-	SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
-	SDL_RenderClear(information.ecran.renderer);
-	for (unsigned int i = 0; i < information.allTextures.tabScore.size(); i++)
-		information.allTextures.tabScore[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-	for (unsigned int i = 0; i < information.allTextures.txtscore.size(); i++) {
-		if (information.allTextures.txtscore[i]->renderTextureTestString(information.ecran.renderer, "TOP 10 SCORES"))
+	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
+	SDL_RenderClear(sysinfo.screen.renderer);
+	for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
+		sysinfo.allTextures.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+	for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++) {
+		if (sysinfo.allTextures.txtscore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
 			break;
 	}
 		
 
 	if (position != -1) { // si dans le top 10
-		for (unsigned int i = 0; i < information.allTextures.txtscore.size(); i++)
-			information.allTextures.txtscore[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-		SDL_RenderPresent(information.ecran.renderer);
-		information.variable.tabScorePlayer[position].name = getName(information, position);
+		for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++)
+			sysinfo.allTextures.txtscore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+		SDL_RenderPresent(sysinfo.screen.renderer);
+		sysinfo.var.tabScorePlayer[position].name = getName(sysinfo, position);
 	}
 
-	SDL_SetRenderDrawColor(information.ecran.renderer, 0, 0, 0, 255);
-	SDL_RenderClear(information.ecran.renderer);
-	for (unsigned int i = 0; i < information.allTextures.tabScore.size(); i++)
-		information.allTextures.tabScore[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-	for (unsigned int i = 0; i < information.allTextures.txtscore.size(); i++) {
-		if (information.allTextures.txtscore[i]->renderTextureTestString(information.ecran.renderer, "TOP 10 SCORES"))
+	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
+	SDL_RenderClear(sysinfo.screen.renderer);
+	for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
+		sysinfo.allTextures.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+	for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++) {
+		if (sysinfo.allTextures.txtscore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
 			break;
 	}
-	for (unsigned int i = 0; i < information.allButton.buttonscore.size(); i++)
-		information.allButton.buttonscore[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
-	SDL_RenderPresent(information.ecran.renderer);
+	for (unsigned int i = 0; i < sysinfo.allButtons.buttonScore.size(); i++)
+		sysinfo.allButtons.buttonScore[i]->renderButton(sysinfo.screen.renderer, sysinfo.var.statescreen);
+	SDL_RenderPresent(sysinfo.screen.renderer);
 
 	logfileconsole("_Ecrantitres End_");
 }
-void IHM::alwaysrender(sysinfo& information, Pacman& player) {
+void IHM::alwaysrender(Sysinfo& sysinfo, Pacman& player) {
 	//clock_t t1, t2;
 	//t1 = clock();
-	std::vector<Texture*>* ghostTab[MAXGHOST] = { &information.allTextures.red, &information.allTextures.blue,
-		&information.allTextures.yellow, &information.allTextures.pink };
+	std::vector<Texture*>* ghostTab[MAXGHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
+		&sysinfo.allTextures.yellow, &sysinfo.allTextures.pink };
 
-	switch (information.variable.statescreen) {
+	switch (sysinfo.var.statescreen) {
 	case STATEplay:
 		/*
 			fond gris et affichage de la map avec les couloirs et murs
 		*/
-		SDL_RenderClear(information.ecran.renderer);
-		SDL_SetRenderDrawColor(information.ecran.renderer, 128, 128, 128, 0xFF);
-		afficherMap(information);
-		calculTime(information);
+		SDL_RenderClear(sysinfo.screen.renderer);
+		SDL_SetRenderDrawColor(sysinfo.screen.renderer, 128, 128, 128, 0xFF);
+		afficherMap(sysinfo);
+		calculTime(sysinfo);
 
 		/*
 			changement de skin toutes 10 boucles (10 frames)
 		*/
-		information.variable.modulo = (information.variable.modulo + 1) % 10;
-		if (information.variable.modulo == 0) {
+		sysinfo.var.modulo = (sysinfo.var.modulo + 1) % 10;
+		if (sysinfo.var.modulo == 0) {
 			player.SETalternateSkin(!player.GETalternateSkin());
-			for (unsigned int i = 0; i < information.ghost.size(); i++)
-				information.ghost[i]->SETalternateSkin(!information.ghost[i]->GETalternateSkin());
+			for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
+				sysinfo.ghost[i]->SETalternateSkin(!sysinfo.ghost[i]->GETalternateSkin());
 		}
 
 
-		for (unsigned int i = 0; i < information.allTextures.txtplay.size(); i++) {
-			information.allTextures.txtplay[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+		for (unsigned int i = 0; i < sysinfo.allTextures.txtplay.size(); i++) {
+			sysinfo.allTextures.txtplay[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 		}
 
 		//
-		player.afficherStats(information);
-		player.afficher(information.ecran.renderer, information.allTextures.pacman);
+		player.afficherStats(sysinfo);
+		player.afficher(sysinfo.screen.renderer, sysinfo.allTextures.pacman);
 
 		
-		for (unsigned int i = 0; i < information.ghost.size(); i++)
-			information.ghost[i]->afficher(information.ecran.renderer, *ghostTab[i], information.allTextures.miscGhost);
+		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
+			sysinfo.ghost[i]->afficher(sysinfo.screen.renderer, *ghostTab[i], sysinfo.allTextures.miscGhost);
 
 
-		information.variable.moduloScore = (information.variable.moduloScore + 1) % 30;
-		if (player.GETtypeOfValue() != 0 || information.variable.tempoScore != 0) {
+		sysinfo.var.moduloScore = (sysinfo.var.moduloScore + 1) % 30;
+		if (player.GETtypeOfValue() != 0 || sysinfo.var.tempoScore != 0) {
 			if (player.GETtypeOfValue() != 0)
-				information.variable.tempoScore = player.GETtypeOfValue();
-			switch (information.variable.tempoScore) {
+				sysinfo.var.tempoScore = player.GETtypeOfValue();
+			switch (sysinfo.var.tempoScore) {
 			case valuegold:
-				information.allTextures.scoreValue[0]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[0]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
 			case valuecherry:
-				information.allTextures.scoreValue[1]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[1]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
 			case valuestrawberry:
-				information.allTextures.scoreValue[2]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[2]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
 			case valuepeach:
-				information.allTextures.scoreValue[3]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[3]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
 			case valueapple:
-				information.allTextures.scoreValue[4]->render(information.ecran.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[4]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
 				break;
 			}
 
-			if (information.variable.moduloScore == 0)
-				information.variable.tempoScore = 0;
+			if (sysinfo.var.moduloScore == 0)
+				sysinfo.var.tempoScore = 0;
 		}
 
-		for (unsigned int i = 0; i < information.allButton.buttonplay.size(); i++)
-			information.allButton.buttonplay[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonPlay.size(); i++)
+			sysinfo.allButtons.buttonPlay[i]->renderButton(sysinfo.screen.renderer, sysinfo.var.statescreen);
 
 
-		SDL_RenderPresent(information.ecran.renderer);
+		SDL_RenderPresent(sysinfo.screen.renderer);
 		break;
 	}
 
 	//t2 = clock();
 	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 }
-void IHM::afficherMap(sysinfo& information) {
+void IHM::afficherMap(Sysinfo& sysinfo) {
 	/*
 		à utiliser si besoin de changer la map -> commenter l'autre partie du code
 		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
-
-
-	for (unsigned int i = 0; i < information.map.size(); i++) {
-		if (information.map[i].wall)
-			information.allTextures.ground[blackTile]->render(information.ecran.renderer, information.map[i].tile_x, information.map[i].tile_y);
+	*/
+	/*
+	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+		if (sysinfo.map[i][j].wall)
+			sysinfo.allTextures.ground[blackTile]->render(sysinfo.screen.renderer, sysinfo.map[i][j].tile_x, sysinfo.map[i][j].tile_y);
 		else {
-			information.allTextures.ground[whiteTile]->render(information.ecran.renderer, information.map[i].tile_x, information.map[i].tile_y);
-			if(information.map[i].entity != nothing)
-				information.allTextures.collectibles[information.map[i].entity - 1]->render(information.ecran.renderer, information.map[i].tile_x, information.map[i].tile_y);
+			sysinfo.allTextures.ground[whiteTile]->render(sysinfo.screen.renderer, sysinfo.map[i][j].tile_x, sysinfo.map[i][j].tile_y);
+			if(sysinfo.map[i][j].entity != nothing)
+				sysinfo.allTextures.collectibles[sysinfo.map[i][j].entity - 1]->render(sysinfo.screen.renderer, sysinfo.map[i][j].tile_x, sysinfo.map[i][j].tile_y);
 		}
 	}
 	*/
 
-	information.allTextures.ground[mapTile]->render(information.ecran.renderer, information.map[0][0].tile_x, information.map[0][0].tile_y);
-	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
-		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
-			if (!information.map[i][j].wall && information.map[i][j].entity != nothing)
-				information.allTextures.collectibles[information.map[i][j].entity - 1]->render(information.ecran.renderer,
-					information.map[i][j].tile_x, information.map[i][j].tile_y);
+	
+	sysinfo.allTextures.ground[mapTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[0][0].tile_x, sysinfo.map.matriceMap[0][0].tile_y);
+	for (unsigned int i = 0; i < sysinfo.map.map_length; i++) {
+		for (unsigned int j = 0; j < sysinfo.map.map_height; j++) {
+			if (!sysinfo.map.matriceMap[i][j].wall && sysinfo.map.matriceMap[i][j].entity != nothing)
+				sysinfo.allTextures.collectibles[sysinfo.map.matriceMap[i][j].entity - 1]->render(sysinfo.screen.renderer,
+					sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
 		}
 	}
+	
 }
-void IHM::calculTime(sysinfo& information) {
-	information.variable.onTime.frame = (information.variable.onTime.frame + 1) % 60;
-	if (information.variable.onTime.frame == 0) {
-		information.variable.onTime.seconds = (information.variable.onTime.seconds + 1) % 60;
-		if (information.variable.onTime.seconds == 0) {
-			information.variable.onTime.minutes = (information.variable.onTime.minutes + 1) % 60;
-			if (information.variable.onTime.minutes == 0)
-				information.variable.onTime.hours++;
+void IHM::calculTime(Sysinfo& sysinfo) {
+	sysinfo.var.onTime.frame = (sysinfo.var.onTime.frame + 1) % 60;
+	if (sysinfo.var.onTime.frame == 0) {
+		sysinfo.var.onTime.seconds = (sysinfo.var.onTime.seconds + 1) % 60;
+		if (sysinfo.var.onTime.seconds == 0) {
+			sysinfo.var.onTime.minutes = (sysinfo.var.onTime.minutes + 1) % 60;
+			if (sysinfo.var.onTime.minutes == 0)
+				sysinfo.var.onTime.hours++;
 		}
 	}
-	Texture::writetxt(information, blended,
-		std::to_string(information.variable.onTime.hours) + ":"
-		+ std::to_string(information.variable.onTime.minutes) + ":"
-		+ std::to_string(information.variable.onTime.seconds),
+	Texture::writetxt(sysinfo, blended,
+		std::to_string(sysinfo.var.onTime.hours) + ":"
+		+ std::to_string(sysinfo.var.onTime.minutes) + ":"
+		+ std::to_string(sysinfo.var.onTime.seconds),
 		Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
 }
-int IHM::topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score) {
+int IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score) {
 	/*
 		Tri du tableau des scores dans le sens décroissant
 		recherche si le score fait lors de cette partie est dans le TOP10
 	*/
-	std::vector<scorePlayer> newTabScore;
-	scorePlayer player;
+	std::vector<ScorePlayer> newTabScore;
+	ScorePlayer player;
 	unsigned int scoreToDestroy = 0, maxSize = 0;
 	
 	if (tabScorePlayer.size() > 10)
@@ -710,45 +721,38 @@ int IHM::topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score) 
 	}
 	return positionToReturn;
 }
-void IHM::deleteAll(sysinfo& information) {
+void IHM::deleteAll(Sysinfo& sysinfo) {
 	/*
 		Destruction des allocations dynamiques et de la fenetre
 	*/
 	logfileconsole("*********_________ Start DeleteAll _________*********");
 
 	for (unsigned int i = 1; i < FONTMAX; i++)
-		TTF_CloseFont(information.allTextures.font[i]);
+		TTF_CloseFont(sysinfo.allTextures.font[i]);
 
-	deleteDyTabPlayerAndTextures(information.allTextures.ground, "ground Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.pacman, "pacman Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.red, "red Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.blue, "blue Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.yellow, "yellow Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.pink, "pink Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.miscGhost, "miscGhost Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.collectibles, "collectibles Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.scoreValue, "scoreValue Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.tabScore, "tabScore Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.txtecrantitre, "txtecrantitre Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.txtplay, "txtplay Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.txtplay, "txtscore Texture");
-	deleteDyTabPlayerAndTextures(information.allTextures.imgecrantitre, "imgecrantitre Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.ground, "ground Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.pacman, "pacman Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.red, "red Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.blue, "blue Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.yellow, "yellow Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.pink, "pink Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.miscGhost, "miscGhost Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.collectibles, "collectibles Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.scoreValue, "scoreValue Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.tabScore, "tabScore Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.txtecrantitre, "txtecrantitre Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.txtplay, "txtplay Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.txtplay, "txtscore Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.imgecrantitre, "imgecrantitre Texture");
 
-	deleteDyTabPlayerAndTextures(information.allButton.buttonecrantitre, "Button ecrantitre");
-	deleteDyTabPlayerAndTextures(information.allButton.buttonplay, "Button play");
-	deleteDyTabPlayerAndTextures(information.allButton.buttonscore, "Button score");
+	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonEcrantitre, "Button ecrantitre");
+	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonPlay, "Button play");
+	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonScore, "Button score");
 
-	SDL_DestroyRenderer(information.ecran.renderer);
-	SDL_DestroyWindow(information.ecran.window);
-	information.ecran.renderer = nullptr;
-	information.ecran.window = nullptr;
+	SDL_DestroyRenderer(sysinfo.screen.renderer);
+	SDL_DestroyWindow(sysinfo.screen.window);
+	sysinfo.screen.renderer = nullptr;
+	sysinfo.screen.window = nullptr;
 	logfileconsole("*********_________ End DeleteAll _________*********");
-}
-bool IHM::assertIndexMap(int nbx, int nby) {
-	if (nbx >= 0 && nby >= 0) {
-		if (nbx < MAP_LENGTH && nby < MAP_HEIGHT)
-			return true;
-	}
-	return false;
 }
 

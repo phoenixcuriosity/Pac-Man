@@ -28,28 +28,28 @@
 
 ///////////////////////////// ENTITY //////////////////////////////
 /* ENTITY :: STATIC */
-void Entity::move(sysinfo& information, Pacman& Player) {
+void Entity::move(Sysinfo& sysinfo, Pacman& Player) {
 
-	if (information.variable.statescreen == STATEplay && information.variable.select == selectnothing) {
-		for (unsigned int i = 0; i < information.ghost.size(); i++)
-			information.ghost[i]->move(information.map, Player);
-		Player.move(information.map, information.ghost);
+	if (sysinfo.var.statescreen == STATEplay && sysinfo.var.select == selectnothing) {
+		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
+			sysinfo.ghost[i]->move(sysinfo.map, Player);
+		Player.move(sysinfo.map, sysinfo.ghost);
 
-		information.variable.win = true;
-		for (unsigned int i = 0; i < MAP_LENGTH; i++) {
-			for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
-				if (information.map[i][j].entity) {
-					information.variable.win = false;
+		sysinfo.var.win = true;
+		for (unsigned int i = 0; i < sysinfo.map.map_length; i++) {
+			for (unsigned int j = 0; j < sysinfo.map.map_height; j++) {
+				if (sysinfo.map.matriceMap[i][j].entity) {
+					sysinfo.var.win = false;
 					break;
 				}
 			}
 		}
 		if (Player.GETlife() == 0) {
-			information.variable.select = lost;
+			sysinfo.var.select = lost;
 			IHM::logfileconsole("End Game");
 		}
-		if(information.variable.win) {
-			information.variable.select = win;
+		if(sysinfo.var.win) {
+			sysinfo.var.select = win;
 			IHM::logfileconsole("End Game");
 		}
 	}
@@ -64,7 +64,7 @@ Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHe
 Entity::~Entity()
 {
 }
-int Entity::tryToMove(std::vector<std::vector<tile>>& map, unsigned int pos) {
+int Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	unsigned int nextTileX = 0, nextTileY = 0;
 
 	switch (pos) {
@@ -120,7 +120,7 @@ int Entity::tryToMove(std::vector<std::vector<tile>>& map, unsigned int pos) {
 
 	return Not_Valid;
 }
-bool Entity::isOnFullTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j) {
+bool Entity::isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
 	if (this->GETx() == map[i][j].tile_x) {
 		if (this->GETy() == map[i][j].tile_y) {
 			return true;
@@ -129,7 +129,7 @@ bool Entity::isOnFullTile(std::vector<std::vector<tile>>& map, unsigned int i, u
 	}
 	return false;
 }
-bool Entity::isOnTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j) {
+bool Entity::isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
 	if (this->GETxc() >= map[i][j].tile_x && this->GETxc() < (map[i][j].tile_x + tileSize)) {
 		if (this->GETyc() >= map[i][j].tile_y && this->GETyc() < (map[i][j].tile_y + tileSize)) {
 			return true;
@@ -282,7 +282,7 @@ Pacman& Pacman::operator = (const Pacman& a) {
 	}
 	return *this;
 }
-int Pacman::move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
+int Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
 	Uint8 validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -292,13 +292,13 @@ int Pacman::move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost
 		case Not_Valid:
 			break;
 		case validCondition:
-			if (tryToMove(map, this->GETcurrentHeading())) {
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
 			break;
 		case validNextHeading:
-			if (tryToMove(map, this->GETnextHeading())) {
+			if (tryToMove(map.matriceMap, this->GETnextHeading())) {
 				validMove = validCondition;
 				pos = this->GETnextHeading();
 				this->SETcurrentHeading(this->GETnextHeading());
@@ -310,7 +310,7 @@ int Pacman::move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost
 	}
 	else {
 		if (validTryToMove = search(map)) {
-			if (tryToMove(map, this->GETcurrentHeading())) {
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
@@ -327,7 +327,7 @@ int Pacman::move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost
 				ghost[i]->SETinvincible(true);
 		}
 	}
-	value(map, validMove);
+	value(map.matriceMap, validMove);
 	if (_powerUP) {
 		this->SETinvincible(true);
 		for (unsigned int i = 0; i < ghost.size(); i++)
@@ -341,19 +341,19 @@ int Pacman::move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost
 	teleport();
 	return 0;
 }
-Uint8 Pacman::search(std::vector<std::vector<tile>>& map) {
+Uint8 Pacman::search(Map& map) {
 	Uint8 condition = 0;
-	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
-		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+	for (unsigned int i = 0; i < map.map_length; i++) {
+		for (unsigned int j = 0; j < map.map_height; j++) {
 			if (this->GETcurrentHeading() != this->GETnextHeading()) {
-				if (isOnFullTile(map, i, j)) {
+				if (isOnFullTile(map.matriceMap, i, j)) {
 					this->SETtilex(i);
 					this->SETtiley(j);
 					condition = validNextHeading;
 					return condition;
 				}
 			}
-			if (isOnTile(map, i, j)) {
+			if (isOnTile(map.matriceMap, i, j)) {
 				this->SETtilex(i);
 				this->SETtiley(j);
 				condition = validCondition;
@@ -363,7 +363,7 @@ Uint8 Pacman::search(std::vector<std::vector<tile>>& map) {
 	}
 	return condition;
 }
-void Pacman::value(std::vector<std::vector<tile>>& map, bool validMove) {
+void Pacman::value(std::vector<std::vector<Tile>>& map, bool validMove) {
 	if (validMove) {
 		switch (map[this->GETtilex()][this->GETtiley()].entity) {
 		case nothing:
@@ -452,12 +452,12 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 		}
 	}
 }
-void Pacman::afficherStats(sysinfo& information) {
-	Texture::writetxt(information, blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
-	Texture::writetxt(information, shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
-	Texture::writetxt(information, blended, std::to_string(this->GETx()) + " , " + std::to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
+void Pacman::afficherStats(Sysinfo& sysinfo) {
+	Texture::writetxt(sysinfo, blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
+	Texture::writetxt(sysinfo, shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
+	Texture::writetxt(sysinfo, blended, std::to_string(this->GETx()) + " , " + std::to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
 	if (this->GETinvincible())
-		Texture::writetxt(information, blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
+		Texture::writetxt(sysinfo, blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
 }
 void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
 	std::string pacmanPos[MAXPOS] = { "U", "L", "D", "R" }, pacmanSkin[MAXSKIN] = { "1", "2" };
@@ -501,7 +501,7 @@ Ghost::~Ghost()
 {
 	IHM::logfileconsole(this->GETname() + " is dead");
 }
-int Ghost::move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned int secondLoop) {
+int Ghost::move(Map& map, Pacman& pacman, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -511,13 +511,13 @@ int Ghost::move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned in
 		case Not_Valid:
 			break;
 		case validCondition:
-			if (tryToMove(map, this->GETcurrentHeading())) {
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
 			break;
 		case validNextHeading:
-			if (tryToMove(map, this->GETnextHeading())) {
+			if (tryToMove(map.matriceMap, this->GETnextHeading())) {
 				validMove = validCondition;
 				pos = this->GETnextHeading();
 				this->SETcurrentHeading(this->GETnextHeading());
@@ -529,7 +529,7 @@ int Ghost::move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned in
 	}
 	else {
 		if (validTryToMove = search(map)) {
-			if (tryToMove(map, this->GETcurrentHeading())) {
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
@@ -538,16 +538,16 @@ int Ghost::move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned in
 
 	makeTheMove(validMove, pos);
 	teleport();
-	makeNextHeading(map, pacman);
+	makeNextHeading(map.matriceMap, pacman);
 
 	return 0;
 }
-Uint8 Ghost::search(std::vector<std::vector<tile>>& map) {
+Uint8 Ghost::search(Map& map) {
 	Uint8 condition = 0;
-	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
-		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+	for (unsigned int i = 0; i < map.map_length; i++) {
+		for (unsigned int j = 0; j < map.map_height; j++) {
 			if (this->GETcurrentHeading() != this->GETnextHeading()) {
-				if (isOnFullTile(map, i, j)) {
+				if (isOnFullTile(map.matriceMap, i, j)) {
 					this->SETtilex(i);
 					this->SETtiley(j);
 					if (_type == red) {
@@ -563,7 +563,7 @@ Uint8 Ghost::search(std::vector<std::vector<tile>>& map) {
 					}
 				}
 			}
-			if (isOnTile(map, i, j)) {
+			if (isOnTile(map.matriceMap, i, j)) {
 				this->SETtilex(i);
 				this->SETtiley(j);
 				condition = validCondition;
@@ -573,7 +573,7 @@ Uint8 Ghost::search(std::vector<std::vector<tile>>& map) {
 	}
 	return condition;
 }
-void Ghost::makeNextHeading(std::vector<std::vector<tile>>& map, Pacman& pacman) {
+void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman& pacman) {
 	int deltaX = 0, deltaY = 0;
 	Uint8 posi = 0;
 	Uint8 randomNextHeading = 0;

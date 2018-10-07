@@ -33,7 +33,7 @@ public:
 	static void logfileconsole(const std::string &msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
 	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
-	static void initTile(tile& map, bool wall, unsigned int entity);
+	static void initTile(tile& map, bool wall, Uint8 entity);
 	static void forme(std::vector<tile>& map, unsigned int length, unsigned int height, unsigned int space);
 	static void initGrid(std::vector<tile>& map);
 	static void calculimage(sysinfo&);
@@ -48,10 +48,9 @@ public:
 	static void ecranScore(sysinfo&, Pacman& player);
 	static void alwaysrender(sysinfo&, Pacman& player);
 	static void afficherMap(sysinfo& information);
+	static void calculTime(sysinfo& information);
 
 	static int topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score);
-	static void loadScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer);
-	static void saveScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer);
 
 	static void deleteAll(sysinfo&);
 

@@ -22,6 +22,7 @@
 */
 
 #include "Pac_Man_lib.h"
+#include "SaveReload.h"
 
 void mainLoop(sysinfo& information);
 
@@ -37,8 +38,10 @@ int main(int argc, char** argv) {
 	IHM::logfileconsole("________PROGRAMME START________");
 
 	IHM::initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
-	IHM::loadScore(information.files.score, information.variable.tabScorePlayer);
+	IHM::initGrid(information.map);
+	SaveReload::loadScore(information.files.score, information.variable.tabScorePlayer);
 	IHM::calculimage(information);
+
 	
 	t2 = clock();
 	IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC) + " secondes");
@@ -47,7 +50,7 @@ int main(int argc, char** argv) {
 
 	mainLoop(information);
 
-	IHM::saveScore(information.files.score, information.variable.tabScorePlayer);
+	SaveReload::saveScore(information.files.score, information.variable.tabScorePlayer);
 	IHM::deleteAll(information);
 	TTF_Quit();
 	IMG_Quit();

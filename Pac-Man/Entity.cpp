@@ -18,7 +18,7 @@
 
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+	
 */
 
 #include "Entity.h"
@@ -54,7 +54,7 @@ void Entity::move(sysinfo& information, Pacman& Player) {
 }
 
 /* ENTITY :: METHODES */
-Entity::Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value)
+Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value)
 	: _name(name), _x(x), _y(y), _value(value), _xc(x + tileSize / 2),
 	_yc(y + tileSize / 2), _currentHeading(currentHeading), _nextHeading(nextHeading), _invincible(true), _timeInvincible(tempoInvincible)
 {
@@ -114,6 +114,24 @@ int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
 
 	return Not_Valid;
 }
+bool Entity::isOnFullTile(std::vector<tile>& map, unsigned int i) {
+	if (this->GETx() == map[i].tile_x) {
+		if (this->GETy() == map[i].tile_y) {
+			return true;
+		}
+		return false;
+	}
+	return false;
+}
+bool Entity::isOnTile(std::vector<tile>& map, unsigned int i) {
+	if (this->GETxc() >= map[i].tile_x && this->GETxc() < (map[i].tile_x + tileSize)) {
+		if (this->GETyc() >= map[i].tile_y && this->GETyc() < (map[i].tile_y + tileSize)) {
+			return true;
+		}
+		return false;
+	}
+	return false;
+}
 void Entity::makeTheMove(bool validMove, unsigned int pos) {
 	if (validMove) {
 		switch (pos) {
@@ -156,10 +174,10 @@ unsigned int Entity::GETyc()const {
 unsigned int Entity::GETtile()const {
 	return _tile;
 }
-unsigned int Entity::GETcurrentHeading()const {
+Uint8 Entity::GETcurrentHeading()const {
 	return _currentHeading;
 }
-unsigned int Entity::GETnextHeading()const {
+Uint8 Entity::GETnextHeading()const {
 	return _nextHeading;
 }
 bool Entity::GETalternateSkin()const {
@@ -193,10 +211,10 @@ void Entity::SETyc(unsigned int yc) {
 void Entity::SETtile(unsigned int tile) {
 	_tile = tile;
 }
-void Entity::SETcurrentHeading(unsigned int currentHeading) {
+void Entity::SETcurrentHeading(Uint8 currentHeading) {
 	_currentHeading = currentHeading;
 }
-void Entity::SETnextHeading(unsigned int nextHeading) {
+void Entity::SETnextHeading(Uint8 nextHeading) {
 	_nextHeading = nextHeading;
 }
 void Entity::SETalternateSkin(bool alternateSkin) {
@@ -252,7 +270,7 @@ Pacman& Pacman::operator = (const Pacman& a) {
 	return *this;
 }
 int Pacman::move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
-	unsigned int validTryToMove = 0;
+	Uint8 validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
 	
@@ -310,24 +328,20 @@ int Pacman::move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned in
 	teleport();
 	return 0;
 }
-unsigned int Pacman::search(std::vector<tile>& map) {
-	unsigned int condition = 0;
+Uint8 Pacman::search(std::vector<tile>& map) {
+	Uint8 condition = 0;
 	for (unsigned int i = 0; i < map.size(); i++) {
 		if (this->GETcurrentHeading() != this->GETnextHeading()) {
-			if (this->GETx() == map[i].tile_x) {
-				if (this->GETy() == map[i].tile_y) {
-					this->SETtile(i);
-					condition = validNextHeading;
-					return condition;
-				}
-			}
-		}
-		if (this->GETxc() >= map[i].tile_x && this->GETxc() < (map[i].tile_x + tileSize)) {
-			if (this->GETyc() >= map[i].tile_y && this->GETyc() < (map[i].tile_y + tileSize)) {
+			if (isOnFullTile(map, i)){
 				this->SETtile(i);
-				condition = validCondition;
+				condition = validNextHeading;
 				return condition;
 			}
+		}
+		if (isOnTile(map, i)) {
+			this->SETtile(i);
+			condition = validCondition;
+			return condition;
 		}
 	}
 	return condition;
@@ -439,19 +453,19 @@ void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture
 			return;
 	}
 }
-unsigned int Pacman::GETlife()const {
+Uint8 Pacman::GETlife()const {
 	return _life;
 }
-unsigned int Pacman::GETpowerUP()const {
+Uint8 Pacman::GETpowerUP()const {
 	return _powerUP;
 }
 unsigned int Pacman::GETtypeOfValue()const {
 	return _typeOfValue;
 }
-void Pacman::SETlife(unsigned int life) {
+void Pacman::SETlife(Uint8 life) {
 	_life = life;
 }
-void Pacman::SETpowerUP(unsigned int powerUP) {
+void Pacman::SETpowerUP(Uint8 powerUP) {
 	_powerUP = powerUP;
 }
 void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
@@ -461,7 +475,7 @@ void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 
 ///////////////////////////// GHOST //////////////////////////////
 /*  GHOST :: METHODES */
-Ghost::Ghost(std::string name, unsigned int x, unsigned int y, unsigned int type, unsigned int value)
+Ghost::Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type, unsigned int value)
 	: Entity(name, x, y, UP, RIGHT,value), _type(type)
 {
 	IHM::logfileconsole(this->GETname() + " is alive");
@@ -511,41 +525,37 @@ int Ghost::move(std::vector<tile>& map, Pacman& pacman, unsigned int secondLoop)
 
 	return 0;
 }
-unsigned int Ghost::search(std::vector<tile>& map) {
-	unsigned int condition = 0;
+Uint8 Ghost::search(std::vector<tile>& map) {
+	Uint8 condition = 0;
 	for (unsigned int i = 0; i < map.size(); i++) {
 		if (this->GETcurrentHeading() != this->GETnextHeading()) {
-			if (this->GETx() == map[i].tile_x) {
-				if (this->GETy() == map[i].tile_y) {
-					this->SETtile(i);
-					if (_type == red) {
-						condition = validNextHeading;
-						return condition;
-					}
-					else {
-						if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+			if(isOnFullTile(map, i)){
+				this->SETtile(i);
+				if (_type == red) {
+					condition = validNextHeading;
+					return condition;
+				}
+				else {
+					if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
 							condition = validCondition; // évite de changer de revenir en arrière
-						else
-							condition = validNextHeading;
-						return condition;
-					}
+					else
+						condition = validNextHeading;
+					return condition;
 				}
 			}
 		}
-		if (this->GETxc() >= map[i].tile_x && this->GETxc() < (map[i].tile_x + tileSize)) {
-			if (this->GETyc() >= map[i].tile_y && this->GETyc() < (map[i].tile_y + tileSize)) {
-				this->SETtile(i);
-				condition = validCondition;
-				return condition;
-			}
+		if(isOnTile(map, i)){
+			this->SETtile(i);
+			condition = validCondition;
+			return condition;
 		}
 	}
 	return condition;
 }
 void Ghost::makeNextHeading(std::vector<tile>& map, Pacman& pacman) {
 	int deltaX = 0, deltaY = 0;
-	unsigned int posi = 0;
-	unsigned int randomNextHeading = 0;
+	Uint8 posi = 0;
+	Uint8 randomNextHeading = 0;
 	bool continuer = true;
 	switch (_type) {
 	case red:
@@ -598,9 +608,9 @@ void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture)
 }
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc) {
 	std::string ghostName[MAXGHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAXPOS] = { "U", "L", "D", "R" }, ghostSkin[MAXSKIN] = {"1", "2"};
-	unsigned int skin = 0;
-	if (this->GETalternateSkin())
-		skin = 1;
+	Uint8 skin = 0;
+	if (this->GETalternateSkin()) 
+		skin = 1; // évite le probleme : bool (false == 0) et (true == tout le reste)
 
 	if (this->GETinvincible()) {
 		for (unsigned int i = 0; i < tabTexture.size(); i++) {
@@ -615,9 +625,9 @@ void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture,
 		}
 	}
 }
-unsigned int Ghost::GETtype()const {
+Uint8 Ghost::GETtype()const {
 	return _type;
 }
-void Ghost::SETtype(unsigned int type) {
+void Ghost::SETtype(Uint8 type) {
 	_type = type;
 }

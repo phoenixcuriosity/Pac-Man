@@ -1,4 +1,4 @@
-/*
+  /*
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
@@ -45,33 +45,33 @@
 
 class Texture {
 public:
-	static SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type,
+	static SDL_Texture* renderText(SDL_Renderer*& renderer, Uint8 type,
 		const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
-	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
-		const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt = 0);
-	static void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg,
-		SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int cnt = 0);
-	static void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color,
-		SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
-	static void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);
-	static void centrage(int&, int&, int, int, int = 0);
+	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, Uint8 statescreen, Uint8 select,
+		const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint8 cnt = 0);
+	static void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, Uint8 type, const std::string &msg,
+		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 cnt = 0);
+	static void writetxt(sysinfo& information, Uint8 type, const std::string &msg, SDL_Color color,
+		SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt = 0);
+	static void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, Uint8 = 0);
+	static void centrage(int&, int&, int, int, Uint8 = 0);
 
-
+public:
 	Texture() {};
-	Texture(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select,
+	Texture(SDL_Texture* image, const std::string& msg, Uint8 statescreen, Uint8 select,
 		unsigned int x, unsigned int y, int w, int h);
 	~Texture();
 
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
-	virtual void renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int x = -1, int y = -1);
-	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, int xc = -1, int yc = -1, unsigned int angle = 0);
-	virtual bool renderTextureTestString(SDL_Renderer*&, const std::string&, int = -1, int = -1);
-	virtual bool renderTextureTestStringAndStates(SDL_Renderer*&, const std::string&, unsigned int, int = -1, int = -1);
+	virtual void renderTextureTestStates(SDL_Renderer*& renderer, Uint8 statescreen, Uint8 select, int x = -1, int y = -1);
+	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, Uint8 statescreen, int xc = -1, int yc = -1, unsigned int angle = 0);
+	virtual bool renderTextureTestString(SDL_Renderer*& renderer, const std::string& msg, int xc = -1, int yc = -1);
+	virtual bool renderTextureTestStringAndStates(SDL_Renderer*& renderer, const std::string& msg, Uint8 statescreen, int xc = -1, int yc = -1);
 	virtual bool TextureTestString(const std::string&);
 
 	virtual void changeAlpha(Uint8);
-	virtual void changeTextureMsg(sysinfo& information, unsigned int type, const std::string &msg,
-		SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
+	virtual void changeTextureMsg(sysinfo& information, Uint8 type, const std::string &msg,
+		SDL_Color color, SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt = 0);
 
 	virtual SDL_Texture* GETtexture() const;
 	virtual SDL_Rect GETdst()const;
@@ -80,8 +80,8 @@ public:
 	virtual int GETdstw()const;
 	virtual int GETdsth()const;
 	virtual std::string GETname() const;
-	virtual unsigned int GETstatescreen() const;
-	virtual unsigned int GETselect()const;
+	virtual Uint8 GETstatescreen() const;
+	virtual Uint8 GETselect()const;
 
 
 	virtual void SETdstx(int x);
@@ -95,8 +95,8 @@ private:
 	SDL_Texture* _texture;
 	SDL_Rect _dst;
 	std::string _name;
-	unsigned int _statescreen;
-	unsigned int _select;
+	Uint8 _statescreen;
+	Uint8 _select;
 };
 /*
 
@@ -119,22 +119,22 @@ private:
 */
 class Buttons : public Texture {
 public:
-	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
-		SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
+	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, Uint8 type, const std::string& msg,
+		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 centerbutton = 0);
 
 	Buttons() {};
-	Buttons(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, int x, int y, int w, int h,
+	Buttons(SDL_Texture* image, const std::string& msg, Uint8 statescreen, Uint8 select, int x, int y, int w, int h,
 		SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on = false);
 	~Buttons();
 
 	virtual unsigned int testcolor(SDL_Color, SDL_Color) const;
-	virtual unsigned int searchButton(std::string msg, unsigned int statescreen, signed int x, signed int y);
-	virtual unsigned int searchButtonName(std::string& msg, unsigned int statescreen);
+	virtual unsigned int searchButton(std::string msg, Uint8 statescreen, signed int x, signed int y);
+	virtual unsigned int searchButtonName(std::string& msg, Uint8 statescreen);
 
-	virtual void resetOnStatescreen(unsigned int, unsigned int);
+	virtual void resetOnStatescreen(Uint8 select, unsigned int selectnothing);
 	virtual void resetOnPlayer(unsigned int, std::vector<std::string>);
-	virtual bool renderButton(SDL_Renderer*&, unsigned int);
-	virtual bool renderButtonTestString(SDL_Renderer*&, unsigned int, std::string& msg, int newx = -1, int newy = -1, int center = 0);
+	virtual bool renderButton(SDL_Renderer*& renderer, Uint8 statescreen);
+	virtual bool renderButtonTestString(SDL_Renderer*& renderer, Uint8 statescreen, std::string& msg, int newx = -1, int newy = -1, Uint8 cnt = 0);
 
 	virtual void changeOn();
 

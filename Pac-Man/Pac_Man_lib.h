@@ -34,7 +34,7 @@ const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
 const int mapHeight = 25;
 const int mapLength = 25;
-const unsigned int FONTMAX = 160;
+const Uint8 FONTMAX = 160;
 const unsigned int vitesse = 2;
 const unsigned int tempoInvincible = 600;
 const unsigned int MAXGHOST = 4;
@@ -50,19 +50,19 @@ const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
 const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 const SDL_Color NoColor = { 0, 0, 0, 0 };
 
-enum { normal, blended, shaded};
-enum { nocenter, center_x, center_y, center }; // centrage des textures et boutons
-enum { blackTile, whiteTile, mapTile}; // allTexture.ground
+enum : Uint8 { normal, blended, shaded};
+enum : Uint8 { nocenter, center_x, center_y, center }; // centrage des textures et boutons
+enum : Uint8 { blackTile, whiteTile, mapTile}; // allTexture.ground
 
-enum { red, blue, yellow, pink};
-enum { UP, LEFT, DOWN, RIGHT };
-enum { Not_Valid, validCondition, validNextHeading};
+enum : Uint8 { red, blue, yellow, pink};
+enum : Uint8 { UP, LEFT, DOWN, RIGHT };
+enum : Uint8 { Not_Valid, validCondition, validNextHeading};
 
-enum { nothing, gold, cherry, strawberry, peach, apple, key};
+enum : Uint8 { nothing, gold, cherry, strawberry, peach, apple, key};
 enum { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, ghost1 = 800, ghost2 = 1600, ghost3 = 3200, ghost4 = 10000,valuekey = 5000};
 
-enum { STATEnothing, STATEecrantitre, STATEplay, STATEscore };  // différents état de l'écran
-enum { selectnothing, pause, win, lost };	// spécifications de la séléction
+enum : Uint8 { STATEnothing, STATEecrantitre, STATEplay, STATEscore };  // différents état de l'écran
+enum : Uint8 { selectnothing, pause, win, lost };	// spécifications de la séléction
 
 struct scorePlayer {
 	unsigned int score = 0;
@@ -75,12 +75,20 @@ struct screen {
 struct file {
 	const std::string log = "log.txt";
 	const std::string score = "save/scores.txt";
+	std::string saveMap = "save/saveMap.txt";
+	std::string saveEntity = "save/saveEntity.txt";
+};
+struct GameTime {
+	Uint8 hours = 0;
+	Uint8 minutes = 0;
+	Uint8 seconds = 0;
+	Uint8 frame = 0;
 };
 struct var {
 	bool continuer = true;
 	
-	unsigned int select = selectnothing;
-	unsigned int statescreen = 0; // selectnothing par défaut
+	Uint8 select = selectnothing;
+	Uint8 statescreen = 0; // selectnothing par défaut
 	unsigned int score = 0;
 	bool win = false;
 
@@ -88,6 +96,7 @@ struct var {
 	unsigned int moduloScore = 0;
 	unsigned int tempoScore = 0;
 
+	GameTime onTime;
 	std::vector<scorePlayer> tabScorePlayer;
 };
 struct tile{
@@ -96,7 +105,7 @@ struct tile{
 	unsigned int tile_y = 0;
 
 	bool wall = false;
-	unsigned int entity = gold;
+	Uint8 entity = gold;
 	
 };
 struct texture {

@@ -25,6 +25,8 @@
 #include "IHM.h"
 #include "Pac_Man_lib.h"
 #include "Texture.h"
+#include "SaveReload.h"
+
 
 ///////////////////////////// IHM //////////////////////////////
 void IHM::initfile(const std::string& log) {
@@ -95,13 +97,13 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 
 		const std::string fontFile = "arial.ttf";
 
-		for (unsigned int i = 1; i < FONTMAX; i++)
+		for (Uint8 i = 1; i < FONTMAX; i++)
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
 		logfileconsole("SDL_Init Success");
 	}
 }
-void IHM::initTile(tile& map, bool wall, unsigned int entity) {
+void IHM::initTile(tile& map, bool wall, Uint8 entity) {
 	map.wall = wall; map.entity = entity;
 }
 void IHM::forme(std::vector<tile>& map, unsigned int length, unsigned int height, unsigned int space) {
@@ -280,9 +282,11 @@ void IHM::calculimage(sysinfo& information) {
 	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
 		"Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
 	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
-		"Initial Grid", WriteColorButton, BackColorButton, 32, 0, 64);
+		"Initial Grid", WriteColorButton, BackColorButton, 32, 0, 128);
 	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
 		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0);
+	Buttons::createbutton(information, information.allButton.buttonplay, shaded,
+		"Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64);
 
 	information.variable.statescreen = STATEscore;
 	Buttons::createbutton(information, information.allButton.buttonscore, shaded,
@@ -371,6 +375,11 @@ void IHM::cliqueGauche(sysinfo& information, Pacman& Player,SDL_Event event) {
 				initGrid(information.map);
 				return;
 			}
+			else if (information.allButton.buttonplay[i]->searchButton((std::string)"Save and Quit", information.variable.statescreen, event.button.x, event.button.y)) {
+				SaveReload::save(information, Player);
+				information.variable.continuer = false;
+				return;
+			}
 			else if (information.allButton.buttonplay[i]->searchButton((std::string)"Go to leader board (END GAME)", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.statescreen = STATEscore;
 				information.variable.select = pause;
@@ -383,11 +392,11 @@ void IHM::cliqueGauche(sysinfo& information, Pacman& Player,SDL_Event event) {
 		for (unsigned int i = 0; i < information.allButton.buttonecrantitre.size(); i++) {
 			if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.statescreen = STATEplay;
-				initGrid(information.map);
 				return;
 			}
 			else if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.variable.continuer = false;
+				SaveReload::reload(information, Player);
+				information.variable.statescreen = STATEplay;
 				return;
 			}
 			else if (information.allButton.buttonecrantitre[i]->searchButton((std::string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
@@ -561,6 +570,7 @@ void IHM::alwaysrender(sysinfo& information, Pacman& player) {
 		SDL_RenderClear(information.ecran.renderer);
 		SDL_SetRenderDrawColor(information.ecran.renderer, 128, 128, 128, 0xFF);
 		afficherMap(information);
+		calculTime(information);
 
 		/*
 			changement de skin toutes 10 boucles (10 frames)
@@ -625,7 +635,7 @@ void IHM::alwaysrender(sysinfo& information, Pacman& player) {
 }
 void IHM::afficherMap(sysinfo& information) {
 	/*
-		à utiliser si besoin de changer la map -> commententer l'autre partie du code
+		à utiliser si besoin de changer la map -> commenter l'autre partie du code
 		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
 
 
@@ -645,6 +655,22 @@ void IHM::afficherMap(sysinfo& information) {
 		if (!information.map[i].wall && information.map[i].entity != nothing)
 			information.allTextures.collectibles[information.map[i].entity - 1]->render(information.ecran.renderer, information.map[i].tile_x, information.map[i].tile_y);
 	}
+}
+void IHM::calculTime(sysinfo& information) {
+	information.variable.onTime.frame = (information.variable.onTime.frame + 1) % 60;
+	if (information.variable.onTime.frame == 0) {
+		information.variable.onTime.seconds = (information.variable.onTime.seconds + 1) % 60;
+		if (information.variable.onTime.seconds == 0) {
+			information.variable.onTime.minutes = (information.variable.onTime.minutes + 1) % 60;
+			if (information.variable.onTime.minutes == 0)
+				information.variable.onTime.hours++;
+		}
+	}
+	Texture::writetxt(information, blended,
+		std::to_string(information.variable.onTime.hours) + ":"
+		+ std::to_string(information.variable.onTime.minutes) + ":"
+		+ std::to_string(information.variable.onTime.seconds),
+		Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
 }
 int IHM::topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score) {
 	/*
@@ -682,51 +708,6 @@ int IHM::topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score) 
 			positionToReturn = i;
 	}
 	return positionToReturn;
-}
-void IHM::loadScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer) {
-	/*
-		charge le tableau de score TOP10 à partir d'un fichier formaté avec un format particulier
-	*/
-	logfileconsole("_loadScore Start_");
-	std::string destroy;
-	scorePlayer player;
-	unsigned int maxScore = 0;
-	unsigned int k = 0;
-
-	std::ifstream loadScore(score);
-	if (loadScore) {
-		loadScore >> destroy;
-		if (destroy.compare("numberOfScore=") == 0) {
-			loadScore >> maxScore;
-			for (unsigned int i = 0; i < maxScore; i++) {
-				loadScore >> player.name;
-				loadScore >> player.score;
-				tabScorePlayer.push_back(player);
-			}
-		}
-		else
-			logfileconsole("________ERROR : loadScore : file corrupt : " + score);
-	}
-	else
-		logfileconsole("________ERROR : loadScore : cannot open file : " + score);
-
-	logfileconsole("_loadScore End_");
-}
-void IHM::saveScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer) {
-	/*
-		Enregistre le tableau des scores dans un fichier avec un format particulier
-	*/
-	logfileconsole("_saveScore Start_");
-	std::ofstream saveScore(score);
-	if (saveScore) {
-		saveScore << "numberOfScore=\t";
-		saveScore << tabScorePlayer.size();
-		for (unsigned int i = 0; i < tabScorePlayer.size(); i++)
-			saveScore << std::endl << tabScorePlayer[i].name + "\t\t\t\t\t" << tabScorePlayer[i].score;
-	}
-	else
-		logfileconsole("________ERROR : loadScore : cannot open file : " + score);
-	logfileconsole("_saveScore End_");
 }
 void IHM::deleteAll(sysinfo& information) {
 	/*

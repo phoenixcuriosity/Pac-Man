@@ -21,43 +21,17 @@
 
 */
 
-#ifndef lib_H
-#define lib_H
+#ifndef SaveReload_H
+#define SaveReload_H
 
+#include "lib.h"
 
-#include <iostream>
-#include <ostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
-#include <vector>
-#include <exception>
-#include <stdexcept>
-
-#include "SDL2-2.0.8/include/SDL.h"
-#include "SDL2-2.0.8/include/SDL_ttf.h"
-#include "SDL2-2.0.8/include/SDL_image.h"
-
-typedef struct scorePlayer scorePlayer;
-typedef struct screen screen;
-typedef struct file file;
-typedef struct GameTime GameTime;
-typedef struct var var;
-typedef struct tile tile;
-typedef struct texture texture;
-typedef struct button button;
-typedef struct sysinfo sysinfo;
-
-class IHM;
-class Texture;
-class Buttons;
-class Entity;
-class Pacman;
-class Ghost;
-class SaveReload;
-
+class SaveReload {
+public:
+	static bool save(sysinfo& information, Pacman& player);
+	static bool reload(sysinfo& information, Pacman& player);
+	static void loadScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer);
+	static void saveScore(const std::string& score, std::vector<scorePlayer>& tabScorePlayer);
+};
 
 #endif

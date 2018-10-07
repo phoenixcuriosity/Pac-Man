@@ -32,10 +32,12 @@ public:
 	
 
 	Entity() {};
-	Entity(std::string name, unsigned int x, unsigned int y, unsigned int currentHeading, unsigned int nextHeading, unsigned int value = 0);
+	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
 	~Entity();
 
 	int tryToMove(std::vector<tile>& map, unsigned int pos);
+	bool isOnFullTile(std::vector<tile>& map, unsigned int i);
+	bool isOnTile(std::vector<tile>& map, unsigned int i);
 	void makeTheMove(bool, unsigned int);
 	void teleport();
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
@@ -46,8 +48,8 @@ public:
 	unsigned int GETxc()const;
 	unsigned int GETyc()const;
 	unsigned int GETtile()const;
-	unsigned int GETcurrentHeading()const;
-	unsigned int GETnextHeading()const;
+	Uint8 GETcurrentHeading()const;
+	Uint8 GETnextHeading()const;
 	bool GETalternateSkin()const;
 	bool GETinvincible()const;
 	unsigned int GETtimeInvincible()const;
@@ -59,8 +61,8 @@ public:
 	void SETxc(unsigned int);
 	void SETyc(unsigned int);
 	void SETtile(unsigned int tile);
-	void SETcurrentHeading(unsigned int);
-	void SETnextHeading(unsigned int);
+	void SETcurrentHeading(Uint8);
+	void SETnextHeading(Uint8);
 	void SETalternateSkin(bool);
 	void SETinvincible(bool);
 	void SETtimeInvincible(unsigned int);
@@ -74,8 +76,8 @@ private:
 	unsigned int _yc;
 	unsigned int _tile;
 
-	unsigned int _currentHeading;
-	unsigned int _nextHeading;
+	Uint8 _currentHeading;
+	Uint8 _nextHeading;
 	bool _alternateSkin;
 
 	bool _invincible;
@@ -92,7 +94,7 @@ public:
 	Pacman& operator = (const Pacman&);
 
 	int move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
-	unsigned int search(std::vector<tile>& map);
+	Uint8 search(std::vector<tile>& map);
 	void value(std::vector<tile>& map, bool validMove);
 	void collideGhost(std::vector<Ghost*>& ghost);
 
@@ -100,38 +102,38 @@ public:
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 	
 
-	unsigned int GETlife()const;
-	unsigned int GETpowerUP()const;
+	Uint8 GETlife()const;
+	Uint8 GETpowerUP()const;
 	unsigned int GETtypeOfValue()const;
 
-	void SETlife(unsigned int life);
-	void SETpowerUP(unsigned int powerUP);
+	void SETlife(Uint8 life);
+	void SETpowerUP(Uint8 powerUP);
 	void SETtypeOfValue(unsigned int);
 
 private:
 	
-	unsigned int _life;
-	unsigned int _powerUP;
+	Uint8 _life;
+	Uint8 _powerUP;
 	unsigned int _typeOfValue;
 };
 
 class Ghost : public Entity {
 public:
-	Ghost(std::string name, unsigned int x, unsigned int y, unsigned int type,unsigned int value = 0);
+	Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type,unsigned int value = 0);
 	~Ghost();
 
 	int move(std::vector<tile>& map, Pacman& pacman, unsigned int secondLoop = -1);
-	unsigned int search(std::vector<tile>& map);
+	Uint8 search(std::vector<tile>& map);
 	void makeNextHeading(std::vector<tile>& map, Pacman& pacman);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc);
 
-	unsigned int GETtype()const;
-	void SETtype(unsigned int type);
+	Uint8 GETtype()const;
+	void SETtype(Uint8 type);
 
 private:
 	
-	unsigned int _type;
+	Uint8 _type;
 };
 
 #endif // !Entity_H

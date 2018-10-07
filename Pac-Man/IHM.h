@@ -34,8 +34,8 @@ public:
 	static void logSDLError(std::ostream &os, const std::string &msg);
 	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 	static void initTile(tile& map, bool wall, Uint8 entity);
-	static void forme(std::vector<tile>& map, unsigned int length, unsigned int height, unsigned int space);
-	static void initGrid(std::vector<tile>& map);
+	static void forme(tile& tmap, std::vector<std::vector<tile>>& map, unsigned int length, unsigned int height);
+	static void initGrid(std::vector<std::vector<tile>>& map);
 	static void calculimage(sysinfo&);
 
 
@@ -53,6 +53,9 @@ public:
 	static int topScore(std::vector<scorePlayer>& tabScorePlayer, unsigned int score);
 
 	static void deleteAll(sysinfo&);
+
+protected:
+	bool assertIndexMap(int nbx, int nby);
 
 };
 template<class T>

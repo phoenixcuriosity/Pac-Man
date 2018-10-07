@@ -35,10 +35,11 @@ bool SaveReload::save(sysinfo& information, Pacman& player) {
 		saveEntity << player.GETname() << std::endl;
 		saveEntity << player.GETx() << std::endl;
 		saveEntity << player.GETy() << std::endl;
-		saveEntity << player.GETtile() << std::endl;
+		saveEntity << player.GETtilex() << std::endl;
+		saveEntity << player.GETtiley() << std::endl;
 
-		saveEntity << player.GETcurrentHeading() << std::endl;
-		saveEntity << player.GETnextHeading() << std::endl;
+		saveEntity << (unsigned int)player.GETcurrentHeading() << std::endl;
+		saveEntity << (unsigned int)player.GETnextHeading() << std::endl;
 
 		saveEntity << player.GETinvincible() << std::endl;
 		saveEntity << player.GETtimeInvincible() << std::endl;
@@ -49,10 +50,11 @@ bool SaveReload::save(sysinfo& information, Pacman& player) {
 			saveEntity << information.ghost[i]->GETname() << std::endl;
 			saveEntity << information.ghost[i]->GETx() << std::endl;
 			saveEntity << information.ghost[i]->GETy() << std::endl;
-			saveEntity << information.ghost[i]->GETtile() << std::endl;
+			saveEntity << information.ghost[i]->GETtilex() << std::endl;
+			saveEntity << information.ghost[i]->GETtiley() << std::endl;
 
-			saveEntity << information.ghost[i]->GETcurrentHeading() << std::endl;
-			saveEntity << information.ghost[i]->GETnextHeading() << std::endl;
+			saveEntity << (unsigned int)information.ghost[i]->GETcurrentHeading() << std::endl;
+			saveEntity << (unsigned int)information.ghost[i]->GETnextHeading() << std::endl;
 
 			saveEntity << information.ghost[i]->GETinvincible() << std::endl;
 			saveEntity << information.ghost[i]->GETtimeInvincible() << std::endl;
@@ -66,9 +68,12 @@ bool SaveReload::save(sysinfo& information, Pacman& player) {
 
 	std::ofstream saveMap(information.files.saveMap);
 	if (saveMap) {
-		saveMap << "NumberOfTile=\t" << information.map.size() << std::endl;
-		for (unsigned int i = 0; i < information.map.size(); i++)
-			saveMap << information.map[i].entity << std::endl;
+		saveMap << "MAP_LENGTH=\t" << MAP_LENGTH << std::endl;
+		saveMap << "MAP_HEIGHT=\t" << MAP_HEIGHT << std::endl;
+		for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+			for (unsigned int j = 0; j < MAP_HEIGHT; j++)
+				saveMap << (unsigned int)information.map[i][j].entity << std::endl;
+		}
 	}
 	else
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.files.saveMap);
@@ -81,7 +86,6 @@ bool SaveReload::reload(sysinfo& information, Pacman& player) {
 
 	std::string destroy;
 	unsigned int value = 0;
-	Uint8 valueUint8 = 0;
 	std::ifstream saveEntity(information.files.saveEntity);
 	if (saveEntity) {
 		saveEntity >> destroy;
@@ -94,12 +98,14 @@ bool SaveReload::reload(sysinfo& information, Pacman& player) {
 			saveEntity >> value;
 			player.SETy(value);
 			saveEntity >> value;
-			player.SETtile(value);
+			player.SETtilex(value);
+			saveEntity >> value;
+			player.SETtiley(value);
 
-			saveEntity >> valueUint8;
-			player.SETcurrentHeading(valueUint8);
-			saveEntity >> valueUint8;
-			player.SETnextHeading(valueUint8);
+			saveEntity >> value;
+			player.SETcurrentHeading((Uint8)value);
+			saveEntity >> value;
+			player.SETnextHeading((Uint8)value);
 
 			saveEntity >> value;
 			player.SETinvincible(value);
@@ -119,12 +125,14 @@ bool SaveReload::reload(sysinfo& information, Pacman& player) {
 				saveEntity >> value;
 				information.ghost[i]->SETy(value);
 				saveEntity >> value;
-				information.ghost[i]->SETtile(value);
+				information.ghost[i]->SETtilex(value);
+				saveEntity >> value;
+				information.ghost[i]->SETtiley(value);
 
-				saveEntity >> valueUint8;
-				information.ghost[i]->SETcurrentHeading(valueUint8);
-				saveEntity >> valueUint8;
-				information.ghost[i]->SETnextHeading(valueUint8);
+				saveEntity >> value;
+				information.ghost[i]->SETcurrentHeading((Uint8)value);
+				saveEntity >> value;
+				information.ghost[i]->SETnextHeading((Uint8)value);
 
 				saveEntity >> value;
 				information.ghost[i]->SETinvincible(value);
@@ -138,17 +146,20 @@ bool SaveReload::reload(sysinfo& information, Pacman& player) {
 	else
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.files.saveEntity);
 
-	
-	unsigned int maxTile = 0;
-	Uint8 entity = 0;
+
+	unsigned int entity = 0;
 	std::ifstream saveMap(information.files.saveMap);
 	if (saveMap) {
 		saveMap >> destroy;
-		if (destroy.compare("NumberOfTile=") == 0) {
-			saveMap >> maxTile;
-			for (unsigned int i = 0; i < maxTile; i++) {
-				saveMap >> entity;
-				information.map[i].entity = entity;
+		if (destroy.compare("MAP_LENGTH=") == 0) {
+			saveMap >> destroy;
+			saveMap >> destroy;
+			saveMap >> destroy;
+			for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+				for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+					saveMap >> entity;
+					information.map[i][j].entity = (Uint8)entity;
+				}
 			}
 		}
 		else

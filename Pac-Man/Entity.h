@@ -35,9 +35,9 @@ public:
 	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
 	~Entity();
 
-	int tryToMove(std::vector<tile>& map, unsigned int pos);
-	bool isOnFullTile(std::vector<tile>& map, unsigned int i);
-	bool isOnTile(std::vector<tile>& map, unsigned int i);
+	int tryToMove(std::vector<std::vector<tile>>& map, unsigned int pos);
+	bool isOnFullTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j);
+	bool isOnTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j);
 	void makeTheMove(bool, unsigned int);
 	void teleport();
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
@@ -47,7 +47,8 @@ public:
 	unsigned int GETy()const;
 	unsigned int GETxc()const;
 	unsigned int GETyc()const;
-	unsigned int GETtile()const;
+	unsigned int GETtilex()const;
+	unsigned int GETtiley()const;
 	Uint8 GETcurrentHeading()const;
 	Uint8 GETnextHeading()const;
 	bool GETalternateSkin()const;
@@ -60,7 +61,8 @@ public:
 	void SETy(unsigned int y);
 	void SETxc(unsigned int);
 	void SETyc(unsigned int);
-	void SETtile(unsigned int tile);
+	void SETtilex(unsigned int tilex);
+	void SETtiley(unsigned int tiley);
 	void SETcurrentHeading(Uint8);
 	void SETnextHeading(Uint8);
 	void SETalternateSkin(bool);
@@ -74,7 +76,8 @@ private:
 	unsigned int _y;
 	unsigned int _xc;
 	unsigned int _yc;
-	unsigned int _tile;
+	unsigned int _tilex;
+	unsigned int _tiley;
 
 	Uint8 _currentHeading;
 	Uint8 _nextHeading;
@@ -93,9 +96,9 @@ public:
 
 	Pacman& operator = (const Pacman&);
 
-	int move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
-	Uint8 search(std::vector<tile>& map);
-	void value(std::vector<tile>& map, bool validMove);
+	int move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
+	Uint8 search(std::vector<std::vector<tile>>& map);
+	void value(std::vector<std::vector<tile>>& map, bool validMove);
 	void collideGhost(std::vector<Ghost*>& ghost);
 
 	void afficherStats(sysinfo& information);
@@ -122,9 +125,9 @@ public:
 	Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type,unsigned int value = 0);
 	~Ghost();
 
-	int move(std::vector<tile>& map, Pacman& pacman, unsigned int secondLoop = -1);
-	Uint8 search(std::vector<tile>& map);
-	void makeNextHeading(std::vector<tile>& map, Pacman& pacman);
+	int move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned int secondLoop = -1);
+	Uint8 search(std::vector<std::vector<tile>>& map);
+	void makeNextHeading(std::vector<std::vector<tile>>& map, Pacman& pacman);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc);
 

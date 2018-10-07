@@ -32,8 +32,8 @@
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
 const int tileSize = 32;
-const int mapHeight = 25;
-const int mapLength = 25;
+const int MAP_HEIGHT = 25;
+const int MAP_LENGTH = 25;
 const Uint8 FONTMAX = 160;
 const unsigned int vitesse = 2;
 const unsigned int tempoInvincible = 600;
@@ -100,13 +100,13 @@ struct var {
 	std::vector<scorePlayer> tabScorePlayer;
 };
 struct tile{
-	unsigned int tile_nb = 0;
+	unsigned int tile_nbx = 0;
+	unsigned int tile_nby = 0;
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
 
 	bool wall = false;
 	Uint8 entity = gold;
-	
 };
 struct texture {
 	std::vector<Texture*> ground;
@@ -137,7 +137,7 @@ struct sysinfo {
 	screen ecran;
 	file files;
 	var variable;
-	std::vector<tile> map;
+	std::vector<std::vector<tile>> map;
 	button allButton;
 	texture allTextures;
 	std::vector<Ghost*> ghost;

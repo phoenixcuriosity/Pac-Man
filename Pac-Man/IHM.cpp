@@ -66,7 +66,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		window = SDL_CreateWindow("Pacman",
 			0, 0,
 			SCREEN_WIDTH, SCREEN_HEIGHT,
-			SDL_WINDOW_OPENGL| SDL_WINDOW_FULLSCREEN);
+			SDL_WINDOW_OPENGL);
 
 		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
 		if (window == nullptr) {
@@ -106,29 +106,28 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 void IHM::initTile(tile& map, bool wall, Uint8 entity) {
 	map.wall = wall; map.entity = entity;
 }
-void IHM::forme(std::vector<tile>& map, unsigned int length, unsigned int height, unsigned int space) {
+void IHM::forme(tile& tmap, std::vector<std::vector<tile>>& map, unsigned int length, unsigned int height) {
 	for (unsigned int i = 0; i < length; i++) {
-		for (unsigned int j = 0; j < height; j++) {
-			initTile(map[space], true, nothing);
-			space++;
-		}
-		space += (mapHeight - height);
+		for (unsigned int j = 0; j < height; j++)
+			initTile(map[tmap.tile_nbx + i][tmap.tile_nby + j], true, nothing);
 	}
 }
-void IHM::initGrid(std::vector<tile>& map) {
+void IHM::initGrid(std::vector<std::vector<tile>>& map) {
 	/*
 		Initialisation d'un niveau unique de Pacman
 	*/
-	unsigned int k = 0;
 	tile kTile;
 	map.clear();
-	for (unsigned int i = 0; i < mapLength; i++) {
-		for (unsigned int j = 0; j < mapHeight; j++) {
+	std::vector<tile> blank;
+	for (unsigned int x = 0; x < MAP_LENGTH; x++) {
+		map.push_back(blank);
+		for (unsigned int y = 0; y < MAP_HEIGHT; y++) {
 
-			kTile.tile_nb = k;
-			kTile.tile_x = tileSize * i + (SCREEN_WIDTH / 2 - (mapLength / 2 * tileSize));
-			kTile.tile_y = tileSize * j + (SCREEN_HEIGHT / 2 - (mapHeight / 2 * tileSize));
-			if (i == 0 || i == mapLength - 1 || j == 0 || j == mapHeight - 1) {
+			kTile.tile_nbx = x;
+			kTile.tile_nby = y;
+			kTile.tile_x = tileSize * x + (SCREEN_WIDTH / 2 - (MAP_LENGTH / 2 * tileSize));
+			kTile.tile_y = tileSize * y + (SCREEN_HEIGHT / 2 - (MAP_HEIGHT / 2 * tileSize));
+			if (x == 0 || x == MAP_LENGTH - 1 || y == 0 || y == MAP_HEIGHT - 1) {
 				kTile.wall = true;
 				kTile.entity = nothing;
 			}
@@ -136,76 +135,75 @@ void IHM::initGrid(std::vector<tile>& map) {
 				kTile.wall = false;
 				kTile.entity = gold;
 			}
-			map.push_back(kTile);
-			k++;
+			map[x].push_back(kTile);
 		}
 	}
-	unsigned int space = 0;
 	// ouverture
-	initTile(map[12], false, nothing);
-	initTile(map[612], false, nothing);
+	initTile(map[0][12], false, nothing);
+	initTile(map[MAP_LENGTH - 1][12], false, nothing);
 
 	// 
-	initTile(map[26], false, cherry);
-	initTile(map[48], false, strawberry);
-	initTile(map[576], false, peach);
-	initTile(map[598], false, apple);
+	initTile(map[1][1], false, cherry);
+	initTile(map[1][MAP_HEIGHT - 2], false, strawberry);
+	initTile(map[MAP_LENGTH - 2][1], false, peach);
+	initTile(map[MAP_LENGTH - 2][MAP_HEIGHT - 2], false, apple);
 
 	// blocs de murs
-	forme(map, 4, 2, 52); // 1
-	forme(map, 2, 3, 55); // 2 
-	forme(map, 2, 1, 59); // 3 
-	forme(map, 4, 1, 36); // 4
-	forme(map, 4, 1, 38); // 5
-	forme(map, 4, 2, 65); // 6
-	forme(map, 1, 5, 68); // 7
-	forme(map, 1, 5, 130); // 8
-	forme(map, 2, 2, 118); // 9
-	forme(map, 2, 2, 121); // 10
-	forme(map, 1, 3, 177); // 11
-	initTile(map[space = 161], true, nothing); // 12a
-	forme(map, 1, 2, 181); // 12b
-	forme(map, 2, 4, 183); // 12c
-	initTile(map[space = 163], true, nothing); // 13a
-	forme(map, 2, 4, 188); // 13b
-	forme(map, 2, 3, 193); // 14
-	forme(map, 4, 1, 197); // 15a
-	forme(map, 1, 3, 270); // 15b
-	forme(map, 2, 5, 227); // 16
-	forme(map, 5, 1, 258); // 17a
-	forme(map, 1, 2, 306); // 17b
-	forme(map, 2, 1, 260); // 18a
-	forme(map, 1, 4, 261); // 18b
-	forme(map, 3, 1, 289); // 18c
-	forme(map, 2, 1, 335); // 18d
-	forme(map, 1, 4, 361); // 18e
-	initTile(map[space = 266], true, nothing); // 19
-	forme(map, 5, 1, 268); // 20a
-	forme(map, 1, 2, 316); // 20b
-	forme(map, 1, 4, 301); // 21
-	forme(map, 1, 4, 320); // 22
-	forme(map, 2, 5, 352); // 23
-	initTile(map[space = 366], true, nothing); // 24
-	forme(map, 1, 2, 370); // 25a
-	forme(map, 4, 1, 372); // 25b
-	forme(map, 2, 4, 408); // 26a
-	forme(map, 1, 2, 431); // 26b
-	initTile(map[space = 461], true, nothing); // 26c
-	forme(map, 2, 4, 413); // 27a
-	initTile(map[space = 463], true, nothing); // 27b
-	forme(map, 2, 3, 418); // 28
-	forme(map, 1, 3, 427); // 29
-	forme(map, 4, 2, 477); // 30
-	forme(map, 1, 5, 480); // 31
-	forme(map, 4, 2, 490); // 32
-	forme(map, 2, 2, 493); // 33
-	forme(map, 2, 2, 496); // 34
-	forme(map, 4, 1, 511); // 35
-	forme(map, 4, 1, 513); // 36
-	forme(map, 2, 3, 530); // 37
-	forme(map, 2, 1, 534); // 38
-	forme(map, 1, 5, 568); // 39
+	forme(map[1][11], map, 4, 1); // 1
+	forme(map[1][13], map, 4, 1); // 2
+	forme(map[2][2], map, 4, 2); // 3
+	forme(map[2][5], map, 2, 3); // 4
+	forme(map[2][9], map, 2, 1); // 5
+	forme(map[2][15], map, 4, 2); // 6
+	forme(map[2][18], map, 1, 5); // 7
+	forme(map[4][18], map, 2, 2); // 8
+	forme(map[4][21], map, 2, 2); // 9
+	forme(map[5][5], map, 1, 5); // 10
+	initTile(map[6][11], true, nothing); // 11a
+	initTile(map[6][13], true, nothing); // 12a
+	forme(map[7][2], map, 1, 3); // 13
+	forme(map[7][6], map, 1, 2); // 11b
+	forme(map[7][8], map, 2, 4); // 11c
+	forme(map[7][13], map, 2, 4); // 12b
+	forme(map[7][18], map, 2, 3); // 14
+	forme(map[7][22], map, 4, 1); // 15a
+	forme(map[9][2], map, 2, 5); // 16
+	forme(map[10][8], map, 5, 1); // 17a
+	forme(map[10][10], map, 2, 1); // 18a
+	forme(map[10][11], map, 1, 4); // 18b
+	initTile(map[10][16], true, nothing); // 19
+	forme(map[10][18], map, 5, 1); // 20a
+	forme(map[10][20], map, 1, 2); // 15b
+	forme(map[11][14], map, 3, 1); // 18c
+	forme(map[12][1], map, 1, 4); // 21
+	forme(map[12][6], map, 1, 2); // 17b
+	forme(map[12][16], map, 1, 2); // 20b
+	forme(map[12][20], map, 1, 4); // 22
+	forme(map[13][10], map, 2, 1); // 18d
+	forme(map[14][2], map, 2, 5); // 23
+	forme(map[14][11], map, 1, 4); // 18e
+	initTile(map[14][16], true, nothing); // 24
+	forme(map[14][20], map, 1, 2); // 25a
+	forme(map[14][22], map, 4, 1); // 25b
+	forme(map[16][8], map, 2, 4); // 26a
+	forme(map[16][13], map, 2, 4); // 27a
+	forme(map[16][18], map, 2, 3); // 28
+	forme(map[17][2], map, 1, 3); // 29
+	forme(map[17][6], map, 1, 2); // 26b
+	initTile(map[18][11], true, nothing); // 26c
+	initTile(map[18][13], true, nothing); // 27b
+	forme(map[19][2], map, 4, 2); // 30
+	forme(map[19][5], map, 1, 5); // 31
+	forme(map[19][15], map, 4, 2); // 32
+	forme(map[19][18], map, 2, 2); // 33
+	forme(map[19][21], map, 2, 2); // 34
+	forme(map[20][11], map, 4, 1); // 35
+	forme(map[20][13], map, 4, 1); // 36
+	forme(map[21][5], map, 2, 3); // 37
+	forme(map[21][9], map, 2, 1); // 38
+	forme(map[22][18], map, 1, 5); // 39
 
+	
 }
 void IHM::calculimage(sysinfo& information) {
 	logfileconsole("_calculimage Start_");
@@ -650,10 +648,13 @@ void IHM::afficherMap(sysinfo& information) {
 	}
 	*/
 
-	information.allTextures.ground[mapTile]->render(information.ecran.renderer, information.map[0].tile_x, information.map[0].tile_y);
-	for (unsigned int i = 0; i < information.map.size(); i++) {
-		if (!information.map[i].wall && information.map[i].entity != nothing)
-			information.allTextures.collectibles[information.map[i].entity - 1]->render(information.ecran.renderer, information.map[i].tile_x, information.map[i].tile_y);
+	information.allTextures.ground[mapTile]->render(information.ecran.renderer, information.map[0][0].tile_x, information.map[0][0].tile_y);
+	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+			if (!information.map[i][j].wall && information.map[i][j].entity != nothing)
+				information.allTextures.collectibles[information.map[i][j].entity - 1]->render(information.ecran.renderer,
+					information.map[i][j].tile_x, information.map[i][j].tile_y);
+		}
 	}
 }
 void IHM::calculTime(sysinfo& information) {
@@ -743,6 +744,11 @@ void IHM::deleteAll(sysinfo& information) {
 	information.ecran.window = nullptr;
 	logfileconsole("*********_________ End DeleteAll _________*********");
 }
-
-
+bool IHM::assertIndexMap(int nbx, int nby) {
+	if (nbx >= 0 && nby >= 0) {
+		if (nbx < MAP_LENGTH && nby < MAP_HEIGHT)
+			return true;
+	}
+	return false;
+}
 

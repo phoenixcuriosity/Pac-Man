@@ -36,10 +36,12 @@ void Entity::move(sysinfo& information, Pacman& Player) {
 		Player.move(information.map, information.ghost);
 
 		information.variable.win = true;
-		for (unsigned int i = 0; i < information.map.size(); i++) {
-			if (information.map[i].entity) {
-				information.variable.win = false;
-				break;
+		for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+			for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+				if (information.map[i][j].entity) {
+					information.variable.win = false;
+					break;
+				}
 			}
 		}
 		if (Player.GETlife() == 0) {
@@ -62,14 +64,15 @@ Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHe
 Entity::~Entity()
 {
 }
-int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
-	unsigned int nextTile = 0;
+int Entity::tryToMove(std::vector<std::vector<tile>>& map, unsigned int pos) {
+	unsigned int nextTileX = 0, nextTileY = 0;
 
 	switch (pos) {
 	case UP:
-		nextTile = this->GETtile() - 1;
-		if (map[nextTile].wall) {
-			if (this->GETy() - vitesse >= (map[nextTile].tile_y + tileSize))
+		nextTileX = this->GETtilex();
+		nextTileY = this->GETtiley() - 1;
+		if (map[nextTileX][nextTileY].wall) {
+			if (this->GETy() - vitesse >= (map[nextTileX][nextTileY].tile_y + tileSize))
 				return 1;
 			else
 				return 0;
@@ -78,9 +81,10 @@ int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
 			return 1;
 		break;
 	case LEFT:
-		nextTile = this->GETtile() - mapHeight;
-		if (map[nextTile].wall) {
-			if (this->GETx() - vitesse >= (map[nextTile].tile_x + tileSize))
+		nextTileX = this->GETtilex() - 1;
+		nextTileY = this->GETtiley();
+		if (map[nextTileX][nextTileY].wall) {
+			if (this->GETx() - vitesse >= (map[nextTileX][nextTileY].tile_x + tileSize))
 				return 1;
 			else
 				return 0;
@@ -89,9 +93,10 @@ int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
 			return 1;
 		break;
 	case DOWN:
-		nextTile = this->GETtile() + 1;
-		if (map[nextTile].wall) {
-			if (((this->GETy() + tileSize) + vitesse) <= map[nextTile].tile_y)
+		nextTileX = this->GETtilex();
+		nextTileY = this->GETtiley() + 1;
+		if (map[nextTileX][nextTileY].wall) {
+			if (((this->GETy() + tileSize) + vitesse) <= map[nextTileX][nextTileY].tile_y)
 				return 1;
 			else
 				return 0;
@@ -100,9 +105,10 @@ int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
 			return 1;
 		break;
 	case RIGHT:
-		nextTile = this->GETtile() + mapHeight;
-		if (map[nextTile].wall) {
-			if (((this->GETx() + tileSize) + vitesse) <= map[nextTile].tile_x)
+		nextTileX = this->GETtilex() + 1;
+		nextTileY = this->GETtiley();
+		if (map[nextTileX][nextTileY].wall) {
+			if (((this->GETx() + tileSize) + vitesse) <= map[nextTileX][nextTileY].tile_x)
 				return 1;
 			else
 				return 0;
@@ -114,18 +120,18 @@ int Entity::tryToMove(std::vector<tile>& map, unsigned int pos) {
 
 	return Not_Valid;
 }
-bool Entity::isOnFullTile(std::vector<tile>& map, unsigned int i) {
-	if (this->GETx() == map[i].tile_x) {
-		if (this->GETy() == map[i].tile_y) {
+bool Entity::isOnFullTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j) {
+	if (this->GETx() == map[i][j].tile_x) {
+		if (this->GETy() == map[i][j].tile_y) {
 			return true;
 		}
 		return false;
 	}
 	return false;
 }
-bool Entity::isOnTile(std::vector<tile>& map, unsigned int i) {
-	if (this->GETxc() >= map[i].tile_x && this->GETxc() < (map[i].tile_x + tileSize)) {
-		if (this->GETyc() >= map[i].tile_y && this->GETyc() < (map[i].tile_y + tileSize)) {
+bool Entity::isOnTile(std::vector<std::vector<tile>>& map, unsigned int i, unsigned int j) {
+	if (this->GETxc() >= map[i][j].tile_x && this->GETxc() < (map[i][j].tile_x + tileSize)) {
+		if (this->GETyc() >= map[i][j].tile_y && this->GETyc() < (map[i][j].tile_y + tileSize)) {
 			return true;
 		}
 		return false;
@@ -171,8 +177,11 @@ unsigned int Entity::GETxc()const {
 unsigned int Entity::GETyc()const {
 	return _y + tileSize / 2;
 }
-unsigned int Entity::GETtile()const {
-	return _tile;
+unsigned int Entity::GETtilex()const {
+	return _tilex;
+}
+unsigned int Entity::GETtiley()const {
+	return _tiley;
 }
 Uint8 Entity::GETcurrentHeading()const {
 	return _currentHeading;
@@ -208,8 +217,11 @@ void Entity::SETxc(unsigned int xc) {
 void Entity::SETyc(unsigned int yc) {
 	_yc = yc;
 }
-void Entity::SETtile(unsigned int tile) {
-	_tile = tile;
+void Entity::SETtilex(unsigned int tilex) {
+	_tilex = tilex;
+}
+void Entity::SETtiley(unsigned int tiley) {
+	_tiley = tiley;
 }
 void Entity::SETcurrentHeading(Uint8 currentHeading) {
 	_currentHeading = currentHeading;
@@ -256,7 +268,8 @@ Pacman& Pacman::operator = (const Pacman& a) {
 		this->SETy(this->GETy());
 		this->SETxc(this->GETxc());
 		this->SETyc(this->GETyc());
-		this->SETtile(this->GETtile());
+		this->SETtilex(this->GETtilex());
+		this->SETtiley(this->GETtiley());
 		this->SETcurrentHeading(this->GETcurrentHeading());
 		this->SETnextHeading(this->GETnextHeading());
 		this->SETalternateSkin(this->GETalternateSkin());
@@ -269,7 +282,7 @@ Pacman& Pacman::operator = (const Pacman& a) {
 	}
 	return *this;
 }
-int Pacman::move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
+int Pacman::move(std::vector<std::vector<tile>>& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
 	Uint8 validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -328,61 +341,65 @@ int Pacman::move(std::vector<tile>& map, std::vector<Ghost*>& ghost, unsigned in
 	teleport();
 	return 0;
 }
-Uint8 Pacman::search(std::vector<tile>& map) {
+Uint8 Pacman::search(std::vector<std::vector<tile>>& map) {
 	Uint8 condition = 0;
-	for (unsigned int i = 0; i < map.size(); i++) {
-		if (this->GETcurrentHeading() != this->GETnextHeading()) {
-			if (isOnFullTile(map, i)){
-				this->SETtile(i);
-				condition = validNextHeading;
+	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+			if (this->GETcurrentHeading() != this->GETnextHeading()) {
+				if (isOnFullTile(map, i, j)) {
+					this->SETtilex(i);
+					this->SETtiley(j);
+					condition = validNextHeading;
+					return condition;
+				}
+			}
+			if (isOnTile(map, i, j)) {
+				this->SETtilex(i);
+				this->SETtiley(j);
+				condition = validCondition;
 				return condition;
 			}
-		}
-		if (isOnTile(map, i)) {
-			this->SETtile(i);
-			condition = validCondition;
-			return condition;
 		}
 	}
 	return condition;
 }
-void Pacman::value(std::vector<tile>& map, bool validMove) {
+void Pacman::value(std::vector<std::vector<tile>>& map, bool validMove) {
 	if (validMove) {
-		switch (map[this->GETtile()].entity) {
+		switch (map[this->GETtilex()][this->GETtiley()].entity) {
 		case nothing:
 			_typeOfValue = 0;
 			break;
 		case gold:
-			map[this->GETtile()].entity = nothing;
+			map[this->GETtilex()][this->GETtiley()].entity = nothing;
 			this->SETvalue(this->GETvalue() + valuegold);
 			_typeOfValue = valuegold;
 			break;
 		case cherry:
-			map[this->GETtile()].entity = nothing;
+			map[this->GETtilex()][this->GETtiley()].entity = nothing;
 			this->SETvalue(this->GETvalue() + valuecherry);
 			_typeOfValue = valuecherry;
 			_powerUP++;
 			break;
 		case strawberry:
-			map[this->GETtile()].entity = nothing;
+			map[this->GETtilex()][this->GETtiley()].entity = nothing;
 			this->SETvalue(this->GETvalue() + valuestrawberry);
 			_typeOfValue = valuestrawberry;
 			_powerUP++;
 			break;
 		case peach:
-			map[this->GETtile()].entity = nothing;
+			map[this->GETtilex()][this->GETtiley()].entity = nothing;
 			this->SETvalue(this->GETvalue() + valuepeach);
 			_typeOfValue = valuepeach;
 			_powerUP++;
 			break;
 		case apple:
-			map[this->GETtile()].entity = nothing;
+			map[this->GETtilex()][this->GETtiley()].entity = nothing;
 			this->SETvalue(this->GETvalue() + valueapple);
 			_typeOfValue = valueapple;
 			_powerUP++;
 			break;
 		case key:
-			map[this->GETtile()].entity = nothing;
+			map[this->GETtilex()][this->GETtiley()].entity = nothing;
 			this->SETvalue(this->GETvalue() + valuekey);
 			_typeOfValue = valuekey;
 			break;
@@ -484,7 +501,7 @@ Ghost::~Ghost()
 {
 	IHM::logfileconsole(this->GETname() + " is dead");
 }
-int Ghost::move(std::vector<tile>& map, Pacman& pacman, unsigned int secondLoop) {
+int Ghost::move(std::vector<std::vector<tile>>& map, Pacman& pacman, unsigned int secondLoop) {
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
@@ -525,34 +542,38 @@ int Ghost::move(std::vector<tile>& map, Pacman& pacman, unsigned int secondLoop)
 
 	return 0;
 }
-Uint8 Ghost::search(std::vector<tile>& map) {
+Uint8 Ghost::search(std::vector<std::vector<tile>>& map) {
 	Uint8 condition = 0;
-	for (unsigned int i = 0; i < map.size(); i++) {
-		if (this->GETcurrentHeading() != this->GETnextHeading()) {
-			if(isOnFullTile(map, i)){
-				this->SETtile(i);
-				if (_type == red) {
-					condition = validNextHeading;
-					return condition;
-				}
-				else {
-					if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
-							condition = validCondition; // évite de changer de revenir en arrière
-					else
+	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
+		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
+			if (this->GETcurrentHeading() != this->GETnextHeading()) {
+				if (isOnFullTile(map, i, j)) {
+					this->SETtilex(i);
+					this->SETtiley(j);
+					if (_type == red) {
 						condition = validNextHeading;
-					return condition;
+						return condition;
+					}
+					else {
+						if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+							condition = validCondition; // évite de changer de revenir en arrière
+						else
+							condition = validNextHeading;
+						return condition;
+					}
 				}
 			}
-		}
-		if(isOnTile(map, i)){
-			this->SETtile(i);
-			condition = validCondition;
-			return condition;
+			if (isOnTile(map, i, j)) {
+				this->SETtilex(i);
+				this->SETtiley(j);
+				condition = validCondition;
+				return condition;
+			}
 		}
 	}
 	return condition;
 }
-void Ghost::makeNextHeading(std::vector<tile>& map, Pacman& pacman) {
+void Ghost::makeNextHeading(std::vector<std::vector<tile>>& map, Pacman& pacman) {
 	int deltaX = 0, deltaY = 0;
 	Uint8 posi = 0;
 	Uint8 randomNextHeading = 0;

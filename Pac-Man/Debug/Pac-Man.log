@@ -1,18 +1,2 @@
-﻿  Entity.cpp
-c:\users\robin\documents\github\pac-man\pac-man\entity.cpp(606): warning C4100: 'tabTexture' : paramètre formel non référencé
-c:\users\robin\documents\github\pac-man\pac-man\entity.cpp(606): warning C4100: 'renderer' : paramètre formel non référencé
-  main.cpp
-c:\users\robin\documents\github\pac-man\pac-man\main.cpp(29): warning C4100: 'argv' : paramètre formel non référencé
-c:\users\robin\documents\github\pac-man\pac-man\main.cpp(29): warning C4100: 'argc' : paramètre formel non référencé
-c:\users\robin\documents\github\pac-man\pac-man\main.cpp(73): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
-  IHM.cpp
-  SaveReload.cpp
-  Texture.cpp
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(324): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(326): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(339): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(341): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-  Génération de code en cours...
-c:\users\robin\documents\github\pac-man\pac-man\entity.cpp(299): warning C4706: assignation au sein d'une expression conditionnelle
-c:\users\robin\documents\github\pac-man\pac-man\entity.cpp(514): warning C4706: assignation au sein d'une expression conditionnelle
+﻿  SaveReload.cpp
   Pac-Man.vcxproj -> C:\Users\Robin\Documents\GitHub\Pac-Man\Debug\Pac-Man.exe

@@ -28,8 +28,8 @@
 
 class SaveReload {
 public:
-	static bool save(Sysinfo& sysinfo, Pacman& player);
-	static bool reload(Sysinfo& sysinfo, Pacman& player);
+	static bool save(Sysinfo& sysinfo);
+	static bool reload(Sysinfo& sysinfo);
 	static void loadScore(const std::string& score, std::vector<ScorePlayer>& tabScorePlayer);
 	static void saveScore(const std::string& score, std::vector<ScorePlayer>& tabScorePlayer);
 };

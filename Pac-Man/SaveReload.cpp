@@ -26,32 +26,32 @@
 #include "Pac_Man_lib.h"
 
 
-bool SaveReload::save(Sysinfo& sysinfo, Pacman& player) {
+bool SaveReload::save(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Save Start_");
 
 	std::ofstream saveEntity(sysinfo.file.saveEntity);
 	if (saveEntity) {
 		saveEntity << "Pacman:" << std::endl;
-		saveEntity << player.GETname() << std::endl;
-		saveEntity << player.GETx() << std::endl;
-		saveEntity << player.GETy() << std::endl;
-		saveEntity << player.GETtilex() << std::endl;
-		saveEntity << player.GETtiley() << std::endl;
+		saveEntity << sysinfo.pacman->GETname() << std::endl;
+		saveEntity << sysinfo.pacman->GETx() << std::endl;
+		saveEntity << sysinfo.pacman->GETy() << std::endl;
+		saveEntity << sysinfo.pacman->GETindexX() << std::endl;
+		saveEntity << sysinfo.pacman->GETindexY() << std::endl;
 
-		saveEntity << (unsigned int)player.GETcurrentHeading() << std::endl;
-		saveEntity << (unsigned int)player.GETnextHeading() << std::endl;
+		saveEntity << (unsigned int)sysinfo.pacman->GETcurrentHeading() << std::endl;
+		saveEntity << (unsigned int)sysinfo.pacman->GETnextHeading() << std::endl;
 
-		saveEntity << player.GETinvincible() << std::endl;
-		saveEntity << player.GETtimeInvincible() << std::endl;
-		saveEntity << player.GETvalue() << std::endl;
+		saveEntity << sysinfo.pacman->GETinvincible() << std::endl;
+		saveEntity << sysinfo.pacman->GETtimeInvincible() << std::endl;
+		saveEntity << sysinfo.pacman->GETvalue() << std::endl;
 
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++) {
 			saveEntity << std::endl << std::endl << "Ghost:" << std::endl;
 			saveEntity << sysinfo.ghost[i]->GETname() << std::endl;
 			saveEntity << sysinfo.ghost[i]->GETx() << std::endl;
 			saveEntity << sysinfo.ghost[i]->GETy() << std::endl;
-			saveEntity << sysinfo.ghost[i]->GETtilex() << std::endl;
-			saveEntity << sysinfo.ghost[i]->GETtiley() << std::endl;
+			saveEntity << sysinfo.ghost[i]->GETindexX() << std::endl;
+			saveEntity << sysinfo.ghost[i]->GETindexY() << std::endl;
 
 			saveEntity << (unsigned int)sysinfo.ghost[i]->GETcurrentHeading() << std::endl;
 			saveEntity << (unsigned int)sysinfo.ghost[i]->GETnextHeading() << std::endl;
@@ -68,10 +68,10 @@ bool SaveReload::save(Sysinfo& sysinfo, Pacman& player) {
 
 	std::ofstream saveMap(sysinfo.file.saveMap);
 	if (saveMap) {
-		saveMap << "MAP_LENGTH=\t" << sysinfo.map.map_length << std::endl;
-		saveMap << "MAP_HEIGHT=\t" << sysinfo.map.map_height << std::endl;
-		for (unsigned int i = 0; i < sysinfo.map.map_length; i++) {
-			for (unsigned int j = 0; j < sysinfo.map.map_height; j++)
+		saveMap << "MAP_LENGTH=\t" << (unsigned int)sysinfo.map.map_length << std::endl;
+		saveMap << "MAP_HEIGHT=\t" << (unsigned int)sysinfo.map.map_height << std::endl;
+		for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
+			for (Uint8 j = 0; j < sysinfo.map.map_height; j++)
 				saveMap << (unsigned int)sysinfo.map.matriceMap[i][j].entity << std::endl;
 		}
 	}
@@ -81,7 +81,7 @@ bool SaveReload::save(Sysinfo& sysinfo, Pacman& player) {
 	IHM::logfileconsole("_Save End_");
 	return false;
 }
-bool SaveReload::reload(Sysinfo& sysinfo, Pacman& player) {
+bool SaveReload::reload(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Reload Start_");
 
 	std::string destroy;
@@ -91,28 +91,28 @@ bool SaveReload::reload(Sysinfo& sysinfo, Pacman& player) {
 		saveEntity >> destroy;
 		if (destroy.compare("Pacman:") == 0) {
 			saveEntity >> destroy;
-			player.SETname(destroy);
+			sysinfo.pacman->SETname(destroy);
 
 			saveEntity >> value;
-			player.SETx(value);
+			sysinfo.pacman->SETx(value);
 			saveEntity >> value;
-			player.SETy(value);
+			sysinfo.pacman->SETy(value);
 			saveEntity >> value;
-			player.SETtilex(value);
+			sysinfo.pacman->SETindexX((Uint8)value);
 			saveEntity >> value;
-			player.SETtiley(value);
+			sysinfo.pacman->SETindexY((Uint8)value);
 
 			saveEntity >> value;
-			player.SETcurrentHeading((Uint8)value);
+			sysinfo.pacman->SETcurrentHeading((Uint8)value);
 			saveEntity >> value;
-			player.SETnextHeading((Uint8)value);
+			sysinfo.pacman->SETnextHeading((Uint8)value);
 
 			saveEntity >> value;
-			player.SETinvincible(value);
+			sysinfo.pacman->SETinvincible(value);
 			saveEntity >> value;
-			player.SETtimeInvincible(value);
+			sysinfo.pacman->SETtimeInvincible(value);
 			saveEntity >> value;
-			player.SETvalue(value);
+			sysinfo.pacman->SETvalue(value);
 
 			for (unsigned int i = 0; i < sysinfo.ghost.size(); i++) {
 				saveEntity >> destroy;
@@ -125,9 +125,9 @@ bool SaveReload::reload(Sysinfo& sysinfo, Pacman& player) {
 				saveEntity >> value;
 				sysinfo.ghost[i]->SETy(value);
 				saveEntity >> value;
-				sysinfo.ghost[i]->SETtilex(value);
+				sysinfo.ghost[i]->SETindexX((Uint8)value);
 				saveEntity >> value;
-				sysinfo.ghost[i]->SETtiley(value);
+				sysinfo.ghost[i]->SETindexY((Uint8)value);
 
 				saveEntity >> value;
 				sysinfo.ghost[i]->SETcurrentHeading((Uint8)value);
@@ -155,8 +155,8 @@ bool SaveReload::reload(Sysinfo& sysinfo, Pacman& player) {
 			saveMap >> destroy;
 			saveMap >> destroy;
 			saveMap >> destroy;
-			for (unsigned int i = 0; i < sysinfo.map.map_length; i++) {
-				for (unsigned int j = 0; j < sysinfo.map.map_height; j++) {
+			for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
+				for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
 					saveMap >> entity;
 					sysinfo.map.matriceMap[i][j].entity = (Uint8)entity;
 				}

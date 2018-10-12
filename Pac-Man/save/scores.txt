@@ -1,11 +1,11 @@
 numberOfScore=	10
 qhrghq					36521
 lol					22400
+amazon					21500
 ikea					20700
+asctec					19600
 robin					19400
 apple					15500
 google					15500
 9robin09X					15000
-gog					10500
-amazon					7700
-kfc					6700
+rg					10900

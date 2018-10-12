@@ -122,6 +122,7 @@ public:
 	static void createbutton(Sysinfo& sysinfo, std::vector<Buttons*>& tabbutton, Uint8 type, const std::string& msg,
 		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 centerbutton = 0);
 
+public:
 	Buttons() {};
 	Buttons(SDL_Texture* image, const std::string& msg, Uint8 statescreen, Uint8 select, int x, int y, int w, int h,
 		SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on = false);

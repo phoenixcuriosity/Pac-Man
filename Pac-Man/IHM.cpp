@@ -97,7 +97,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 
 		const std::string fontFile = "arial.ttf";
 
-		for (Uint8 i = 1; i < FONTMAX; i++)
+		for (Uint8 i = 1; i < MAX_FONT; i++)
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
 		logfileconsole("SDL_Init Success");
@@ -106,40 +106,40 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 void IHM::initTile(Tile& map, bool wall, Uint8 entity) {
 	map.wall = wall; map.entity = entity;
 }
-void IHM::forme(Tile& tmap, std::vector<std::vector<Tile>>& map, unsigned int length, unsigned int height, bool wall) {
-	for (unsigned int i = 0; i < length; i++) {
-		for (unsigned int j = 0; j < height; j++) {
+void IHM::forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, Uint8 height, bool wall) {
+	for (Uint8 i = 0; i < length; i++) {
+		for (Uint8 j = 0; j < height; j++) {
 			if(wall)
-				initTile(map[tmap.tile_nbx + i][tmap.tile_nby + j], true, nothing);
+				initTile(map[tmap.indexX + i][tmap.indexY + j], true, nothing);
 			else
-				initTile(map[tmap.tile_nbx + i][tmap.tile_nby + j], false, nothing);
+				initTile(map[tmap.indexX + i][tmap.indexY + j], false, nothing);
 		}
 	}
 }
-void IHM::initGrid(Map& map) {
-	/*
+/*
 		Initialisation d'un niveau unique de Pacman
-	*/
-	Tile kTile;
+*/
+void IHM::initGrid(Map& map) {
 	map.matriceMap.clear();
+	Tile blankTile;
 	std::vector<Tile> blank;
-	for (unsigned int x = 0; x < map.map_length; x++) {
+	for (Uint8 x = 0; x < map.map_length; x++) {
 		map.matriceMap.push_back(blank);
-		for (unsigned int y = 0; y < map.map_height; y++) {
+		for (Uint8 y = 0; y < map.map_height; y++) {
 
-			kTile.tile_nbx = x;
-			kTile.tile_nby = y;
-			kTile.tile_x = tileSize * x + (SCREEN_WIDTH / 2 - (map.map_length / 2 * tileSize));
-			kTile.tile_y = tileSize * y + (SCREEN_HEIGHT / 2 - (map.map_height / 2 * tileSize));
+			blankTile.indexX = x;
+			blankTile.indexY = y;
+			blankTile.tile_x = TILE_SIZE * x + (SCREEN_WIDTH / 2 - (map.map_length / 2 * TILE_SIZE));
+			blankTile.tile_y = TILE_SIZE * y + (SCREEN_HEIGHT / 2 - (map.map_height / 2 * TILE_SIZE));
 			if (x == 0 || x == map.map_length - 1 || y == 0 || y == map.map_height - 1) {
-				kTile.wall = true;
-				kTile.entity = nothing;
+				blankTile.wall = true;
+				blankTile.entity = nothing;
 			}
 			else {
-				kTile.wall = false;
-				kTile.entity = gold;
+				blankTile.wall = false;
+				blankTile.entity = gold;
 			}
-			map.matriceMap[x].push_back(kTile);
+			map.matriceMap[x].push_back(blankTile);
 		}
 	}
 	// ouverture
@@ -210,8 +210,6 @@ void IHM::initGrid(Map& map) {
 	forme(map.matriceMap[21][5], map.matriceMap, 2, 3); // 37
 	forme(map.matriceMap[21][9], map.matriceMap, 2, 1); // 38
 	forme(map.matriceMap[22][18], map.matriceMap, 1, 5); // 39
-
-	
 }
 void IHM::calculimage(Sysinfo& sysinfo) {
 	logfileconsole("_calculimage Start_");
@@ -219,45 +217,45 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	std::string IPath = "image/";
 	sysinfo.var.statescreen = STATEplay;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "map.png", "map.png", (Uint8)255, -1, -1, NULL, NULL);
 
-	std::string ghostName[MAXGHOST] = { "Red", "Blue", "Yellow", "Pink" }, Pos[MAXPOS] = { "U", "L", "D", "R" };
-	for (unsigned int i = 0; i < MAXPOS; i++) {
+	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, Pos[MAX_POS] = { "U", "L", "D", "R" };
+	for (unsigned int i = 0; i < MAX_POS; i++) {
 		for (unsigned int j = 1; j < 3; j++)
 			Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.pacman, sysinfo.var.statescreen, sysinfo.var.select,
-				IPath + "pacman/pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", "pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
+				IPath + "pacman/pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", "pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	}
 
 	// permet de charger les 32 Textures des Ghost (8 par Ghost, dont 4 pour les position avec le 1er skin et les 4 autres pour l'autre skin(alternateskin))
-	std::vector<Texture*>* ghostTab[MAXGHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
+	std::vector<Texture*>* ghostTab[MAX_GHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
 		&sysinfo.allTextures.yellow, &sysinfo.allTextures.pink };
-	for (unsigned int i = 0; i < MAXGHOST; i++) { // nb de ghost
+	for (unsigned int i = 0; i < MAX_GHOST; i++) { // nb de ghost
 		for (unsigned int j = 1; j < 3; j++) { // skin or alternate skin
-			for (unsigned int k = 0; k < MAXPOS; k++) // UP, LEFT, DOWN, RIGHT
+			for (unsigned int k = 0; k < MAX_POS; k++) // UP, LEFT, DOWN, RIGHT
 				Texture::loadImage(sysinfo.screen.renderer, *ghostTab[i], sysinfo.var.statescreen,
 						sysinfo.var.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png",
-						ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, tileSize, tileSize);
+						ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 		}
 	}
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "Ghost/not_Invincible.png", "not_Invincible.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "Ghost/not_Invincible.png", "not_Invincible.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "collectibles/lemon.png", "lemon.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "collectibles/lemon.png", "lemon.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "collectibles/pear.png", "pear.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "collectibles/pear.png", "pear.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1, tileSize, tileSize);
+		IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 
 
 	sysinfo.var.statescreen = STATEecrantitre;
@@ -287,8 +285,6 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	sysinfo.var.statescreen = STATEplay;
 	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
 		"Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
-		"Initial Grid", WriteColorButton, BackColorButton, 32, 0, 128);
 	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
 		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0);
 	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
@@ -350,22 +346,17 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	sysinfo.var.select = selectnothing;
 	logfileconsole("_calculimage End_");
 }
-void IHM::mouse(Sysinfo& sysinfo, Pacman& Player, SDL_Event event) {
-	/*
+/*
 	Handle Mouse Event
 	BUTTON_LEFT
 	BUTTON_RIGHT
-
-	*/
-
+*/
+void IHM::mouse(Sysinfo& sysinfo, SDL_Event event) {
 	if (event.button.button == SDL_BUTTON_LEFT)
-		cliqueGauche(sysinfo, Player, event);
-
-
+		cliqueGauche(sysinfo, event);
 }
-void IHM::cliqueGauche(Sysinfo& sysinfo, Pacman& Player,SDL_Event event) {
-	// recherche du bouton par comparaison de string et des positions x et y du clic
-
+// recherche du bouton par comparaison de string et des positions x et y du clic
+void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 	switch (sysinfo.var.statescreen) {
 	case STATEplay:
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonPlay.size(); i++) { // recherche si une bouton est dans ces coordonnées
@@ -377,19 +368,15 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, Pacman& Player,SDL_Event event) {
 					sysinfo.var.select = selectnothing;
 				return;
 			}
-			else if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Initial Grid", sysinfo.var.statescreen, event.button.x, event.button.y)) {
-				initGrid(sysinfo.map);
-				return;
-			}
 			else if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Save and Quit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
-				SaveReload::save(sysinfo, Player);
+				SaveReload::save(sysinfo);
 				sysinfo.var.continuer = false;
 				return;
 			}
 			else if (sysinfo.allButtons.buttonPlay[i]->searchButton((std::string)"Go to leader board (END GAME)", sysinfo.var.statescreen, event.button.x, event.button.y)) {
 				sysinfo.var.statescreen = STATEscore;
 				sysinfo.var.select = pause;
-				ecranScore(sysinfo, Player);
+				ecranScore(sysinfo);
 				return;
 			}
 		}
@@ -398,10 +385,14 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, Pacman& Player,SDL_Event event) {
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonEcrantitre.size(); i++) {
 			if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"New Game", sysinfo.var.statescreen, event.button.x, event.button.y)) {
 				sysinfo.var.statescreen = STATEplay;
+				Entity::initEntity(sysinfo.pacman, sysinfo.ghost);
+				initGrid(sysinfo.map);
 				return;
 			}
 			else if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"Reload", sysinfo.var.statescreen, event.button.x, event.button.y)) {
-				SaveReload::reload(sysinfo, Player);
+				Entity::initEntity(sysinfo.pacman, sysinfo.ghost);
+				initGrid(sysinfo.map);
+				SaveReload::reload(sysinfo);
 				sysinfo.var.statescreen = STATEplay;
 				return;
 			}
@@ -426,12 +417,13 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, Pacman& Player,SDL_Event event) {
 		break;
 	}
 }
-std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
-	/*
+/*
 		Demande au joueur son pseudo pour etre placé dans le tableau des scores
 		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
 		Fonctionne par cast avec le tableau ASCII
-	*/
+*/
+std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
+	
 	SDL_Event event;
 	std::string name;
 	bool validCharacter = false, validChange = false;
@@ -486,12 +478,12 @@ std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
 	}
 
 }
-void IHM::ecrantitre(Sysinfo& sysinfo) {
-	/*
+/*
 
 		affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEecrantitre
 
-	*/
+*/
+void IHM::ecrantitre(Sysinfo& sysinfo) {
 	logfileconsole("_Ecrantitres Start_");
 
 	sysinfo.var.statescreen = STATEecrantitre;
@@ -512,12 +504,12 @@ void IHM::ecrantitre(Sysinfo& sysinfo) {
 
 	logfileconsole("_Ecrantitres End_");
 }
-void IHM::ecranScore(Sysinfo& sysinfo, Pacman& player) {
+void IHM::ecranScore(Sysinfo& sysinfo) {
 	logfileconsole("_Ecrantitres Start_");
 
 	sysinfo.var.statescreen = STATEscore;
-	int position = 0;
-	ScorePlayer p; p.name = ""; p.score = player.GETvalue();
+	int8_t position = 0;
+	ScorePlayer p; p.name = ""; p.score = sysinfo.pacman->GETvalue();
 	sysinfo.var.tabScorePlayer.push_back(p);
 	position = topScore(sysinfo.var.tabScorePlayer, p.score);
 	
@@ -562,10 +554,10 @@ void IHM::ecranScore(Sysinfo& sysinfo, Pacman& player) {
 
 	logfileconsole("_Ecrantitres End_");
 }
-void IHM::alwaysrender(Sysinfo& sysinfo, Pacman& player) {
+void IHM::alwaysrender(Sysinfo& sysinfo) {
 	//clock_t t1, t2;
 	//t1 = clock();
-	std::vector<Texture*>* ghostTab[MAXGHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
+	std::vector<Texture*>* ghostTab[MAX_GHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
 		&sysinfo.allTextures.yellow, &sysinfo.allTextures.pink };
 
 	switch (sysinfo.var.statescreen) {
@@ -576,14 +568,17 @@ void IHM::alwaysrender(Sysinfo& sysinfo, Pacman& player) {
 		SDL_RenderClear(sysinfo.screen.renderer);
 		SDL_SetRenderDrawColor(sysinfo.screen.renderer, 128, 128, 128, 0xFF);
 		afficherMap(sysinfo);
-		calculTime(sysinfo);
+		calculTime(sysinfo.var.gameTime);
+		Texture::writetxt(sysinfo, blended,
+			std::to_string(sysinfo.var.gameTime.hours) + ":"+ std::to_string(sysinfo.var.gameTime.minutes) + ":"
+			+ std::to_string(sysinfo.var.gameTime.seconds), Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
 
 		/*
 			changement de skin toutes 10 boucles (10 frames)
 		*/
 		sysinfo.var.modulo = (sysinfo.var.modulo + 1) % 10;
 		if (sysinfo.var.modulo == 0) {
-			player.SETalternateSkin(!player.GETalternateSkin());
+			sysinfo.pacman->SETalternateSkin(!sysinfo.pacman->GETalternateSkin());
 			for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
 				sysinfo.ghost[i]->SETalternateSkin(!sysinfo.ghost[i]->GETalternateSkin());
 		}
@@ -594,8 +589,8 @@ void IHM::alwaysrender(Sysinfo& sysinfo, Pacman& player) {
 		}
 
 		//
-		player.afficherStats(sysinfo);
-		player.afficher(sysinfo.screen.renderer, sysinfo.allTextures.pacman);
+		sysinfo.pacman->afficherStats(sysinfo);
+		sysinfo.pacman->afficher(sysinfo.screen.renderer, sysinfo.allTextures.pacman);
 
 		
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
@@ -603,24 +598,24 @@ void IHM::alwaysrender(Sysinfo& sysinfo, Pacman& player) {
 
 
 		sysinfo.var.moduloScore = (sysinfo.var.moduloScore + 1) % 30;
-		if (player.GETtypeOfValue() != 0 || sysinfo.var.tempoScore != 0) {
-			if (player.GETtypeOfValue() != 0)
-				sysinfo.var.tempoScore = player.GETtypeOfValue();
+		if (sysinfo.pacman->GETtypeOfValue() != 0 || sysinfo.var.tempoScore != 0) {
+			if (sysinfo.pacman->GETtypeOfValue() != 0)
+				sysinfo.var.tempoScore = sysinfo.pacman->GETtypeOfValue();
 			switch (sysinfo.var.tempoScore) {
 			case valuegold:
-				sysinfo.allTextures.scoreValue[0]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[gold - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuecherry:
-				sysinfo.allTextures.scoreValue[1]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[cherry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuestrawberry:
-				sysinfo.allTextures.scoreValue[2]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[strawberry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuepeach:
-				sysinfo.allTextures.scoreValue[3]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[peach - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valueapple:
-				sysinfo.allTextures.scoreValue[4]->render(sysinfo.screen.renderer, player.GETx() + tileSize, player.GETy() + tileSize);
+				sysinfo.allTextures.scoreValue[apple - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			}
 
@@ -645,50 +640,45 @@ void IHM::afficherMap(Sysinfo& sysinfo) {
 		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
 	*/
 	/*
-	for (unsigned int i = 0; i < MAP_LENGTH; i++) {
-		for (unsigned int j = 0; j < MAP_HEIGHT; j++) {
-		if (sysinfo.map[i][j].wall)
-			sysinfo.allTextures.ground[blackTile]->render(sysinfo.screen.renderer, sysinfo.map[i][j].tile_x, sysinfo.map[i][j].tile_y);
-		else {
-			sysinfo.allTextures.ground[whiteTile]->render(sysinfo.screen.renderer, sysinfo.map[i][j].tile_x, sysinfo.map[i][j].tile_y);
-			if(sysinfo.map[i][j].entity != nothing)
-				sysinfo.allTextures.collectibles[sysinfo.map[i][j].entity - 1]->render(sysinfo.screen.renderer, sysinfo.map[i][j].tile_x, sysinfo.map[i][j].tile_y);
+	for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
+		for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
+			if (sysinfo.map.matriceMap[i][j].wall)
+				sysinfo.allTextures.ground[blackTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
+			else {
+				sysinfo.allTextures.ground[whiteTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
+				if (sysinfo.map.matriceMap[i][j].entity != nothing)
+					sysinfo.allTextures.collectibles[sysinfo.map.matriceMap[i][j].entity - 1]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
+			}
 		}
 	}
 	*/
 
 	
 	sysinfo.allTextures.ground[mapTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[0][0].tile_x, sysinfo.map.matriceMap[0][0].tile_y);
-	for (unsigned int i = 0; i < sysinfo.map.map_length; i++) {
-		for (unsigned int j = 0; j < sysinfo.map.map_height; j++) {
+	for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
+		for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
 			if (!sysinfo.map.matriceMap[i][j].wall && sysinfo.map.matriceMap[i][j].entity != nothing)
 				sysinfo.allTextures.collectibles[sysinfo.map.matriceMap[i][j].entity - 1]->render(sysinfo.screen.renderer,
 					sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
 		}
 	}
-	
 }
-void IHM::calculTime(Sysinfo& sysinfo) {
-	sysinfo.var.onTime.frame = (sysinfo.var.onTime.frame + 1) % 60;
-	if (sysinfo.var.onTime.frame == 0) {
-		sysinfo.var.onTime.seconds = (sysinfo.var.onTime.seconds + 1) % 60;
-		if (sysinfo.var.onTime.seconds == 0) {
-			sysinfo.var.onTime.minutes = (sysinfo.var.onTime.minutes + 1) % 60;
-			if (sysinfo.var.onTime.minutes == 0)
-				sysinfo.var.onTime.hours++;
+void IHM::calculTime(GameTime& gameTime) {
+	gameTime.frame = (gameTime.frame + 1) % 60;
+	if (gameTime.frame == 0) {
+		gameTime.seconds = (gameTime.seconds + 1) % 60;
+		if (gameTime.seconds == 0) {
+			gameTime.minutes = (gameTime.minutes + 1) % 60;
+			if (gameTime.minutes == 0)
+				gameTime.hours++;
 		}
 	}
-	Texture::writetxt(sysinfo, blended,
-		std::to_string(sysinfo.var.onTime.hours) + ":"
-		+ std::to_string(sysinfo.var.onTime.minutes) + ":"
-		+ std::to_string(sysinfo.var.onTime.seconds),
-		Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
 }
-int IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score) {
-	/*
+/*
 		Tri du tableau des scores dans le sens décroissant
 		recherche si le score fait lors de cette partie est dans le TOP10
-	*/
+*/
+int8_t IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score) {
 	std::vector<ScorePlayer> newTabScore;
 	ScorePlayer player;
 	unsigned int scoreToDestroy = 0, maxSize = 0;
@@ -714,20 +704,22 @@ int IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score) 
 	}
 	tabScorePlayer = newTabScore;
 
-	int positionToReturn = -1;
+	int8_t positionToReturn = -1;
 	for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
 		if (tabScorePlayer[i].score == score)
-			positionToReturn = i;
+			positionToReturn = (int8_t)i;
 	}
 	return positionToReturn;
 }
-void IHM::deleteAll(Sysinfo& sysinfo) {
-	/*
+/*
 		Destruction des allocations dynamiques et de la fenetre
-	*/
+*/
+void IHM::deleteAll(Sysinfo& sysinfo) {
 	logfileconsole("*********_________ Start DeleteAll _________*********");
 
-	for (unsigned int i = 1; i < FONTMAX; i++)
+	Entity::destroyEntity(sysinfo.pacman, sysinfo.ghost);
+
+	for (Uint8 i = 1; i < MAX_FONT; i++)
 		TTF_CloseFont(sysinfo.allTextures.font[i]);
 
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.ground, "ground Texture");

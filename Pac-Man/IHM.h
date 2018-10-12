@@ -28,32 +28,30 @@
 
 class IHM {
 public:
-
 	static void initfile(const std::string& log);
 	static void logfileconsole(const std::string &msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
 	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 	static void initTile(Tile& map, bool wall, Uint8 entity);
-	static void forme(Tile& tmap, std::vector<std::vector<Tile>>& map, unsigned int length, unsigned int height, bool wall = true);
+	static void forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, Uint8 height, bool wall = true);
 	static void initGrid(Map& map);
 	static void calculimage(Sysinfo&);
 
-
-	static void mouse(Sysinfo& sysinfo, Pacman& Player, SDL_Event event);
-	static void cliqueGauche(Sysinfo& sysinfo, Pacman& Player, SDL_Event event);
-
+public:
+	static void mouse(Sysinfo& sysinfo, SDL_Event event);
+	static void cliqueGauche(Sysinfo& sysinfo, SDL_Event event);
 	static std::string getName(Sysinfo& sysinfo, unsigned int position);
+	static int8_t topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score);
 
-	static void ecrantitre(Sysinfo&);
-	static void ecranScore(Sysinfo&, Pacman& player);
-	static void alwaysrender(Sysinfo&, Pacman& player);
+public:
+	static void ecrantitre(Sysinfo& syinfo);
+	static void ecranScore(Sysinfo& syinfo);
+	static void alwaysrender(Sysinfo& syinfo);
 	static void afficherMap(Sysinfo& sysinfo);
-	static void calculTime(Sysinfo& sysinfo);
+	static void calculTime(GameTime& gameTime);
 
-	static int topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score);
-
+public:
 	static void deleteAll(Sysinfo&);
-
 };
 template<class T>
 T max(T& a, T& b) {

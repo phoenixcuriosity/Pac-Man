@@ -29,18 +29,15 @@
 #include "IHM.h"
 #include "Entity.h"
 
-const unsigned int SCREEN_WIDTH = 1920;
-const unsigned int SCREEN_HEIGHT = 1088;
-const unsigned int MAXGHOST = 4;
-const unsigned int MAXPOS = 4;
-const unsigned int MAXSKIN = 2;
-const Uint8 FONTMAX = 160;
-
-// to do : intégration Sysinfo
-const int tileSize = 32;
-const unsigned int vitesse = 2;
-const unsigned int tempoInvincible = 600;
-
+const Uint16 SCREEN_WIDTH = 1920;
+const Uint16 SCREEN_HEIGHT = 1088;
+const int8_t TILE_SIZE = 32;
+const Uint8 MAX_GHOST = 4;
+const Uint8 MAX_POS = 4;
+const Uint8 MAX_SKIN = 2;
+const Uint8 MAX_FONT = 160;
+const Uint16 TEMPO_INVINCIBLE = 600;
+const Uint8 INITIAL_VELOCITY = 2;
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -67,20 +64,27 @@ enum : Uint8 { selectnothing, pause, win, lost };	// spécifications de la séléct
 
 
 //////////////////////// Structure niveau 2 ///////////////////////
+/*
+		structure contenant les données en rapport avec le temps du programme
+*/
 struct GameTime {
+	
 	Uint8 hours = 0;
 	Uint8 minutes = 0;
 	Uint8 seconds = 0;
 	Uint8 frame = 0;
 };
-
 struct ScorePlayer {
 	unsigned int score = 0;
 	std::string name = "";
 };
+/*
+		Structure décrivant une case dans la map
+*/
 struct Tile {
-	unsigned int tile_nbx = 0;
-	unsigned int tile_nby = 0;
+	
+	Uint8 indexX = 0; // numéro de la case en x map[x][y]
+	Uint8 indexY = 0; // numéro de la case en y map[x][y]
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
 
@@ -89,9 +93,15 @@ struct Tile {
 };
 //////////////////////// Structure niveau 1 ///////////////////////
 struct Screen {
+	/*
+		
+	*/
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
 };
+/*
+		Structure contenant tous les noms des fichiers ainsi que leurs chemins
+*/
 struct File {
 	const std::string log = "log.txt";
 	const std::string score = "save/scores.txt";
@@ -106,13 +116,16 @@ struct Var {
 	unsigned int score = 0;
 	bool win = false;
 
-	unsigned int modulo = 0;
-	unsigned int moduloScore = 0;
+	Uint8 modulo = 0;
+	Uint8 moduloScore = 0;
 	unsigned int tempoScore = 0;
-
-	GameTime onTime;
+	
+	GameTime gameTime;
 	std::vector<ScorePlayer> tabScorePlayer;
 };
+/*
+		Contient toutes les Textures (images et textes)
+*/
 struct AllTextures {
 	std::vector<Texture*> ground;
 
@@ -131,17 +144,21 @@ struct AllTextures {
 	std::vector<Texture*> txtplay;
 	std::vector<Texture*> txtscore;
 
-	TTF_Font *font[FONTMAX];
+	TTF_Font *font[MAX_FONT];
 };
+/*
+		Contient tous les boutons
+*/
 struct AllButtons {
+	
 	std::vector<Buttons*> buttonEcrantitre;
 	std::vector<Buttons*> buttonPlay;
 	std::vector<Buttons*> buttonScore;
 };
 struct Map {
 	std::vector<std::vector<Tile>> matriceMap;
-	unsigned int map_length = 25;
-	unsigned int map_height = 25;
+	Uint8 map_length = 25;
+	Uint8 map_height = 25;
 };
 //////////////////////// Structure niveau 0 ///////////////////////
 struct Sysinfo {
@@ -151,6 +168,7 @@ struct Sysinfo {
 	AllTextures allTextures;
 	AllButtons allButtons;
 	Map map;
+	Pacman* pacman = nullptr;
 	std::vector<Ghost*> ghost;
 };
 

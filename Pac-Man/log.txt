@@ -12,12 +12,11 @@ Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
 Create Button n:0 msg = Pause Success
-Create Button n:1 msg = Initial Grid Success
-Create Button n:2 msg = Go to leader board (END GAME) Success
-Create Button n:3 msg = Save and Quit Success
+Create Button n:1 msg = Go to leader board (END GAME) Success
+Create Button n:2 msg = Save and Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.497000 secondes
+temps d'execution de l'initialisation : 1.416000 secondes
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
@@ -26,19 +25,26 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman lost a life
+Pacman lost a life
+Pacman lost a life
+End Game
 _Ecrantitres Start_
 _Ecrantitres End_
 _Ecrantitres Start_
 _Ecrantitres End_
+_mainLoop End_
+_saveScore Start_
+_saveScore End_
+*********_________ Start DeleteAll _________*********
+Pacman is dead
 Red is dead
 Blue is dead
 Yellow is dead
 Pink is dead
-_mainLoop End_
-Pacman is dead
-_saveScore Start_
-_saveScore End_
-*********_________ Start DeleteAll _________*********
 Delete ground Texture name = Black.bmp Success
 Delete ground Texture name = White.bmp Success
 Delete ground Texture name = map.png Success
@@ -106,14 +112,14 @@ Delete scoreValue Texture name = 5000 Success
 Delete ALL scoreValue Texture Success
 Delete tabScore Texture name = qhrghq      36521 Success
 Delete tabScore Texture name = lol      22400 Success
+Delete tabScore Texture name = amazon      21500 Success
 Delete tabScore Texture name = ikea      20700 Success
+Delete tabScore Texture name = asctec      19600 Success
 Delete tabScore Texture name = robin      19400 Success
 Delete tabScore Texture name = apple      15500 Success
 Delete tabScore Texture name = google      15500 Success
 Delete tabScore Texture name = 9robin09X      15000 Success
-Delete tabScore Texture name = gog      10500 Success
-Delete tabScore Texture name = amazon      7700 Success
-Delete tabScore Texture name = kfc      6700 Success
+Delete tabScore Texture name = rg      10900 Success
 Delete ALL tabScore Texture Success
 Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success
 Delete txtecrantitre Texture name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
@@ -140,7 +146,6 @@ Delete Button ecrantitre name = Option Success
 Delete Button ecrantitre name = Quit Success
 Delete ALL Button ecrantitre Success
 Delete Button play name = Pause Success
-Delete Button play name = Initial Grid Success
 Delete Button play name = Go to leader board (END GAME) Success
 Delete Button play name = Save and Quit Success
 Delete ALL Button play Success

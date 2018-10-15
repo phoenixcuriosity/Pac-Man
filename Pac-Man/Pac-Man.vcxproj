@@ -30,8 +30,15 @@
     <ClInclude Include="lib.h" />
     <ClInclude Include="Pac_Man_lib.h" />
     <ClInclude Include="IHM.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="SaveReload.h" />
     <ClInclude Include="Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Pac-Man.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="D:\Downloads\pac-man.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

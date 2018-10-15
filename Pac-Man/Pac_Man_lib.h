@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -49,6 +49,7 @@ const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 const SDL_Color NoColor = { 0, 0, 0, 0 };
 
 enum : Uint8 { normal, blended, shaded};
+enum : Uint8 { transparent = 0, semiTransparent = 128, nonTransparent = 255 };
 enum : Uint8 { nocenter, center_x, center_y, center }; // centrage des textures et boutons
 enum : Uint8 { blackTile, whiteTile, mapTile}; // allTexture.ground
 
@@ -124,9 +125,10 @@ struct Var {
 	std::vector<ScorePlayer> tabScorePlayer;
 };
 /*
-		Contient toutes les Textures (images et textes)
+		Contient toutes les Textures images
 */
 struct AllTextures {
+	std::vector<Texture*> imgecrantitre;
 	std::vector<Texture*> ground;
 
 	std::vector<Texture*> pacman;
@@ -136,24 +138,25 @@ struct AllTextures {
 	std::vector<Texture*> pink;
 	std::vector<Texture*> miscGhost;
 	std::vector<Texture*> collectibles;
-	std::vector<Texture*> scoreValue;
-	std::vector<Texture*> tabScore;
-
-	std::vector<Texture*> imgecrantitre;
-	std::vector<Texture*> txtecrantitre;
-	std::vector<Texture*> txtplay;
-	std::vector<Texture*> txtscore;
-
+};
+/*
+		Contient toutes les Textes
+*/
+struct AllTextes {
 	TTF_Font *font[MAX_FONT];
+	std::vector<Texte*> txtEcrantitre;
+	std::vector<Texte*> txtPlay;
+	std::vector<Texte*> scoreValue;
+	std::vector<Texte*> txtScore;
+	std::vector<Texte*> tabScore;
 };
 /*
 		Contient tous les boutons
 */
 struct AllButtons {
-	
-	std::vector<Buttons*> buttonEcrantitre;
-	std::vector<Buttons*> buttonPlay;
-	std::vector<Buttons*> buttonScore;
+	std::vector<Button*> buttonEcrantitre;
+	std::vector<Button*> buttonPlay;
+	std::vector<Button*> buttonScore;
 };
 struct Map {
 	std::vector<std::vector<Tile>> matriceMap;
@@ -166,6 +169,7 @@ struct Sysinfo {
 	File file;
 	Var var;
 	AllTextures allTextures;
+	AllTextes allTextes;
 	AllButtons allButtons;
 	Map map;
 	Pacman* pacman = nullptr;

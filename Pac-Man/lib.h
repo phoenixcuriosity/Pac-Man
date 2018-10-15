@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -48,13 +48,15 @@ typedef struct GameTime GameTime;
 typedef struct Var Var;
 typedef struct Tile Tile;
 typedef struct AllTextures AllTextures;
+typedef struct AllTextes AllTextes;
 typedef struct AllButtons AllButtons;
 typedef struct Map Map;
 typedef struct Sysinfo Sysinfo;
 
 class IHM;
 class Texture;
-class Buttons;
+class Texte;
+class Button;
 class Entity;
 class Pacman;
 class Ghost;

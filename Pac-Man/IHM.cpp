@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -273,75 +273,75 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 
 	// ______Buttons_____
 	sysinfo.var.statescreen = STATEecrantitre;
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
-		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
-		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
-		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
-		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
+		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, center);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
+		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
+		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonEcrantitre,
+		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
 
 	sysinfo.var.statescreen = STATEplay;
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
-		"Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, center_x);
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
-		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0);
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
-		"Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
+		"Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, nonTransparent, center_x);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
+		"Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonPlay, shaded,
+		"Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64, nonTransparent);
 
 	sysinfo.var.statescreen = STATEscore;
-	Buttons::createbutton(sysinfo, sysinfo.allButtons.buttonScore, shaded,
-		"Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0);
+	Button::createbutton(sysinfo, sysinfo.allButtons.buttonScore, shaded,
+		"Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent);
 
 	// ______Writetxt_____ 
 	sysinfo.var.statescreen = STATEecrantitre;
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
-		blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
-		blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
-		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
-		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, center_x);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtecrantitre,
-		blended, "Use your mouse to select", { 0, 255, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 350, center_x);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtEcrantitre,
+		blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtEcrantitre,
+		blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtEcrantitre,
+		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, nonTransparent, center_x);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtEcrantitre,
+		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, nonTransparent, center_x);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtEcrantitre,
+		blended, "Use your mouse to select", { 0, 255, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 350, nonTransparent, center_x);
 
 
 	sysinfo.var.statescreen = STATEplay;
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
-		"Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, center_x);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
-		"You can move Pacman", { 0, 255, 0, 255 }, NoColor, 24, 100, 500);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
-		"by pressing arrows on your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 524);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtPlay, blended,
+		"Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, nonTransparent, center_x);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtPlay, blended,
+		"You can move Pacman", { 0, 255, 0, 255 }, NoColor, 24, 100, 500, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtPlay, blended,
+		"by pressing arrows on your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 524, nonTransparent);
 	sysinfo.var.select = lost;
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
-		"YOU DIED", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, center);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtPlay, blended,
+		"YOU DIED", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, nonTransparent, center);
 	sysinfo.var.select = win;
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtplay, blended,
-		"YOU WIN", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, center);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtPlay, blended,
+		"YOU WIN", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, nonTransparent, center);
 
 	sysinfo.var.select = selectnothing;
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.scoreValue, blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.scoreValue, blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.scoreValue, blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.scoreValue, blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.scoreValue, blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.scoreValue, blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
 
 	sysinfo.var.statescreen = STATEscore;
 	sysinfo.var.select = pause;
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
-		blended, "TOP 10 SCORES", { 255, 0, 0, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, center_x);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
-		blended, "Enter your name", { 0, 255, 0, 255 }, NoColor, 24, 100, 200);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
-		blended, "with your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 224);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
-		blended, "Remove last letter with backspace", { 0, 255, 0, 255 }, NoColor, 24, 100, 248);
-	Texture::loadwritetxt(sysinfo, sysinfo.allTextures.txtscore,
-		blended, "Press return when finish", { 0, 255, 0, 255 }, NoColor, 24, 100, 272);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtScore,
+		blended, "TOP 10 SCORES", { 255, 0, 0, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, nonTransparent, center_x);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtScore,
+		blended, "Enter your name", { 0, 255, 0, 255 }, NoColor, 24, 100, 200, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtScore,
+		blended, "with your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 224, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtScore,
+		blended, "Remove last letter with backspace", { 0, 255, 0, 255 }, NoColor, 24, 100, 248, nonTransparent);
+	Texte::loadwritetxt(sysinfo, sysinfo.allTextes.txtScore,
+		blended, "Press return when finish", { 0, 255, 0, 255 }, NoColor, 24, 100, 272, nonTransparent);
 
 	sysinfo.var.select = selectnothing;
 	logfileconsole("_calculimage End_");
@@ -461,14 +461,13 @@ std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
 
 				SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 				SDL_RenderClear(sysinfo.screen.renderer);
-				sysinfo.allTextures.tabScore[position]->changeTextureMsg(sysinfo, blended,
-					name + "      " + std::to_string(sysinfo.var.tabScorePlayer[position].score),
-					{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += ((1 + position) * 32), center_x);
+				sysinfo.allTextes.tabScore[position]->changeTextureMsg(name + "      " + std::to_string(sysinfo.var.tabScorePlayer[position].score),
+					sysinfo.screen.renderer, sysinfo.allTextes.font);
 				initspacemenu = 200;
-				for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
-					sysinfo.allTextures.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
-				for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++)
-					sysinfo.allTextures.txtscore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+				for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
+					sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+				for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++)
+					sysinfo.allTextes.txtScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 				SDL_RenderPresent(sysinfo.screen.renderer);
 			}
 			validCharacter = false;
@@ -490,8 +489,8 @@ void IHM::ecrantitre(Sysinfo& sysinfo) {
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
 
-	for (unsigned int i = 0; i < sysinfo.allTextures.txtecrantitre.size(); i++)
-		sysinfo.allTextures.txtecrantitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+	for (unsigned int i = 0; i < sysinfo.allTextes.txtEcrantitre.size(); i++)
+		sysinfo.allTextes.txtEcrantitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 
 	for (unsigned int i = 0; i < sysinfo.allTextures.imgecrantitre.size(); i++)
 		sysinfo.allTextures.imgecrantitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
@@ -513,39 +512,39 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 	sysinfo.var.tabScorePlayer.push_back(p);
 	position = topScore(sysinfo.var.tabScorePlayer, p.score);
 	
-	for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
-		delete sysinfo.allTextures.tabScore[i];
-	sysinfo.allTextures.tabScore.clear();
+	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
+		delete sysinfo.allTextes.tabScore[i];
+	sysinfo.allTextes.tabScore.clear();
 	unsigned int initspacemenu = 200;
 	for (unsigned int i = 0; i < sysinfo.var.tabScorePlayer.size(); i++)
-		Texture::loadwritetxt(sysinfo, sysinfo.allTextures.tabScore,
+		Texte::loadwritetxt(sysinfo, sysinfo.allTextes.tabScore,
 			blended, sysinfo.var.tabScorePlayer[i].name + "      " + std::to_string(sysinfo.var.tabScorePlayer[i].score),
-			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, center_x);
+			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, nonTransparent, center_x);
 
 
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
-	for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
-		sysinfo.allTextures.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
-	for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++) {
-		if (sysinfo.allTextures.txtscore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
+	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
+		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+	for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++) {
+		if (sysinfo.allTextes.txtScore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
 			break;
 	}
 		
 
 	if (position != -1) { // si dans le top 10
-		for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++)
-			sysinfo.allTextures.txtscore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+		for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++)
+			sysinfo.allTextes.txtScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 		SDL_RenderPresent(sysinfo.screen.renderer);
 		sysinfo.var.tabScorePlayer[position].name = getName(sysinfo, position);
 	}
 
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
-	for (unsigned int i = 0; i < sysinfo.allTextures.tabScore.size(); i++)
-		sysinfo.allTextures.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
-	for (unsigned int i = 0; i < sysinfo.allTextures.txtscore.size(); i++) {
-		if (sysinfo.allTextures.txtscore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
+	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
+		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+	for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++) {
+		if (sysinfo.allTextes.txtScore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
 			break;
 	}
 	for (unsigned int i = 0; i < sysinfo.allButtons.buttonScore.size(); i++)
@@ -569,7 +568,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo) {
 		SDL_SetRenderDrawColor(sysinfo.screen.renderer, 128, 128, 128, 0xFF);
 		afficherMap(sysinfo);
 		calculTime(sysinfo.var.gameTime);
-		Texture::writetxt(sysinfo, blended,
+		Texte::writetxt(sysinfo, blended,
 			std::to_string(sysinfo.var.gameTime.hours) + ":"+ std::to_string(sysinfo.var.gameTime.minutes) + ":"
 			+ std::to_string(sysinfo.var.gameTime.seconds), Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
 
@@ -584,8 +583,8 @@ void IHM::alwaysrender(Sysinfo& sysinfo) {
 		}
 
 
-		for (unsigned int i = 0; i < sysinfo.allTextures.txtplay.size(); i++) {
-			sysinfo.allTextures.txtplay[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
+		for (unsigned int i = 0; i < sysinfo.allTextes.txtPlay.size(); i++) {
+			sysinfo.allTextes.txtPlay[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 		}
 
 		//
@@ -603,19 +602,19 @@ void IHM::alwaysrender(Sysinfo& sysinfo) {
 				sysinfo.var.tempoScore = sysinfo.pacman->GETtypeOfValue();
 			switch (sysinfo.var.tempoScore) {
 			case valuegold:
-				sysinfo.allTextures.scoreValue[gold - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[gold - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuecherry:
-				sysinfo.allTextures.scoreValue[cherry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[cherry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuestrawberry:
-				sysinfo.allTextures.scoreValue[strawberry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[strawberry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuepeach:
-				sysinfo.allTextures.scoreValue[peach - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[peach - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valueapple:
-				sysinfo.allTextures.scoreValue[apple - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[apple - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			}
 
@@ -720,7 +719,7 @@ void IHM::deleteAll(Sysinfo& sysinfo) {
 	Entity::destroyEntity(sysinfo.pacman, sysinfo.ghost);
 
 	for (Uint8 i = 1; i < MAX_FONT; i++)
-		TTF_CloseFont(sysinfo.allTextures.font[i]);
+		TTF_CloseFont(sysinfo.allTextes.font[i]);
 
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.ground, "ground Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.pacman, "pacman Texture");
@@ -730,12 +729,13 @@ void IHM::deleteAll(Sysinfo& sysinfo) {
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.pink, "pink Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.miscGhost, "miscGhost Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.collectibles, "collectibles Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.scoreValue, "scoreValue Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.tabScore, "tabScore Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.txtecrantitre, "txtecrantitre Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.txtplay, "txtplay Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.txtplay, "txtscore Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.imgecrantitre, "imgecrantitre Texture");
+
+	deleteDyTabPlayerAndTextures(sysinfo.allTextes.txtEcrantitre, "txtecrantitre Texte");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextes.txtPlay, "txtplay Texte");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextes.scoreValue, "scoreValue Texte");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextes.txtScore, "txtscore Texte");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextes.tabScore, "tabScore Texte");
 
 	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonEcrantitre, "Button ecrantitre");
 	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonPlay, "Button play");

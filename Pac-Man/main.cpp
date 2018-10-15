@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 
 	IHM::logfileconsole("________PROGRAMME START________");
 
-	IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font);
+	IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextes.font);
 	SaveReload::loadScore(sysinfo.file.score, sysinfo.var.tabScorePlayer);
 	IHM::calculimage(sysinfo);
 

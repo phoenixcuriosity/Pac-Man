@@ -16,7 +16,7 @@ Create Button n:1 msg = Go to leader board (END GAME) Success
 Create Button n:2 msg = Save and Quit Success
 Create Button n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.416000 secondes
+temps d'execution de l'initialisation : 1.422000 secondes
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
@@ -25,13 +25,6 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
-Pacman hit a Ghost successfully
-Pacman hit a Ghost successfully
-Pacman hit a Ghost successfully
-Pacman lost a life
-Pacman lost a life
-Pacman lost a life
-End Game
 _Ecrantitres Start_
 _Ecrantitres End_
 _Ecrantitres Start_
@@ -103,43 +96,48 @@ Delete collectibles Texture name = lemon.png Success
 Delete collectibles Texture name = pear.png Success
 Delete collectibles Texture name = key.png Success
 Delete ALL collectibles Texture Success
-Delete scoreValue Texture name = 100 Success
-Delete scoreValue Texture name = 200 Success
-Delete scoreValue Texture name = 400 Success
-Delete scoreValue Texture name = 800 Success
-Delete scoreValue Texture name = 1600 Success
-Delete scoreValue Texture name = 5000 Success
-Delete ALL scoreValue Texture Success
-Delete tabScore Texture name = qhrghq      36521 Success
-Delete tabScore Texture name = lol      22400 Success
-Delete tabScore Texture name = amazon      21500 Success
-Delete tabScore Texture name = ikea      20700 Success
-Delete tabScore Texture name = asctec      19600 Success
-Delete tabScore Texture name = robin      19400 Success
-Delete tabScore Texture name = apple      15500 Success
-Delete tabScore Texture name = google      15500 Success
-Delete tabScore Texture name = 9robin09X      15000 Success
-Delete tabScore Texture name = rg      10900 Success
-Delete ALL tabScore Texture Success
-Delete txtecrantitre Texture name = Game dev in C++ and with SDL2.0.8 Success
-Delete txtecrantitre Texture name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
-Delete txtecrantitre Texture name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
-Delete txtecrantitre Texture name = With ALL DLC For Only 99.99$ what a deal !!! Success
-Delete txtecrantitre Texture name = Use your mouse to select Success
-Delete ALL txtecrantitre Texture Success
-Delete txtplay Texture name = Your Score Success
-Delete txtplay Texture name = You can move Pacman Success
-Delete txtplay Texture name = by pressing arrows on your keyboard Success
-Delete txtplay Texture name = YOU DIED Success
-Delete txtplay Texture name = YOU WIN Success
-Delete ALL txtplay Texture Success
-Delete ALL txtscore Texture Success
 Delete imgecrantitre Texture name = linux.jpg Success
 Delete imgecrantitre Texture name = c++.jpg Success
 Delete imgecrantitre Texture name = sudo.jpg Success
 Delete imgecrantitre Texture name = PC_master_Race.jpg Success
 Delete imgecrantitre Texture name = matlab.jpg Success
 Delete ALL imgecrantitre Texture Success
+Delete txtecrantitre Texte name = Game dev in C++ and with SDL2.0.8 Success
+Delete txtecrantitre Texte name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
+Delete txtecrantitre Texte name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
+Delete txtecrantitre Texte name = With ALL DLC For Only 99.99$ what a deal !!! Success
+Delete txtecrantitre Texte name = Use your mouse to select Success
+Delete ALL txtecrantitre Texte Success
+Delete txtplay Texte name = Your Score Success
+Delete txtplay Texte name = You can move Pacman Success
+Delete txtplay Texte name = by pressing arrows on your keyboard Success
+Delete txtplay Texte name = YOU DIED Success
+Delete txtplay Texte name = YOU WIN Success
+Delete ALL txtplay Texte Success
+Delete scoreValue Texte name = 100 Success
+Delete scoreValue Texte name = 200 Success
+Delete scoreValue Texte name = 400 Success
+Delete scoreValue Texte name = 800 Success
+Delete scoreValue Texte name = 1600 Success
+Delete scoreValue Texte name = 5000 Success
+Delete ALL scoreValue Texte Success
+Delete txtscore Texte name = TOP 10 SCORES Success
+Delete txtscore Texte name = Enter your name Success
+Delete txtscore Texte name = with your keyboard Success
+Delete txtscore Texte name = Remove last letter with backspace Success
+Delete txtscore Texte name = Press return when finish Success
+Delete ALL txtscore Texte Success
+Delete tabScore Texte name = qhrghq      36521 Success
+Delete tabScore Texte name = lol      22400 Success
+Delete tabScore Texte name = amazon      21500 Success
+Delete tabScore Texte name = ikea      20700 Success
+Delete tabScore Texte name = asctec      19600 Success
+Delete tabScore Texte name = robin      19400 Success
+Delete tabScore Texte name = apple      15500 Success
+Delete tabScore Texte name = google      15500 Success
+Delete tabScore Texte name = 9robin09X      15000 Success
+Delete tabScore Texte name = rg      10900 Success
+Delete ALL tabScore Texte Success
 Delete Button ecrantitre name = New Game Success
 Delete Button ecrantitre name = Reload Success
 Delete Button ecrantitre name = Option Success

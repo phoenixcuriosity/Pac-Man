@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -24,6 +24,15 @@
 #include "Pac_Man_lib.h"
 #include "SaveReload.h"
 
+/*
+	Boucle principale bloquante
+	Gestion des évenements selon la définiton de la SDL (souris, clavier, ...)
+	Fonctionne à la fréquence du moniteur (ici 60Hz)
+	
+	Toutes les frames :
+		-> Appel de la fonction move
+		-> Appel de la fonction alwaysrender qui affiche la frame calculée du STATEplay (statescreen == STATEplay)
+*/
 void mainLoop(Sysinfo& sysinfo);
 
 int main(int argc, char** argv) {
@@ -37,25 +46,27 @@ int main(int argc, char** argv) {
 
 	IHM::logfileconsole("________PROGRAMME START________");
 
-	IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextes.font);
-	SaveReload::loadScore(sysinfo.file.score, sysinfo.var.tabScorePlayer);
-	IHM::calculimage(sysinfo);
+	if (IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextes.font)) {
+		if (sysinfo.var.saveReload.loadScore(sysinfo.file.score)) {
+			IHM::calculimage(sysinfo);
 
-	t2 = clock();
-	IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC) + " secondes");
+			t2 = clock();
+			IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC) + " secondes");
 
-	IHM::ecrantitre(sysinfo);
+			IHM::ecrantitre(sysinfo);
 
-	mainLoop(sysinfo);
+			mainLoop(sysinfo);
 
-	SaveReload::saveScore(sysinfo.file.score, sysinfo.var.tabScorePlayer);
-	IHM::deleteAll(sysinfo);
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
+			sysinfo.var.saveReload.saveScore(sysinfo.file.score);
+		}
+		IHM::deleteAll(sysinfo);
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+	}
 	IHM::logfileconsole("SDL_Quit Success");
 	IHM::logfileconsole("________PROGRAMME FINISH________");
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void mainLoop(Sysinfo& sysinfo) {

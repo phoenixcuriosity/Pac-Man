@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.115
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,8 +35,8 @@ bool SaveReload::save(Sysinfo& sysinfo) {
 		saveEntity << sysinfo.pacman->GETname() << std::endl;
 		saveEntity << sysinfo.pacman->GETx() << std::endl;
 		saveEntity << sysinfo.pacman->GETy() << std::endl;
-		saveEntity << sysinfo.pacman->GETindexX() << std::endl;
-		saveEntity << sysinfo.pacman->GETindexY() << std::endl;
+		saveEntity << (unsigned int)sysinfo.pacman->GETindexX() << std::endl;
+		saveEntity << (unsigned int)sysinfo.pacman->GETindexY() << std::endl;
 
 		saveEntity << (unsigned int)sysinfo.pacman->GETcurrentHeading() << std::endl;
 		saveEntity << (unsigned int)sysinfo.pacman->GETnextHeading() << std::endl;
@@ -50,8 +50,8 @@ bool SaveReload::save(Sysinfo& sysinfo) {
 			saveEntity << sysinfo.ghost[i]->GETname() << std::endl;
 			saveEntity << sysinfo.ghost[i]->GETx() << std::endl;
 			saveEntity << sysinfo.ghost[i]->GETy() << std::endl;
-			saveEntity << sysinfo.ghost[i]->GETindexX() << std::endl;
-			saveEntity << sysinfo.ghost[i]->GETindexY() << std::endl;
+			saveEntity << (unsigned int)sysinfo.ghost[i]->GETindexX() << std::endl;
+			saveEntity << (unsigned int)sysinfo.ghost[i]->GETindexY() << std::endl;
 
 			saveEntity << (unsigned int)sysinfo.ghost[i]->GETcurrentHeading() << std::endl;
 			saveEntity << (unsigned int)sysinfo.ghost[i]->GETnextHeading() << std::endl;
@@ -61,9 +61,10 @@ bool SaveReload::save(Sysinfo& sysinfo) {
 		}
 		
 	}
-	else
+	else {
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.saveEntity);
-
+		return false;
+	}
 
 
 	std::ofstream saveMap(sysinfo.file.saveMap);
@@ -75,11 +76,30 @@ bool SaveReload::save(Sysinfo& sysinfo) {
 				saveMap << (unsigned int)sysinfo.map.matriceMap[i][j].entity << std::endl;
 		}
 	}
-	else
+	else {
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.saveMap);
-
+		return false;
+	}
+		
 	IHM::logfileconsole("_Save End_");
-	return false;
+	return true;
+}
+bool SaveReload::saveScore(const std::string& score) {
+	IHM::logfileconsole("_saveScore Start_");
+	std::ofstream saveScore(score);
+	if (saveScore) {
+		saveScore << "numberOfScore=\t";
+		saveScore << _tabScorePlayer.size();
+		for (unsigned int i = 0; i < _tabScorePlayer.size(); i++)
+			saveScore << std::endl << _tabScorePlayer[i].name + "\t\t\t\t\t" << _tabScorePlayer[i].score;
+	}
+	else {
+		IHM::logfileconsole("________ERROR : loadScore : cannot open file : " + score);
+		return false;
+	}
+	
+	IHM::logfileconsole("_saveScore End_");
+	return true;
 }
 bool SaveReload::reload(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Reload Start_");
@@ -140,12 +160,16 @@ bool SaveReload::reload(Sysinfo& sysinfo) {
 				sysinfo.ghost[i]->SETtimeInvincible(value);
 			}
 		}
-		else
+		else {
 			IHM::logfileconsole("________ERROR : reload : file corrupt : " + sysinfo.file.saveEntity);
+			return false;
+		}
+			
 	}
-	else
+	else {
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.saveEntity);
-
+		return false;
+	}
 
 	unsigned int entity = 0;
 	std::ifstream saveMap(sysinfo.file.saveMap);
@@ -162,19 +186,21 @@ bool SaveReload::reload(Sysinfo& sysinfo) {
 				}
 			}
 		}
-		else
+		else {
 			IHM::logfileconsole("________ERROR : reload : file corrupt : " + sysinfo.file.saveMap);
+			return false;
+		}
 	}
-	else
+	else {
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.saveMap);
-
+		return false;
+	}
+		
 	IHM::logfileconsole("_Reload End_");
-	return false;
+	return true;
 }
-void SaveReload::loadScore(const std::string& score, std::vector<ScorePlayer>& tabScorePlayer) {
-	/*
-		charge le tableau de score TOP10 à partir d'un fichier formaté avec un format particulier
-	*/
+bool SaveReload::loadScore(const std::string& score) {
+	
 	IHM::logfileconsole("_loadScore Start_");
 	std::string destroy;
 	ScorePlayer player;
@@ -188,30 +214,34 @@ void SaveReload::loadScore(const std::string& score, std::vector<ScorePlayer>& t
 			for (unsigned int i = 0; i < maxScore; i++) {
 				loadScore >> player.name;
 				loadScore >> player.score;
-				tabScorePlayer.push_back(player);
+				_tabScorePlayer.push_back(player);
 			}
 		}
-		else
+		else {
 			IHM::logfileconsole("________ERROR : loadScore : file corrupt : " + score);
+			return false;
+		}
+			
 	}
-	else
+	else {
 		IHM::logfileconsole("________ERROR : loadScore : cannot open file : " + score);
+		return false;
+	}
 
 	IHM::logfileconsole("_loadScore End_");
+	return true;
 }
-void SaveReload::saveScore(const std::string& score, std::vector<ScorePlayer>& tabScorePlayer) {
-	/*
-		Enregistre le tableau des scores dans un fichier avec un format particulier
-	*/
-	IHM::logfileconsole("_saveScore Start_");
-	std::ofstream saveScore(score);
-	if (saveScore) {
-		saveScore << "numberOfScore=\t";
-		saveScore << tabScorePlayer.size();
-		for (unsigned int i = 0; i < tabScorePlayer.size(); i++)
-			saveScore << std::endl << tabScorePlayer[i].name + "\t\t\t\t\t" << tabScorePlayer[i].score;
-	}
-	else
-		IHM::logfileconsole("________ERROR : loadScore : cannot open file : " + score);
-	IHM::logfileconsole("_saveScore End_");
+
+SaveReload::SaveReload()
+{
+}
+
+std::vector<ScorePlayer> SaveReload::GETtabScorePlayer()const {
+	return _tabScorePlayer;
+}
+std::vector<ScorePlayer>& SaveReload::GETtabScorePlayerNONCONST() {
+	return _tabScorePlayer;
+}
+void SaveReload::SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer) {
+	_tabScorePlayer = tabScorePlayer;
 }

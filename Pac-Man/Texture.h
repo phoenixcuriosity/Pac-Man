@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -56,6 +56,7 @@ public:
 	virtual bool TextureTestString(const std::string&);
 
 	virtual SDL_Texture* GETtexture() const;
+	virtual SDL_Texture* GETtextureNonConst();
 	virtual SDL_Rect GETdst()const;
 	virtual int GETdstx()const;
 	virtual int GETdsty()const;
@@ -114,6 +115,7 @@ public:
 	virtual SDL_Color GETbackcolor() const;
 	virtual Uint8 GETsize()const;
 	
+	virtual void SETname(std::string msg, SDL_Renderer*& renderer, TTF_Font* font[]);
 	virtual void SETtype(Uint8 type, SDL_Renderer*& renderer, TTF_Font *font[]);
 	virtual void SETsize(Uint8 type, SDL_Renderer*& renderer, TTF_Font *font[]);
 	virtual void SETtxtcolor(SDL_Color txtcolor, SDL_Renderer*& renderer, TTF_Font *font[]);
@@ -123,7 +125,7 @@ public:
 	virtual bool isSameColor(SDL_Color, SDL_Color) const;
 
 public:
-	virtual void changeTextureMsg(const std::string &msg, SDL_Renderer*& renderer, TTF_Font *font[]);
+	virtual void resizeTexte();
 
 private:
 	Uint8 _type;
@@ -172,6 +174,7 @@ public:
 	virtual bool GETon() const;
 
 	virtual void SETon(bool);
+	virtual void SETalpha(Uint8);
 
 private:
 	SDL_Texture* _imageOn;

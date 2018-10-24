@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -28,29 +28,90 @@
 
 class IHM {
 public:
+	// initialisation des fichiers
 	static void initfile(const std::string& log);
+	// permet de d'écrire sur la console ainsi que dans le fichier log.txt
 	static void logfileconsole(const std::string &msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
-	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
+
+	/*
+		initialisation de la fenetre, du renderer et du tableau contenant les polices d'ecriture
+		retourne true si aucune erreur n'est survenue
+		retourne false si une erreur est survenue
+	*/
+	static bool initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
+
 	static void initTile(Tile& map, bool wall, Uint8 entity);
+	// creer une forme à partir de la case visée, celle-ci représente le point en haut à gauche de la forme
 	static void forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, Uint8 height, bool wall = true);
+	// Initialisation d'un niveau unique de Pacman
 	static void initGrid(Map& map);
+	
+	/*
+		Chargement Textures en fonction de l'ecran (menu, play, score):
+		 -> des images
+		 -> des boutons
+		 -> des textes
+	*/
 	static void calculimage(Sysinfo&);
 
+
+
 public:
+	// Handle Mouse Event	BUTTON_LEFT, BUTTON_RIGHT
 	static void mouse(Sysinfo& sysinfo, SDL_Event event);
+	// recherche du bouton par comparaison de string et des positions x et y du clic
 	static void cliqueGauche(Sysinfo& sysinfo, SDL_Event event);
+
+	/*
+		Demande au joueur son pseudo pour etre placé dans le tableau des scores
+		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
+		Fonctionne par cast avec le tableau ASCII
+		-> retourne le nom entré par le joueur (std::string)
+	*/
 	static std::string getName(Sysinfo& sysinfo, unsigned int position);
+
+	/*
+		Tri du tableau des scores dans le sens décroissant
+		recherche si le score fait lors de cette partie est dans le TOP10
+		-> retourne la position du joueur
+		-> retourne -1 si le joueur ne figure pas dans le TOP10
+	*/
 	static int8_t topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score);
 
-public:
-	static void ecrantitre(Sysinfo& syinfo);
-	static void ecranScore(Sysinfo& syinfo);
-	static void alwaysrender(Sysinfo& syinfo);
-	static void afficherMap(Sysinfo& sysinfo);
-	static void calculTime(GameTime& gameTime);
+
 
 public:
+	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEecrantitre
+	static void ecrantitre(Sysinfo& syinfo);
+	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEscore
+	static void ecranScore(Sysinfo& syinfo);
+
+	/*
+		Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEplay
+		Cette fonction est appelée à la meme fréquence que la boucle principale
+	*/
+	static void alwaysrender(Sysinfo& syinfo);
+
+	/*
+		Affiche la map du niveau chargé :
+		-> murs
+		-> couloir
+		-> bonus
+	*/
+	static void afficherMap(Sysinfo& sysinfo);
+
+	/*
+		Affiche le temps passé depuis le début du New Game
+		Compte sur le fait que la boucle fonctionne à la fréquence de l'écran (ici 60Hz)
+		si la boucle principale prend plus que 1/60 s alors le temps affiché sera décalé
+	*/
+	static void calculTime(GameTime& gameTime);
+
+
+
+public:
+	// Destruction des allocations dynamiques et de la fenetre
 	static void deleteAll(Sysinfo&);
 };
 template<class T>

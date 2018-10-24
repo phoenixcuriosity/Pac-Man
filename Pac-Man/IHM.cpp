@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -59,9 +59,11 @@ void IHM::logSDLError(std::ostream &os, const std::string &msg) {
 	else
 		std::cout << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt << std::endl;
 }
-void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]) {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+bool IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]) {
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		std::cout << std::endl << "SDL could not initialize! SDL_Error: " << SDL_GetError();
+		return false;
+	}
 	else {
 		window = SDL_CreateWindow("Pacman",
 			0, 0,
@@ -72,6 +74,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		if (window == nullptr) {
 			logSDLError(std::cout, "CreateWindow");
 			SDL_Quit();
+			return false;
 		}
 		else
 			logfileconsole("CreateWindow Success");
@@ -81,6 +84,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 			logSDLError(std::cout, "CreateRenderer");
 			SDL_DestroyWindow(window);
 			SDL_Quit();
+			return false;
 		}
 		else
 			logfileconsole("CreateRenderer Success");
@@ -90,6 +94,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 			SDL_DestroyRenderer(renderer);
 			SDL_DestroyWindow(window);
 			SDL_Quit();
+			return false;
 		}
 		else
 			logfileconsole("TTF_Init Success");
@@ -101,6 +106,7 @@ void IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
 		logfileconsole("SDL_Init Success");
+		return true;
 	}
 }
 void IHM::initTile(Tile& map, bool wall, Uint8 entity) {
@@ -116,9 +122,6 @@ void IHM::forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, U
 		}
 	}
 }
-/*
-		Initialisation d'un niveau unique de Pacman
-*/
 void IHM::initGrid(Map& map) {
 	map.matriceMap.clear();
 	Tile blankTile;
@@ -346,16 +349,10 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	sysinfo.var.select = selectnothing;
 	logfileconsole("_calculimage End_");
 }
-/*
-	Handle Mouse Event
-	BUTTON_LEFT
-	BUTTON_RIGHT
-*/
 void IHM::mouse(Sysinfo& sysinfo, SDL_Event event) {
 	if (event.button.button == SDL_BUTTON_LEFT)
 		cliqueGauche(sysinfo, event);
 }
-// recherche du bouton par comparaison de string et des positions x et y du clic
 void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 	switch (sysinfo.var.statescreen) {
 	case STATEplay:
@@ -392,8 +389,10 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 			else if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"Reload", sysinfo.var.statescreen, event.button.x, event.button.y)) {
 				Entity::initEntity(sysinfo.pacman, sysinfo.ghost);
 				initGrid(sysinfo.map);
-				SaveReload::reload(sysinfo);
-				sysinfo.var.statescreen = STATEplay;
+				if(SaveReload::reload(sysinfo))
+					sysinfo.var.statescreen = STATEplay;
+				else
+					sysinfo.var.continuer = false;
 				return;
 			}
 			else if (sysinfo.allButtons.buttonEcrantitre[i]->searchButton((std::string)"Option", sysinfo.var.statescreen, event.button.x, event.button.y)) {
@@ -417,17 +416,11 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 		break;
 	}
 }
-/*
-		Demande au joueur son pseudo pour etre placé dans le tableau des scores
-		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
-		Fonctionne par cast avec le tableau ASCII
-*/
 std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
-	
 	SDL_Event event;
 	std::string name;
 	bool validCharacter = false, validChange = false;
-	unsigned int initspacemenu = 200;
+	
 	while (true) {
 		SDL_WaitEvent(&event);
 		switch (event.type) {
@@ -461,9 +454,10 @@ std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
 
 				SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 				SDL_RenderClear(sysinfo.screen.renderer);
-				sysinfo.allTextes.tabScore[position]->changeTextureMsg(name + "      " + std::to_string(sysinfo.var.tabScorePlayer[position].score),
+				sysinfo.allTextes.tabScore[position]->SETname(name + "      " + std::to_string(sysinfo.var.saveReload.GETtabScorePlayer()[position].score),
 					sysinfo.screen.renderer, sysinfo.allTextes.font);
-				initspacemenu = 200;
+				sysinfo.allTextes.tabScore[position]->SETtxtcolor(Yellow, sysinfo.screen.renderer, sysinfo.allTextes.font);
+				
 				for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
 					sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 				for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++)
@@ -477,11 +471,39 @@ std::string IHM::getName(Sysinfo& sysinfo, unsigned int position) {
 	}
 
 }
-/*
+int8_t IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score) {
+	std::vector<ScorePlayer> newTabScore;
+	ScorePlayer player;
+	unsigned int scoreToDestroy = 0, maxSize = 0;
 
-		affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEecrantitre
+	if (tabScorePlayer.size() > 10)
+		maxSize = 10;
+	else {
+		maxSize = tabScorePlayer.size();
+		if (score == 0)
+			maxSize--;
+	}
+	while (newTabScore.size() < maxSize) { // TOP 10 SCORES
+		for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
+			if (tabScorePlayer[i].score > player.score) {
+				scoreToDestroy = i;
+				player.score = tabScorePlayer[i].score;
+				player.name = tabScorePlayer[i].name;
+			}
+		}
+		tabScorePlayer.erase(tabScorePlayer.begin() + scoreToDestroy);
+		newTabScore.push_back(player);
+		player.score = 0;
+	}
+	tabScorePlayer = newTabScore;
 
-*/
+	int8_t positionToReturn = -1;
+	for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
+		if (tabScorePlayer[i].score == score)
+			positionToReturn = (int8_t)i;
+	}
+	return positionToReturn;
+}
 void IHM::ecrantitre(Sysinfo& sysinfo) {
 	logfileconsole("_Ecrantitres Start_");
 
@@ -509,16 +531,16 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 	sysinfo.var.statescreen = STATEscore;
 	int8_t position = 0;
 	ScorePlayer p; p.name = ""; p.score = sysinfo.pacman->GETvalue();
-	sysinfo.var.tabScorePlayer.push_back(p);
-	position = topScore(sysinfo.var.tabScorePlayer, p.score);
+	sysinfo.var.saveReload.GETtabScorePlayerNONCONST().push_back(p);
+	position = topScore(sysinfo.var.saveReload.GETtabScorePlayerNONCONST(), p.score);
 	
 	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
 		delete sysinfo.allTextes.tabScore[i];
 	sysinfo.allTextes.tabScore.clear();
 	unsigned int initspacemenu = 200;
-	for (unsigned int i = 0; i < sysinfo.var.tabScorePlayer.size(); i++)
+	for (unsigned int i = 0; i < sysinfo.var.saveReload.GETtabScorePlayer().size(); i++)
 		Texte::loadwritetxt(sysinfo, sysinfo.allTextes.tabScore,
-			blended, sysinfo.var.tabScorePlayer[i].name + "      " + std::to_string(sysinfo.var.tabScorePlayer[i].score),
+			blended, sysinfo.var.saveReload.GETtabScorePlayer()[i].name + "      " + std::to_string(sysinfo.var.saveReload.GETtabScorePlayer()[i].score),
 			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, nonTransparent, center_x);
 
 
@@ -536,7 +558,7 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 		for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++)
 			sysinfo.allTextes.txtScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.statescreen, sysinfo.var.select);
 		SDL_RenderPresent(sysinfo.screen.renderer);
-		sysinfo.var.tabScorePlayer[position].name = getName(sysinfo, position);
+		sysinfo.var.saveReload.GETtabScorePlayerNONCONST()[position].name = getName(sysinfo, position);
 	}
 
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
@@ -556,8 +578,6 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 void IHM::alwaysrender(Sysinfo& sysinfo) {
 	//clock_t t1, t2;
 	//t1 = clock();
-	std::vector<Texture*>* ghostTab[MAX_GHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
-		&sysinfo.allTextures.yellow, &sysinfo.allTextures.pink };
 
 	switch (sysinfo.var.statescreen) {
 	case STATEplay:
@@ -588,12 +608,15 @@ void IHM::alwaysrender(Sysinfo& sysinfo) {
 		}
 
 		//
+		std::vector<Texture*> pacmanTab[1] = { sysinfo.allTextures.pacman };
 		sysinfo.pacman->afficherStats(sysinfo);
-		sysinfo.pacman->afficher(sysinfo.screen.renderer, sysinfo.allTextures.pacman);
+		sysinfo.pacman->afficher(sysinfo.screen.renderer, pacmanTab);
 
 		
+		std::vector<Texture*> ghostTab[MAX_GHOST + 1] = { sysinfo.allTextures.red, sysinfo.allTextures.blue,
+		sysinfo.allTextures.yellow, sysinfo.allTextures.pink , sysinfo.allTextures.miscGhost };
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
-			sysinfo.ghost[i]->afficher(sysinfo.screen.renderer, *ghostTab[i], sysinfo.allTextures.miscGhost);
+			sysinfo.ghost[i]->afficher(sysinfo.screen.renderer, ghostTab);
 
 
 		sysinfo.var.moduloScore = (sysinfo.var.moduloScore + 1) % 30;
@@ -673,46 +696,6 @@ void IHM::calculTime(GameTime& gameTime) {
 		}
 	}
 }
-/*
-		Tri du tableau des scores dans le sens décroissant
-		recherche si le score fait lors de cette partie est dans le TOP10
-*/
-int8_t IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score) {
-	std::vector<ScorePlayer> newTabScore;
-	ScorePlayer player;
-	unsigned int scoreToDestroy = 0, maxSize = 0;
-	
-	if (tabScorePlayer.size() > 10)
-		maxSize = 10;
-	else {
-		maxSize = tabScorePlayer.size();
-		if (score == 0)
-			maxSize--;
-	}
-	while(newTabScore.size() < maxSize){ // TOP 10 SCORES
-		for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
-			if (tabScorePlayer[i].score > player.score) {
-				scoreToDestroy = i;
-				player.score = tabScorePlayer[i].score;
-				player.name = tabScorePlayer[i].name;
-			}
-		}
-		tabScorePlayer.erase(tabScorePlayer.begin() + scoreToDestroy);
-		newTabScore.push_back(player);
-		player.score = 0;
-	}
-	tabScorePlayer = newTabScore;
-
-	int8_t positionToReturn = -1;
-	for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
-		if (tabScorePlayer[i].score == score)
-			positionToReturn = (int8_t)i;
-	}
-	return positionToReturn;
-}
-/*
-		Destruction des allocations dynamiques et de la fenetre
-*/
 void IHM::deleteAll(Sysinfo& sysinfo) {
 	logfileconsole("*********_________ Start DeleteAll _________*********");
 

@@ -95,52 +95,52 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 		nextindexY = this->GETindexY() - 1;
 		if (map[nextindexX][nextindexY].wall) {
 			if (this->GETy() - this->GETvelocity() >= (map[nextindexX][nextindexY].tile_y + TILE_SIZE))
-				return validCondition;
+				return (bool)validCondition;
 			else
-				return Not_Valid;
+				return (bool)Not_Valid;
 		}
 		else
-			return validCondition;
+			return (bool)validCondition;
 		break;
 	case LEFT:
 		nextindexX = this->GETindexX() - 1;
 		nextindexY = this->GETindexY();
 		if (map[nextindexX][nextindexY].wall) {
 			if (this->GETx() - this->GETvelocity() >= (map[nextindexX][nextindexY].tile_x + TILE_SIZE))
-				return validCondition;
+				return (bool)validCondition;
 			else
-				return Not_Valid;
+				return (bool)Not_Valid;
 		}
 		else
-			return validCondition;
+			return (bool)validCondition;
 		break;
 	case DOWN:
 		nextindexX = this->GETindexX();
 		nextindexY = this->GETindexY() + 1;
 		if (map[nextindexX][nextindexY].wall) {
 			if (((this->GETy() + TILE_SIZE) + this->GETvelocity()) <= map[nextindexX][nextindexY].tile_y)
-				return validCondition;
+				return (bool)validCondition;
 			else
-				return Not_Valid;
+				return (bool)Not_Valid;
 		}
 		else
-			return validCondition;
+			return (bool)validCondition;
 		break;
 	case RIGHT:
 		nextindexX = this->GETindexX() + 1;
 		nextindexY = this->GETindexY();
 		if (map[nextindexX][nextindexY].wall) {
 			if (((this->GETx() + TILE_SIZE) + this->GETvelocity()) <= map[nextindexX][nextindexY].tile_x)
-				return validCondition;
+				return (bool)validCondition;
 			else
-				return Not_Valid;
+				return (bool)Not_Valid;
 		}
 		else
-			return validCondition;
+			return (bool)validCondition;
 		break;
 	}
 
-	return Not_Valid;
+	return (bool)Not_Valid;
 }
 bool Entity::isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
 	if (this->GETx() == map[i][j].tile_x) {
@@ -315,7 +315,7 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 		}
 	}
 	else {
-		if (validTryToMove = search(map)) {
+		if ((validTryToMove = search(map)) != Not_Valid) {
 			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
@@ -348,7 +348,7 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 	return 0;
 }
 Uint8 Pacman::search(Map& map) {
-	Uint8 condition = 0;
+	Uint8 condition = Not_Valid;
 	for (Uint8 i = 0; i < map.map_length; i++) {
 		for (Uint8 j = 0; j < map.map_height; j++) {
 			if (this->GETcurrentHeading() != this->GETnextHeading()) {
@@ -465,13 +465,13 @@ void Pacman::afficherStats(Sysinfo& sysinfo) {
 	if (this->GETinvincible())
 		Texte::writetxt(sysinfo, blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
 }
-void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
+void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) {
 	std::string pacmanPos[MAX_POS] = { "U", "L", "D", "R" }, pacmanSkin[MAX_SKIN] = { "1", "2" };
 	unsigned int skin = 0;
 	if (this->GETalternateSkin())
 		skin = 1;
-	for (unsigned int i = 0; i < tabTexture.size(); i++) {
-		if (tabTexture[i]->renderTextureTestString(renderer, "pacman_" + pacmanPos[this->GETcurrentHeading()]
+	for (unsigned int i = 0; i < tabTexture[0].size(); i++) {
+		if (tabTexture[0][i]->renderTextureTestString(renderer, "pacman_" + pacmanPos[this->GETcurrentHeading()]
 			+ "_" + pacmanSkin[skin] + ".png", this->GETx(), this->GETy()))
 			return;
 	}
@@ -534,7 +534,7 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 		}
 	}
 	else {
-		if (validTryToMove = search(map)) {
+		if ((validTryToMove = search(map)) != Not_Valid) {
 			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
@@ -630,25 +630,22 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 		break;
 	}
 }
-void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) {
-	
-}
-void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc) {
-	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAX_POS] = { "U", "L", "D", "R" }, ghostSkin[MAX_SKIN] = {"1", "2"};
+void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) {
+	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAX_POS] = { "U", "L", "D", "R" }, ghostSkin[MAX_SKIN] = { "1", "2" };
 	Uint8 skin = 0;
-	if (this->GETalternateSkin()) 
+	if (this->GETalternateSkin())
 		skin = 1; // évite le probleme : bool (false == 0) et (true == tout le reste)
 
 	if (this->GETinvincible()) {
-		for (unsigned int i = 0; i < tabTexture.size(); i++) {
-			if (tabTexture[i]->renderTextureTestString(renderer, ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
+		for (unsigned int i = 0; i < tabTexture[_type].size(); i++) {
+			if (tabTexture[_type][i]->renderTextureTestString(renderer, ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
 				"_" + ghostSkin[skin] + ".png", this->GETx(), this->GETy()))
 				return;
 		}
 	}
-	else{
-		for (unsigned int i = 0; i < misc.size(); i++) {
-			misc[i]->renderTextureTestString(renderer, "not_Invincible.png", this->GETx(), this->GETy());
+	else {
+		for (unsigned int i = 0; i < tabTexture[MAX_GHOST].size(); i++) {
+			tabTexture[MAX_GHOST][i]->renderTextureTestString(renderer, "not_Invincible.png", this->GETx(), this->GETy());
 		}
 	}
 }

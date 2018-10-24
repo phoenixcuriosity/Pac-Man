@@ -28,23 +28,55 @@
 // classe abstraite
 class Entity { 
 public:
+	// demande un mouvement de tous les objets Entity, conditions de victoire et de défaite
 	static void move(Sysinfo& sysinfo);
-public:
-	static void initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
-	static void destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
+
 
 public:
+	// initialisation des objets Entity au positions et paramètres pré-définis
+	static void initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
+	// destruction de tous les objets Entity
+	static void destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
+
+
+public: // constructeurs et destructeur
 	Entity() {};
 	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
 	~Entity();
 
-	bool tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos);
-	bool isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
-	bool isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
-	void makeTheMove(bool validMove, unsigned int pos);
-	void teleport();
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture) = 0;
 
+public: // opérations sur l'objet
+	/*
+		test la future position de l'objet
+		retourne Not_Valid (false) si la future position est bloquée
+		retourne validCondition (true) si l'objet peut effectuer le mouvement vers la future position
+	*/
+	bool tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos);
+
+	/* 
+		cherche si l'objet est pleinement la case
+		retourne vrai si l'objet est effectivement pleinement la case
+		retourne faux sinon
+	*/
+	bool isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
+
+	/*
+		cherche si l'objet (centre) est sur la case
+		retourne vrai si l'objet est effectivement la case
+		retourne faux sinon
+	*/
+	bool isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
+
+	// change les coordonnées de l'objet
+	void makeTheMove(bool validMove, unsigned int pos);
+	// test de la position spécifique de téléporation
+	void teleport();
+
+
+public: // affichage
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) = 0;
+
+public: // assesseurs
 	std::string GETname()const;
 	unsigned int GETx()const;
 	unsigned int GETy()const;
@@ -96,20 +128,22 @@ private:
 };
 
 class Pacman : public Entity {
-public:
+public: // constructeurs et destructeur
 	Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
 	Pacman(const Pacman& player);
 	~Pacman();
 
+public: // opérations sur l'objet
 	int8_t move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
 	Uint8 search(Map& map);
 	void value(std::vector<std::vector<Tile>>& map, bool validMove);
 	void collideGhost(std::vector<Ghost*>& ghost);
 
+public: // affichage
 	void afficherStats(Sysinfo& sysinfo);
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]);
 	
-
+public: // assesseurs
 	Uint8 GETlife()const;
 	Uint8 GETpowerUP()const;
 	unsigned int GETtypeOfValue()const;
@@ -119,28 +153,30 @@ public:
 	void SETtypeOfValue(unsigned int);
 
 private:
-	
 	Uint8 _life;
 	Uint8 _powerUP;
 	unsigned int _typeOfValue;
 };
 
 class Ghost : public Entity {
-public:
+public: // constructeurs et destructeur
+	Ghost() {};
 	Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type,unsigned int value = 0);
 	~Ghost();
 
+public: // opérations sur l'objet
 	int8_t move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop = -1);
 	Uint8 search(Map& map);
 	void makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman);
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture);
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, std::vector<Texture*>& misc);
 
+public: // affichage
+	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]);
+
+public: // assesseurs
 	Uint8 GETtype()const;
 	void SETtype(Uint8 type);
 
 private:
-	
 	Uint8 _type;
 };
 

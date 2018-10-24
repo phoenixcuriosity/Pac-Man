@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -50,7 +50,7 @@ void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTextu
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		if (newTexture != nullptr) {
-			if (alpha != (Uint8)255) {
+			if (alpha != nonTransparent) {
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 					IHM::logSDLError(std::cout, "alpha : ");
 			}
@@ -69,14 +69,14 @@ void Texture::centrage(int& xc, int& yc, int iW, int iH, Uint8 cnt) {
 	case nocenter:
 		break;
 	case center_x:
-		xc = xc - (iW / 2);
+		xc -= (iW / 2);
 		break;
 	case center_y:
-		yc = yc - (iH / 2);
+		yc -= (iH / 2);
 		break;
 	case center:
-		xc = xc - (iW / 2);
-		yc = yc - (iH / 2);
+		xc -= (iW / 2);
+		yc -= (iH / 2);
 		break;
 	}
 }
@@ -144,6 +144,9 @@ bool Texture::TextureTestString(const std::string& msg) {
 SDL_Texture* Texture::GETtexture() const {
 	return _texture;
 }
+SDL_Texture* Texture::GETtextureNonConst(){
+	return _texture;
+}
 SDL_Rect Texture::GETdst()const {
 	return _dst;
 }
@@ -175,11 +178,13 @@ Uint8 Texture::GETcenter() const {
 	return _center;
 }
 void Texture::SETtexture(SDL_Texture* texture) {
-	if (_texture != nullptr) {
-		SDL_DestroyTexture(_texture);
-		_texture = nullptr;
+	if (_texture != texture) {
+		if (_texture != nullptr) {
+			SDL_DestroyTexture(_texture);
+			_texture = nullptr;
+		}
+		_texture = texture;
 	}
-	_texture = texture;
 }
 void Texture::SETdstx(int x) {
 	_dst.x = x;
@@ -197,13 +202,17 @@ void Texture::SETname(std::string msg) {
 	_name = msg;
 }
 void Texture::SETalpha(Uint8 alpha) {
-	_alpha = alpha;
-	if (SDL_SetTextureAlphaMod(_texture, alpha) != 0)
-		IHM::logSDLError(std::cout, "alpha : ");
+	if (_alpha != alpha) {
+		_alpha = alpha;
+		if (SDL_SetTextureAlphaMod(_texture, _alpha) != 0)
+			IHM::logSDLError(std::cout, "alpha : ");
+	}
 }
 void Texture::SETcenter(Uint8 center) {
-	_center = center;
-	centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
+	if (_center != center) {
+		_center = center;
+		centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
+	}
 }
 
 
@@ -222,12 +231,15 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(SDL_Renderer*& renderer, Uint8 ty
 	if (texture == nullptr)
 		IHM::logfileconsole("___________ERROR : renderTextShaded nullptr for : " + message);
 	SDL_FreeSurface(surf);
+
 	return texture;
 }
 void Texte::loadwritetxt(Sysinfo& sysinfo, std::vector<Texte*>& tabTexte, Uint8 type, const std::string &msg,
 	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 cnt) {
 
 	SDL_Texture *image = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, backcolor, sysinfo.allTextes.font[size]);
+	if (alpha != nonTransparent)
+		SDL_SetTextureAlphaMod(image, alpha);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
@@ -273,6 +285,13 @@ SDL_Color Texte::GETbackcolor() const {
 Uint8 Texte::GETsize()const {
 	return _size;
 }
+void Texte::SETname(std::string msg, SDL_Renderer*& renderer, TTF_Font* font[]) {
+	if (this->GETname().compare(msg) != 0) {
+		this->Texture::SETname(msg);
+		this->SETtexture(createSDL_TextureFromTexte(renderer, _type, this->GETname(), _txtcolor, _backcolor, font[_size]));
+		resizeTexte();
+	}
+}
 void Texte::SETtype(Uint8 type, SDL_Renderer*& renderer, TTF_Font *font[]) {
 	if (type != _type) {
 		_type = type;
@@ -283,37 +302,54 @@ void Texte::SETsize(Uint8 size, SDL_Renderer*& renderer, TTF_Font *font[]) {
 	if (size != _size) {
 		_size = size;
 		this->SETtexture(createSDL_TextureFromTexte(renderer, _type, this->GETname(), _txtcolor, _backcolor, font[_size]));
+		resizeTexte();
 	}
 }
 void Texte::SETtxtcolor(SDL_Color txtcolor, SDL_Renderer*& renderer, TTF_Font *font[]) {
-	if (isSameColor(txtcolor, _txtcolor)) {
+	if (!isSameColor(txtcolor, _txtcolor)) {
 		_txtcolor = txtcolor;
 		this->SETtexture(createSDL_TextureFromTexte(renderer, _type, this->GETname(), _txtcolor, _backcolor, font[_size]));
 	}
 }
 void Texte::SETbackcolor(SDL_Color backcolor, SDL_Renderer*& renderer, TTF_Font *font[]) {
-	if(isSameColor(backcolor, _backcolor)) {
+	if(!isSameColor(backcolor, _backcolor)) {
 		_backcolor = backcolor;
 		this->SETtexture(createSDL_TextureFromTexte(renderer, _type, this->GETname(), _txtcolor, _backcolor, font[_size]));
 	}
 }
-
 bool Texte::isSameColor(SDL_Color color1, SDL_Color color2) const {
 	if (color1.a != color2.a || color1.b != color2.b || color1.g != color2.g || color1.r != color2.r)
 		return false;
 	else
 		return true;
 }
+void Texte::resizeTexte() {
+	int xc = 0, yc = 0, iW = 0, iH = 0;
 
-void Texte::changeTextureMsg(const std::string &msg, SDL_Renderer*& renderer, TTF_Font *font[]) {
-	this->SETname(msg);
-	SDL_DestroyTexture(this->GETtexture());
-	this->SETtexture(createSDL_TextureFromTexte(renderer, _type, msg, _txtcolor, _backcolor, font[_size]));
-	int xc = this->GETdstx(), yc = this->GETdsty(), iW = 0, iH = 0;
-	SDL_QueryTexture(this->GETtexture(), NULL, NULL, &iW, &iH);
+	switch (this->GETcenter()) {
+	case nocenter:
+		xc = this->GETdstx();
+		yc = this->GETdsty();
+		break;
+	case center_x:
+		xc = this->GETdstx() + this->GETdstw() / 2;
+		yc = this->GETdsty();
+		break;
+	case center_y:
+		xc = this->GETdstx();
+		yc = this->GETdsty() + this->GETdsth() / 2;
+		break;
+	case center:
+		xc = this->GETdstx() + this->GETdstw() / 2;
+		yc = this->GETdsty() + this->GETdsth() / 2;
+		break;
+	}
+
+	SDL_QueryTexture(this->GETtextureNonConst(), NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, this->GETcenter());
 	this->SETdstx(xc); this->SETdsty(yc); this->SETdstw(iW); this->SETdsth(iH);
 }
+
 
 
 
@@ -335,6 +371,10 @@ void Button::createbutton(Sysinfo& sysinfo, std::vector<Button*>& tabbutton, Uin
 		if (i == tabbutton.size()) {
 			image = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, backcolor, sysinfo.allTextes.font[size]);
 			imageOn = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, { 64,128,64,255 }, sysinfo.allTextes.font[size]);
+			if (alpha != nonTransparent) {
+				SDL_SetTextureAlphaMod(image, alpha);
+				SDL_SetTextureAlphaMod(imageOn, alpha);
+			}
 			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 			centrage(x, y, iW, iH, cnt);
 			tabbutton.push_back(new Button(image, msg, sysinfo.var.statescreen, sysinfo.var.select, x, y, iW, iH,
@@ -425,4 +465,11 @@ bool Button::GETon() const {
 }
 void Button::SETon(bool state) {
 	_on = state;
+}
+void Button::SETalpha(Uint8 alpha) {
+	this->SETalpha(alpha);
+	if (SDL_SetTextureAlphaMod(this->GETtextureNonConst(), this->GETalpha()) != 0)
+		IHM::logSDLError(std::cout, "alpha : ");
+	if (SDL_SetTextureAlphaMod(_imageOn, this->GETalpha()) != 0)
+		IHM::logSDLError(std::cout, "alpha : ");
 }

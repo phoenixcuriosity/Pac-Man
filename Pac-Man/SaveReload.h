@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -27,11 +27,47 @@
 #include "lib.h"
 
 class SaveReload {
-public:
+public: 
+	/* 
+		Enregistre les attributs des objets Entity ainsi que configuration de la map
+		retourne true si aucune erreur n'est survenue
+		retourne false si une erreur est survenue
+	*/
 	static bool save(Sysinfo& sysinfo);
+
+	/*
+		Charge les attributs des objets Entity ainsi que configuration de la map
+		retourne true si aucune erreur n'est survenue
+		retourne false si une erreur est survenue
+	*/
 	static bool reload(Sysinfo& sysinfo);
-	static void loadScore(const std::string& score, std::vector<ScorePlayer>& tabScorePlayer);
-	static void saveScore(const std::string& score, std::vector<ScorePlayer>& tabScorePlayer);
+	
+public:
+	SaveReload();
+	~SaveReload() {};
+
+public:
+	/*
+		Enregistre le tableau des scores dans un fichier avec un format particulier
+		retourne true si aucune erreur n'est survenue
+		retourne false si une erreur est survenue
+	*/
+	bool saveScore(const std::string& score);
+
+	/* 
+		Charge le tableau de score TOP10 à partir d'un fichier formaté avec un format particulier
+		retourne true si aucune erreur n'est survenue
+		retourne false si une erreur est survenue
+	*/
+	bool loadScore(const std::string& score);
+
+	std::vector<ScorePlayer> GETtabScorePlayer()const;
+	std::vector<ScorePlayer>& GETtabScorePlayerNONCONST();
+
+	void SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer);
+
+private:
+	std::vector<ScorePlayer> _tabScorePlayer;
 };
 
 #endif

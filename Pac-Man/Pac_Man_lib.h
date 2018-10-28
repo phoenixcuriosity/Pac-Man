@@ -33,25 +33,43 @@
 // ********* CONSTANTES ******** //
 //--- Constantes concernant l'ecran et la dimension de la fenetre  -----------------------------------------------------------------------------------
 
+// longueur de la fenetre en pixel
 const Uint16 SCREEN_WIDTH = 1920;
+
+// hauteur de la fenetre en pixel
 const Uint16 SCREEN_HEIGHT = 1088;
+
+// longueur et hauteur d'une case en pixel
 const Uint8 TILE_SIZE = 32;
 
 //--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
 
+// nombre maximal d'objets Ghost dans les tableau (peut servir d'index) 
 const Uint8 MAX_GHOST = 4;
+
+// nombre maximal de positions cardinales
 const Uint8 MAX_POS = 4;
+
+// nombre maximal d'animations par position cardinal
 const Uint8 MAX_SKIN = 2;
+
+// nombre maximal de polices de la font (ici arial)
 const Uint8 MAX_FONT = 160;
 
 //--- Constantes concernant les objets Entity  ------------------------------------------------------------------------------------------------------
 
+// temps en nombre de cycle de la boucle principale (60 boucles/s -> 600 boucles = 10s)
 const Uint16 TEMPO_INVINCIBLE = 600;
+
+// vitesse des objets Entity en pixel
 const Uint8 INITIAL_VELOCITY = 2;
 
 //--- Constantes concernant les couleurs pour l'utilisation de la SDL  -------------------------------------------------------------------------------
 
-// {Red, Green, Blue, Alpha (transparance)} codé sur 8 bit -> Uint8
+/*
+	SDL_Color name {Red, Green, Blue, Alpha (transparance)} 
+	chaque parametre est codé sur 8 bit -> Uint8  (de 0 à 255)
+*/
 
 const SDL_Color Black = { 0, 0, 0, 255 };
 const SDL_Color White = { 255, 255, 255, 255 };
@@ -83,7 +101,7 @@ enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTran
 /*
 	* type de centrage :	
 	*	-> nocenter : les positions x et y ne changent pas
-	*	-> center_x : la position y ne change pas et centre la position x en focntion de longueur du texte
+	*	-> center_x : la position y ne change pas et centre la position x en focntion de la longueur du texte
 	*	-> center_y : la position x ne change pas et centre la position y en focntion de hauteur du texte
 	*	-> center : centre totalement le texte en fonction de sa longueur et de sa hauteur
 */
@@ -259,7 +277,7 @@ struct AllTextures {
 */
 struct AllTextes {
 	// tableau de polices de la font arial
-	TTF_Font *font[MAX_FONT];
+	TTF_Font *font[MAX_FONT] = {};
 
 	// tableau de textes contenu dans l'écran titre
 	std::vector<Texte*> txtEcrantitre;

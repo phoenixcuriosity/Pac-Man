@@ -61,12 +61,14 @@ public:
 	*/
 	bool loadScore(const std::string& score);
 
+public:
 	std::vector<ScorePlayer> GETtabScorePlayer()const;
 	std::vector<ScorePlayer>& GETtabScorePlayerNONCONST();
 
 	void SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer);
 
 private:
+	// tableau contenant la liste des joueurs (nom et score)
 	std::vector<ScorePlayer> _tabScorePlayer;
 };
 

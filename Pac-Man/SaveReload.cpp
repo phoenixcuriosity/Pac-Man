@@ -84,23 +84,6 @@ bool SaveReload::save(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Save End_");
 	return true;
 }
-bool SaveReload::saveScore(const std::string& score) {
-	IHM::logfileconsole("_saveScore Start_");
-	std::ofstream saveScore(score);
-	if (saveScore) {
-		saveScore << "numberOfScore=\t";
-		saveScore << _tabScorePlayer.size();
-		for (unsigned int i = 0; i < _tabScorePlayer.size(); i++)
-			saveScore << std::endl << _tabScorePlayer[i].name + "\t\t\t\t\t" << _tabScorePlayer[i].score;
-	}
-	else {
-		IHM::logfileconsole("________ERROR : loadScore : cannot open file : " + score);
-		return false;
-	}
-	
-	IHM::logfileconsole("_saveScore End_");
-	return true;
-}
 bool SaveReload::reload(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Reload Start_");
 
@@ -197,6 +180,23 @@ bool SaveReload::reload(Sysinfo& sysinfo) {
 	}
 		
 	IHM::logfileconsole("_Reload End_");
+	return true;
+}
+bool SaveReload::saveScore(const std::string& score) {
+	IHM::logfileconsole("_saveScore Start_");
+	std::ofstream saveScore(score);
+	if (saveScore) {
+		saveScore << "numberOfScore=\t";
+		saveScore << _tabScorePlayer.size();
+		for (unsigned int i = 0; i < _tabScorePlayer.size(); i++)
+			saveScore << std::endl << _tabScorePlayer[i].name + "\t\t\t\t\t" << _tabScorePlayer[i].score;
+	}
+	else {
+		IHM::logfileconsole("________ERROR : loadScore : cannot open file : " + score);
+		return false;
+	}
+
+	IHM::logfileconsole("_saveScore End_");
 	return true;
 }
 bool SaveReload::loadScore(const std::string& score) {

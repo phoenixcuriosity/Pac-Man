@@ -38,16 +38,28 @@
 */
 class Texture {
 public:
+	/*
+		création et ajout d'un objet Texture dans le tableau de Texture choisi
+	*/
 	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, Uint8 statescreen, Uint8 select,
 		const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint8 cnt = 0);
+	
+	/*
+		permet de centrer la Texture selon :
+	*	-> nocenter : les positions x et y ne changent pas
+	*	-> center_x : la position y ne change pas et centre la position x en focntion de la longueur du texte
+	*	-> center_y : la position x ne change pas et centre la position y en focntion de hauteur du texte
+	*	-> center : centre totalement le texte en fonction de sa longueur et de sa hauteur
+	*/
 	static void centrage(int&, int&, int, int, Uint8 = 0);
 
 public:
-	Texture() {};
 	Texture(SDL_Texture* image, const std::string& msg, Uint8 statescreen, Uint8 select,
 		unsigned int x, unsigned int y, int w, int h, Uint8 alpha, Uint8 center = 0);
 	~Texture();
 
+public:
+	// permet de rendre la Texture au coordonnées voulues
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTextureTestStates(SDL_Renderer*& renderer, Uint8 statescreen, Uint8 select, int x = -1, int y = -1);
 	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, Uint8 statescreen, int xc = -1, int yc = -1, unsigned int angle = 0);
@@ -55,6 +67,7 @@ public:
 	virtual bool renderTextureTestStringAndStates(SDL_Renderer*& renderer, const std::string& msg, Uint8 statescreen, int xc = -1, int yc = -1);
 	virtual bool TextureTestString(const std::string&);
 
+public:
 	virtual SDL_Texture* GETtexture() const;
 	virtual SDL_Texture* GETtextureNonConst();
 	virtual SDL_Rect GETdst()const;
@@ -77,16 +90,29 @@ public:
 	virtual void SETalpha(Uint8);
 	virtual void SETcenter(Uint8);
 
+	// création d'un SDL_Rect à partir des positions x, y et des longueur et hauteur
 	SDL_Rect rectangle(int xc, int yc, int w, int h);
 
 private:
+	// ptr sur la SDL_Texture : image 
 	SDL_Texture* _texture;
+	
+	// rectangle des positions en x et y et la longueur et hauteur
 	SDL_Rect _dst;
+
+	// nom de la Texture
 	std::string _name;
 
+	// ecran dans le quel la Texture s'affiche (titre, play, score)
 	Uint8 _statescreen;
+
+	// selection pour l'affichage (selectnothing, pause, win, lost)
 	Uint8 _select;
+
+	// transparance de la Texture
 	Uint8 _alpha;
+
+	// centrage de la Texture (nocenter, center_x, center_y, center)
 	Uint8 _center;
 };
 /*
@@ -96,20 +122,33 @@ private:
 */
 class Texte : public Texture{
 public:
+	/*
+		permet de créer un ptr sur une SDL_Texture pour par la suite créer un objet Texte 
+		*	-> retourne un ptr de la nouvelle SDL_Texture
+	*/
 	static SDL_Texture* createSDL_TextureFromTexte(SDL_Renderer*& renderer, Uint8 type,
 		const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
-	static void loadwritetxt(Sysinfo& sysinfo, std::vector<Texte*>& tabTexte, Uint8 type, const std::string &msg,
+
+	/*
+		création et ajout d'un objet Texte dans le tableau de Texte choisi
+	*/
+	static void loadTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 statescreen, Uint8 select,
+		std::vector<Texte*>& tabTexte, Uint8 type, const std::string &msg,
 		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 cnt = 0);
-	static void writetxt(Sysinfo& sysinfo, Uint8 type, const std::string &msg, SDL_Color color,
+
+	/*
+		créer un ptr sur SDL_Texture temporaire pour afficher le texte à l'écran
+		le ptr et la SDL_Texture sont détruit après l'affichage
+	*/
+	static void writeTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 type, const std::string &msg, SDL_Color color,
 		SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt = 0);
-	static void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, Uint8 = 0);
 
 public:
-	Texte() {};
 	Texte(SDL_Texture* image, const std::string& msg, Uint8 statescreen, Uint8 select, int x, int y, int w, int h,
 		Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, Uint8 center = 0);
 	~Texte() {};
 
+public:
 	virtual Uint8 GETtype()const;
 	virtual SDL_Color GETtxtcolor() const;
 	virtual SDL_Color GETbackcolor() const;
@@ -122,15 +161,34 @@ public:
 	virtual void SETbackcolor(SDL_Color backcolor, SDL_Renderer*& renderer, TTF_Font *font[]);
 
 public:
+	/*
+		test de 2 couleurs de type SDL_Color
+		*	-> retourne false si les 2 couleurs sont différentes
+		*	-> retourne true si les 2 couleurs sont les meme
+	*/
 	virtual bool isSameColor(SDL_Color, SDL_Color) const;
 
 public:
+	/*
+		recentre le Texte lors de changement de taille du texte
+	*/
 	virtual void resizeTexte();
 
 private:
+	/*
+		* type de texte :
+		*	-> blended : sans couleur de fond
+		*	-> shaded : avec une couleur de fond
+	*/
 	Uint8 _type;
+
+	// couleur appliquée au texte
 	SDL_Color _txtcolor;
+
+	// couleur appliquée au sous texte
 	SDL_Color _backcolor;
+
+	// taile du texte (1 - 160)
 	Uint8 _size;
 };
 /*
@@ -151,15 +209,19 @@ private:
 */
 class Button : public Texte {
 public:
-	static void createbutton(Sysinfo& sysinfo, std::vector<Button*>& tabbutton, Uint8 type, const std::string& msg,
+	/*
+		création et ajout d'un objet Button dans le tableau de Button choisi
+	*/
+	static void createbutton(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 statescreen, Uint8 select,
+		std::vector<Button*>& tabbutton, Uint8 type, const std::string& msg,
 		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 centerbutton = 0);
 
 public:
-	Button() {};
 	Button(SDL_Texture* image, const std::string& msg, Uint8 statescreen, Uint8 select, int x, int y, int w, int h,
 		Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, SDL_Texture* imageOn, Uint8 center = 0);
 	~Button();
 
+public:
 	virtual unsigned int searchButton(std::string msg, Uint8 statescreen, signed int x, signed int y);
 	virtual unsigned int searchButtonName(std::string& msg, Uint8 statescreen);
 
@@ -168,16 +230,21 @@ public:
 	virtual bool renderButton(SDL_Renderer*& renderer, Uint8 statescreen);
 	virtual bool renderButtonTestString(SDL_Renderer*& renderer, Uint8 statescreen, std::string& msg, int newx = -1, int newy = -1, Uint8 cnt = 0);
 
+	// alterne l'attribut booléen _on
 	virtual void changeOn();
 
+public:
 	virtual SDL_Texture* GETimageOn() const;
 	virtual bool GETon() const;
 
+	virtual void SETalpha(Uint8 alpha);
 	virtual void SETon(bool);
-	virtual void SETalpha(Uint8);
 
 private:
+	// ptr sur la SDL_Texture : image du bouton activé
 	SDL_Texture* _imageOn;
+
+	// bouton on/off : permet de changer la couleur du bouton
 	bool _on;
 };
 

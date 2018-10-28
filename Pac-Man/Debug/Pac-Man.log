@@ -6,9 +6,9 @@ c:\users\robin\documents\github\pac-man\pac-man\main.cpp(76): warning C4189: 'SD
   IHM.cpp
   SaveReload.cpp
   Texture.cpp
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(435): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(437): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(450): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
-c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(452): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(436): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(438): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(451): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(453): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
   Génération de code en cours...
   Pac-Man.vcxproj -> C:\Users\Robin\Documents\GitHub\Pac-Man\Debug\Pac-Man.exe

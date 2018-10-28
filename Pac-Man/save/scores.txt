@@ -1,4 +1,5 @@
 numberOfScore=	10
+robin					33200
 azertyuiop					5800
 lknf					3100
 opnel					2600
@@ -8,4 +9,3 @@ lol					1201
 amazon					1200
 klmo					1100
 ikea					1000
-thibaut					900

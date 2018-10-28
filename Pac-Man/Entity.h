@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	last modification on this file on version:0.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -35,12 +35,12 @@ public:
 public:
 	// initialisation des objets Entity au positions et paramètres pré-définis
 	static void initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
+
 	// destruction de tous les objets Entity
 	static void destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
 
 
 public: // constructeurs et destructeur
-	Entity() {};
 	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
 	~Entity();
 
@@ -69,6 +69,7 @@ public: // opérations sur l'objet
 
 	// change les coordonnées de l'objet
 	void makeTheMove(bool validMove, unsigned int pos);
+
 	// test de la position spécifique de téléporation
 	void teleport();
 
@@ -108,22 +109,46 @@ public: // assesseurs
 	void SETvelocity(Uint8 velocity);
 
 private:
+	// nom de l'objet Entity
 	std::string _name;
+
+	// position en x sur la fenetre
 	unsigned int _x;
+
+	// position en y sur la fenetre
 	unsigned int _y;
+
+	// position centre de l'objet en x sur la fenetre
 	unsigned int _xc;
+
+	// position centre de l'objet en y sur la fenetre
 	unsigned int _yc;
+
+	// index de la case en x map[x][y]
 	Uint8 _indexX;
+
+	// index de la case en y map[x][y]
 	Uint8 _indexY;
 
+	// direction cardinal courante
 	Uint8 _currentHeading;
+
+	// direction cardinal futur
 	Uint8 _nextHeading;
+
+	// permet d'alterner le skin pour créer une animation
 	bool _alternateSkin;
 
+	// invincibilité de l'objet Entity
 	bool _invincible;
+
+	// temps restant de l'invincibilité
 	unsigned int _timeInvincible;
+
+	// valeur ou score de l'objet
 	unsigned int _value;
 
+	// vitesse en pixel de l'objet, par défaut INITIAL_VELOCITY = 2
 	Uint8 _velocity;
 };
 
@@ -134,13 +159,34 @@ public: // constructeurs et destructeur
 	~Pacman();
 
 public: // opérations sur l'objet
+	/*
+		boucle pouvant etre parcouru au maximum 2 fois
+		permet d'évaluer et de tester le mouvement possible
+		en fonction des murs et des objets Ghost
+		*	-> retourne 0 si la foncton ne rencontre pas d'erreur
+		*	-> retourne -1 si la fonction rencontre une erreur
+	*/
 	int8_t move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoop = -1);
+	
+	/*
+		cherche la position de Pacman 
+		*	-> retourne Not_Valid (0) si la future direction est la meme que la direction courante
+		*	-> retourne validCondition (1) si l'objet se trouve entre 2 cases et si la future direction est différente de la direction courante
+		*	-> retourne validNextHeading (2) si l'objet se trouve sur une case pleine et si la future direction est différente de la direction courante
+	*/
 	Uint8 search(Map& map);
+
+	// cherche la valeur du bonus sur la case où est présent Pacman
 	void value(std::vector<std::vector<Tile>>& map, bool validMove);
+
+	// gestion des collisions entre Pacman et les objets Ghost
 	void collideGhost(std::vector<Ghost*>& ghost);
 
 public: // affichage
-	void afficherStats(Sysinfo& sysinfo);
+	// affiche le nombre de vie restante et le score du joueur
+	void afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]);
+
+	// affichage de la Texture en fonction de la direction et de l'alternance du skin
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]);
 	
 public: // assesseurs
@@ -153,23 +199,44 @@ public: // assesseurs
 	void SETtypeOfValue(unsigned int);
 
 private:
+	// vie restant de Pacman, valeur par défaut 3
 	Uint8 _life;
+
+	// ****obsolète**** permet de savoir si Pacman a mangé un PowerUp
 	Uint8 _powerUP;
+
+	// permet de connaitre la valeur du dernier bonus mangé par pacman
 	unsigned int _typeOfValue;
 };
 
 class Ghost : public Entity {
 public: // constructeurs et destructeur
-	Ghost() {};
 	Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type,unsigned int value = 0);
 	~Ghost();
 
 public: // opérations sur l'objet
+	/*
+		fonction pouvant etre parcourue au maximum 2 fois (récursive)
+		permet d'évaluer et de tester le mouvement possible
+		en fonction des murs et des objets Ghost
+		*	-> retourne 0 si la foncton ne rencontre pas d'erreur
+		*	-> retourne -1 si la fonction rencontre une erreur
+	*/
 	int8_t move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop = -1);
+
+	/*
+		cherche la position de l'objet Ghost
+		*	-> retourne Not_Valid (0) si la future direction est la meme que la direction courante
+		*	-> retourne validCondition (1) si l'objet se trouve entre 2 cases et si la future direction est différente de la direction courante
+		*	-> retourne validNextHeading (2) si l'objet se trouve sur une case pleine et si la future direction est différente de la direction courante
+	*/
 	Uint8 search(Map& map);
+
+	// créer une nouvelle direction future en fonction du type de Ghost
 	void makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman);
 
 public: // affichage
+	// affichage de la Texture en fonction de la direction et de l'alternance du skin
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]);
 
 public: // assesseurs
@@ -177,6 +244,7 @@ public: // assesseurs
 	void SETtype(Uint8 type);
 
 private:
+	// type de Ghost : red, blue, yellow, pink 
 	Uint8 _type;
 };
 

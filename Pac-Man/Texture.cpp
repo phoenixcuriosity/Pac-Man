@@ -234,25 +234,23 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(SDL_Renderer*& renderer, Uint8 ty
 
 	return texture;
 }
-void Texte::loadwritetxt(Sysinfo& sysinfo, std::vector<Texte*>& tabTexte, Uint8 type, const std::string &msg,
+void Texte::loadTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 statescreen, Uint8 select,
+	std::vector<Texte*>& tabTexte, Uint8 type, const std::string &msg,
 	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 cnt) {
 
-	SDL_Texture *image = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, backcolor, sysinfo.allTextes.font[size]);
+	SDL_Texture *image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
 	if (alpha != nonTransparent)
 		SDL_SetTextureAlphaMod(image, alpha);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
-	tabTexte.push_back(new Texte(image, msg, sysinfo.var.statescreen, sysinfo.var.select, xc, yc, iW, iH,
+	tabTexte.push_back(new Texte(image, msg, statescreen, select, xc, yc, iW, iH,
 		type, color, backcolor, size, alpha, cnt));
 }
-void Texte::writetxt(Sysinfo& sysinfo, Uint8 type, const std::string &msg,
+void Texte::writeTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 type, const std::string &msg,
 	SDL_Color color, SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt) {
-	SDL_Texture *image = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, backcolor, sysinfo.allTextes.font[size]);
-	loadAndWriteImage(sysinfo.screen.renderer, image, x, y, cnt);
-	SDL_DestroyTexture(image);
-}
-void Texte::loadAndWriteImage(SDL_Renderer*& renderer, SDL_Texture *image, unsigned int x, unsigned int y, Uint8 cnt) {
+	SDL_Texture *image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
+	
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
@@ -263,6 +261,8 @@ void Texte::loadAndWriteImage(SDL_Renderer*& renderer, SDL_Texture *image, unsig
 	dst.w = iW;
 	dst.h = iH;
 	SDL_RenderCopy(renderer, image, NULL, &dst);
+
+	SDL_DestroyTexture(image);
 }
 
 
@@ -356,7 +356,8 @@ void Texte::resizeTexte() {
 
 ///////////////////////////// Button //////////////////////////////
 /* BUTTONS :: STATIC */
-void Button::createbutton(Sysinfo& sysinfo, std::vector<Button*>& tabbutton, Uint8 type, const std::string& msg,
+void Button::createbutton(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 statescreen, Uint8 select, 
+	std::vector<Button*>& tabbutton, Uint8 type, const std::string& msg,
 	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 cnt) {
 	int iW = 0, iH = 0;
 	unsigned int i = 0;
@@ -369,15 +370,15 @@ void Button::createbutton(Sysinfo& sysinfo, std::vector<Button*>& tabbutton, Uin
 	}
 	for (i; i <= tabbutton.size(); i++) {
 		if (i == tabbutton.size()) {
-			image = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, backcolor, sysinfo.allTextes.font[size]);
-			imageOn = createSDL_TextureFromTexte(sysinfo.screen.renderer, type, msg, color, { 64,128,64,255 }, sysinfo.allTextes.font[size]);
+			image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
+			imageOn = createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]);
 			if (alpha != nonTransparent) {
 				SDL_SetTextureAlphaMod(image, alpha);
 				SDL_SetTextureAlphaMod(imageOn, alpha);
 			}
 			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 			centrage(x, y, iW, iH, cnt);
-			tabbutton.push_back(new Button(image, msg, sysinfo.var.statescreen, sysinfo.var.select, x, y, iW, iH,
+			tabbutton.push_back(new Button(image, msg, statescreen, select, x, y, iW, iH,
 				type, color, backcolor, size, alpha, imageOn, cnt));
 
 			IHM::logfileconsole("Create Button n:" + std::to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");

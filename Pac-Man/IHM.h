@@ -30,8 +30,10 @@ class IHM {
 public:
 	// initialisation des fichiers
 	static void initfile(const std::string& log);
+
 	// permet de d'écrire sur la console ainsi que dans le fichier log.txt
 	static void logfileconsole(const std::string &msg);
+
 	static void logSDLError(std::ostream &os, const std::string &msg);
 
 	/*
@@ -42,8 +44,10 @@ public:
 	static bool initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 
 	static void initTile(Tile& map, bool wall, Uint8 entity);
+
 	// creer une forme à partir de la case visée, celle-ci représente le point en haut à gauche de la forme
 	static void forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, Uint8 height, bool wall = true);
+	
 	// Initialisation d'un niveau unique de Pacman
 	static void initGrid(Map& map);
 	
@@ -56,10 +60,10 @@ public:
 	static void calculimage(Sysinfo&);
 
 
-
 public:
 	// Handle Mouse Event	BUTTON_LEFT, BUTTON_RIGHT
 	static void mouse(Sysinfo& sysinfo, SDL_Event event);
+	
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	static void cliqueGauche(Sysinfo& sysinfo, SDL_Event event);
 
@@ -69,7 +73,8 @@ public:
 		Fonctionne par cast avec le tableau ASCII
 		-> retourne le nom entré par le joueur (std::string)
 	*/
-	static std::string getName(Sysinfo& sysinfo, unsigned int position);
+	static std::string getName(SDL_Renderer*& renderer, TTF_Font* font[], Var& var,
+		std::vector<Texte*> txtScore, std::vector<Texte*> tabScore, unsigned int position);
 
 	/*
 		Tri du tableau des scores dans le sens décroissant
@@ -84,6 +89,7 @@ public:
 public:
 	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEecrantitre
 	static void ecrantitre(Sysinfo& syinfo);
+	
 	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEscore
 	static void ecranScore(Sysinfo& syinfo);
 

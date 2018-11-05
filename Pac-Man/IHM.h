@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
+	last modification on this file on version:0.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -120,13 +120,7 @@ public:
 	// Destruction des allocations dynamiques et de la fenetre
 	static void deleteAll(Sysinfo&);
 };
-template<class T>
-T max(T& a, T& b) {
-	if (a >= b)
-		return a;
-	else
-		return b;
-}
+
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 	unsigned int size = dytab.size();

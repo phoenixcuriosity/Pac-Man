@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
+	last modification on this file on version:0.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -56,11 +56,12 @@ void Entity::move(Sysinfo& sysinfo) {
 }
 void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
 	destroyEntity(pacman, ghost);
-	pacman = new Pacman("player", 832, 544);
-	ghost.push_back(new Ghost("Red", 640, 512, red));
-	ghost.push_back(new Ghost("Blue", 1280, 512, blue));
-	ghost.push_back(new Ghost("Yellow", 1280, 564, yellow));
-	ghost.push_back(new Ghost("Pink", 1280, 628, pink));
+	pacman = new Pacman("player", 768, 608);
+	pacman->SETindexX(6); pacman->SETindexY(14);
+	ghost.push_back(new Ghost("Red", 960, 544, red));
+	ghost.push_back(new Ghost("Blue", 960, 544, blue));
+	ghost.push_back(new Ghost("Yellow", 960, 544, yellow));
+	ghost.push_back(new Ghost("Pink", 960, 544, pink));
 }
 void Entity::destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
 	if (pacman != nullptr) {
@@ -78,7 +79,7 @@ void Entity::destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
 
 /* ENTITY :: METHODES */
 Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value)
-	: _name(name), _x(x), _y(y), _value(value), _xc(x + TILE_SIZE / 2), _yc(y + TILE_SIZE / 2), _currentHeading(currentHeading),
+	: _name(name), _x(x), _y(y), _value(value), _currentHeading(currentHeading),
 	_indexX(0), _indexY(0), _nextHeading(nextHeading), _invincible(true), _alternateSkin(false),
 	_timeInvincible(TEMPO_INVINCIBLE), _velocity(INITIAL_VELOCITY)
 {
@@ -86,15 +87,89 @@ Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHe
 Entity::~Entity()
 {
 }
+bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY) {
+	for (unsigned int i = 0; i < path.size(); i++) {
+		if (path[i].indexX == newIndexX && path[i].indexY == newIndexY)
+			return false;
+	}
+	return true;
+}
+void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY) {
+	if (_indexX != indexX || _indexY != indexY) {
+
+		std::vector<Node> blankTab, newPath;
+		Node blankTile;
+		blankTile.indexX = _indexX; blankTile.indexY = _indexY;
+		blankTab.push_back(blankTile);
+		_tabPath.push_back(blankTab);
+  
+		unsigned int indexTabFound = 0;
+		const unsigned int MAX_DIRECTION = 4;
+		int8_t tabX[MAX_DIRECTION] = { -1 , 1, 0 , 0 }, tabY[MAX_DIRECTION] = { 0, 0, -1, 1};
+		bool breakLoop = false;
+		
+		for (unsigned int i = 0; i < _tabPath.size(); i++) {
+			if (!breakLoop) {
+				for (unsigned int m = 0; m < MAX_DIRECTION; m++) {
+
+					if ((unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]) < map.size()
+						&& (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) < map.size()) {
+
+						if (!map[_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]][_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]].wall
+							&& notPreviousTile(_tabPath[i], _tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m], _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m])) {
+
+							blankTile.indexX = _tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m];
+							blankTile.indexY = _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m];
+
+							newPath = _tabPath[i];
+							newPath.push_back(blankTile);
+							_tabPath.push_back(newPath);
+
+							if (_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m] == indexX
+								&& _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m] == indexY) {
+								indexTabFound = i;
+								breakLoop = true;
+								break;
+							}
+
+						}
+					}
+				}
+			}
+			else
+				break;
+		}
+		
+		if (_tabPath[indexTabFound].size() > 1) {
+			if (_tabPath[0][0].indexX != _tabPath[indexTabFound][1].indexX) {
+				if (_tabPath[indexTabFound][1].indexX < _tabPath[0][0].indexX)
+					_nextHeading = LEFT;
+				else
+					_nextHeading = RIGHT;
+			}
+			else {
+				if (_tabPath[indexTabFound][1].indexY < _tabPath[0][0].indexY)
+					_nextHeading = UP;
+				else
+					_nextHeading = DOWN;
+			}
+		}
+		else {
+			goHomeGhost();
+		}
+
+		_tabPath.clear();
+	}
+}
 bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	unsigned int nextindexX = 0, nextindexY = 0;
 
 	switch (pos) {
 	case UP:
-		nextindexX = this->GETindexX();
-		nextindexY = this->GETindexY() - 1;
+		nextindexX = _indexX;
+		nextindexY = _indexY - 1;
 		if (map[nextindexX][nextindexY].wall) {
-			if (this->GETy() - this->GETvelocity() >= (map[nextindexX][nextindexY].tile_y + TILE_SIZE))
+			if (_y - _velocity >= (map[nextindexX][nextindexY].tile_y + TILE_SIZE))
 				return (bool)validCondition;
 			else
 				return (bool)Not_Valid;
@@ -103,10 +178,10 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 			return (bool)validCondition;
 		break;
 	case LEFT:
-		nextindexX = this->GETindexX() - 1;
-		nextindexY = this->GETindexY();
+		nextindexX = _indexX - 1;
+		nextindexY = _indexY;
 		if (map[nextindexX][nextindexY].wall) {
-			if (this->GETx() - this->GETvelocity() >= (map[nextindexX][nextindexY].tile_x + TILE_SIZE))
+			if (_x - _velocity >= (map[nextindexX][nextindexY].tile_x + TILE_SIZE))
 				return (bool)validCondition;
 			else
 				return (bool)Not_Valid;
@@ -115,10 +190,10 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 			return (bool)validCondition;
 		break;
 	case DOWN:
-		nextindexX = this->GETindexX();
-		nextindexY = this->GETindexY() + 1;
+		nextindexX = _indexX;
+		nextindexY = _indexY + 1;
 		if (map[nextindexX][nextindexY].wall) {
-			if (((this->GETy() + TILE_SIZE) + this->GETvelocity()) <= map[nextindexX][nextindexY].tile_y)
+			if (((_y + TILE_SIZE) + _velocity) <= map[nextindexX][nextindexY].tile_y)
 				return (bool)validCondition;
 			else
 				return (bool)Not_Valid;
@@ -127,10 +202,10 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 			return (bool)validCondition;
 		break;
 	case RIGHT:
-		nextindexX = this->GETindexX() + 1;
-		nextindexY = this->GETindexY();
+		nextindexX = _indexX + 1;
+		nextindexY = _indexY;
 		if (map[nextindexX][nextindexY].wall) {
-			if (((this->GETx() + TILE_SIZE) + this->GETvelocity()) <= map[nextindexX][nextindexY].tile_x)
+			if (((_x + TILE_SIZE) + _velocity) <= map[nextindexX][nextindexY].tile_x)
 				return (bool)validCondition;
 			else
 				return (bool)Not_Valid;
@@ -143,8 +218,8 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	return (bool)Not_Valid;
 }
 bool Entity::isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
-	if (this->GETx() == map[i][j].tile_x) {
-		if (this->GETy() == map[i][j].tile_y) {
+	if (_x == map[i][j].tile_x) {
+		if (_y == map[i][j].tile_y) {
 			return true;
 		}
 		return false;
@@ -152,8 +227,8 @@ bool Entity::isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, u
 	return false;
 }
 bool Entity::isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
-	if (this->GETxc() >= map[i][j].tile_x && this->GETxc() < (map[i][j].tile_x + TILE_SIZE)) {
-		if (this->GETyc() >= map[i][j].tile_y && this->GETyc() < (map[i][j].tile_y + TILE_SIZE)) {
+	if ((_x + TILE_SIZE / 2) >= map[i][j].tile_x && (_x + TILE_SIZE / 2) < (map[i][j].tile_x + TILE_SIZE)) {
+		if ((_y + TILE_SIZE / 2) >= map[i][j].tile_y && (_y + TILE_SIZE / 2) < (map[i][j].tile_y + TILE_SIZE)) {
 			return true;
 		}
 		return false;
@@ -164,25 +239,28 @@ void Entity::makeTheMove(bool validMove, unsigned int pos) {
 	if (validMove) {
 		switch (pos) {
 		case UP:
-			this->SETy(this->GETy() - this->GETvelocity());
+			_y -= _velocity;
 			break;
 		case LEFT:
-			this->SETx(this->GETx() - this->GETvelocity());
+			_x -= _velocity;
 			break;
 		case DOWN:
-			this->SETy(this->GETy() + this->GETvelocity());
+			_y += _velocity;
 			break;
 		case RIGHT:
-			this->SETx(this->GETx() + this->GETvelocity());
+			_x += _velocity;
 			break;
 		}
 	}
 }
 void Entity::teleport(){
-	if (this->GETx() <= 592 && this->GETy() == 544)
-		this->SETx(1306);
-	else if (this->GETx() >= 1328 && this->GETy() == 544)
-		this->SETx(594);
+	if (_x <= 592 && _y == 544)
+		_x = 1306;
+	else if (_x >= 1328 && _y == 544)
+		_x = 594;
+}
+void Entity::goHomeGhost() {
+
 }
 std::string Entity::GETname()const {
 	return _name;
@@ -226,6 +304,12 @@ unsigned int Entity::GETvalue()const {
 Uint8 Entity::GETvelocity()const {
 	return _velocity;
 }
+std::vector<std::vector<Node>> Entity::GETtabPath()const {
+	return _tabPath;
+}
+std::vector<std::vector<Node>>& Entity::GETtabPathNONCONST() {
+	return _tabPath;
+}
 
 void Entity::SETname(std::string name) {
 	_name = name;
@@ -235,12 +319,6 @@ void Entity::SETx(unsigned int x) {
 }
 void Entity::SETy(unsigned int y) {
 	_y = y;
-}
-void Entity::SETxc(unsigned int xc) {
-	_xc = xc;
-}
-void Entity::SETyc(unsigned int yc) {
-	_yc = yc;
 }
 void Entity::SETindexX(Uint8 indexX) {
 	_indexX = indexX;
@@ -268,6 +346,9 @@ void Entity::SETvalue(unsigned int value) {
 }
 void Entity::SETvelocity(Uint8 velocity) {
 	_velocity = velocity;
+}
+void Entity::SETtabPath(std::vector<std::vector<Node>>& tabPath) {
+	_tabPath = tabPath;
 }
 
 
@@ -441,22 +522,25 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 			break;
 		}
 	}
-	if (hit) {
+	if (hit && !ghost[l]->GETgoHome()) {
+
 		if (this->GETinvincible()) {
-			ghost[l]->SETx(SCREEN_WIDTH / 2);
-			ghost[l]->SETy(SCREEN_HEIGHT / 2);
 			ghost[l]->SETinvincible(true);
+			ghost[l]->SETgoHome(true);
 			this->SETvalue(this->GETvalue() + ghost1);
 			IHM::logfileconsole("Pacman hit a Ghost successfully");
 		}
 		else {
 			this->SETx(608);
 			this->SETy(544);
-			if(_life > 0)
+			if (_life > 0)
 				_life--;
 			IHM::logfileconsole("Pacman lost a life");
 		}
 	}
+}
+void Pacman::goHomeGhost() {
+
 }
 void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
 	Texte::writeTexte(renderer, font,
@@ -503,7 +587,7 @@ void Pacman::SETtypeOfValue(unsigned int typeOfValue) {
 ///////////////////////////// GHOST //////////////////////////////
 /*  GHOST :: METHODES */
 Ghost::Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type, unsigned int value)
-	: Entity(name, x, y, UP, RIGHT,value), _type(type)
+	: Entity(name, x, y, UP, RIGHT,value), _type(type), _goHome(false)
 {
 	IHM::logfileconsole(this->GETname() + " is alive");
 }
@@ -517,7 +601,7 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 	bool validMove = false;
 
 	if (secondLoop == -1) {
-		switch (validTryToMove = search(map)) {
+		switch (validTryToMove = search(map, sysinfo.pacman->GETindexX(), sysinfo.pacman->GETindexY())) {
 		case Not_Valid:
 			break;
 		case validCondition:
@@ -538,7 +622,7 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 		}
 	}
 	else {
-		if ((validTryToMove = search(map)) != Not_Valid) {
+		if ((validTryToMove = search(map, sysinfo.pacman->GETindexX(), sysinfo.pacman->GETindexY())) != Not_Valid) {
 			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
@@ -552,27 +636,31 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 
 	return 0;
 }
-Uint8 Ghost::search(Map& map) {
+Uint8 Ghost::search(Map& map, Uint8 indexX, Uint8 indexY) {
 	Uint8 condition = 0;
 	for (Uint8 i = 0; i < map.map_length; i++) {
 		for (Uint8 j = 0; j < map.map_height; j++) {
-			if (this->GETcurrentHeading() != this->GETnextHeading()) {
-				if (isOnFullTile(map.matriceMap, i, j)) {
-					this->SETindexX(i);
-					this->SETindexY(j);
-					if (_type == red) {
+			
+			if (isOnFullTile(map.matriceMap, i, j)) {
+				this->SETindexX(i);
+				this->SETindexY(j);
+				if (_type == red) {
+					if(_goHome)
+						findAPath(map.matriceMap, map.map_length / 2, map.map_height / 2);
+					else
+						findAPath(map.matriceMap, indexX, indexY);
+					condition = validNextHeading;
+					return condition;
+				}
+				else {
+					if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+						condition = validCondition; // évite de changer et de revenir en arrière
+					else
 						condition = validNextHeading;
-						return condition;
-					}
-					else {
-						if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
-							condition = validCondition; // évite de changer de revenir en arrière
-						else
-							condition = validNextHeading;
-						return condition;
-					}
+					return condition;
 				}
 			}
+			
 			if (isOnTile(map.matriceMap, i, j)) {
 				this->SETindexX(i);
 				this->SETindexY(j);
@@ -584,26 +672,11 @@ Uint8 Ghost::search(Map& map) {
 	return condition;
 }
 void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman) {
-	int deltaX = 0, deltaY = 0;
 	Uint8 posi = 0;
 	Uint8 randomNextHeading = 0;
 	bool continuer = true;
 	switch (_type) {
 	case red:
-		deltaX = this->GETxc() - pacman->GETxc();
-		deltaY = this->GETyc() - pacman->GETyc();
-		if (abs(deltaX) > abs(deltaY)) {
-			if (this->GETxc() > pacman->GETxc())
-				this->SETnextHeading(LEFT);
-			else
-				this->SETnextHeading(RIGHT);
-		}
-		else {
-			if (this->GETyc() > pacman->GETyc())
-				this->SETnextHeading(UP);
-			else
-				this->SETnextHeading(DOWN);
-		}
 		break;
 	case blue:
 		posi = pacman->GETcurrentHeading() + 2;
@@ -634,28 +707,40 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 		break;
 	}
 }
+void Ghost::goHomeGhost() {
+	_goHome = false;
+}
 void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) {
 	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAX_POS] = { "U", "L", "D", "R" }, ghostSkin[MAX_SKIN] = { "1", "2" };
 	Uint8 skin = 0;
 	if (this->GETalternateSkin())
 		skin = 1; // évite le probleme : bool (false == 0) et (true == tout le reste)
 
-	if (this->GETinvincible()) {
-		for (unsigned int i = 0; i < tabTexture[_type].size(); i++) {
-			if (tabTexture[_type][i]->renderTextureTestString(renderer, ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
-				"_" + ghostSkin[skin] + ".png", this->GETx(), this->GETy()))
-				return;
-		}
+	if (_goHome) {
+		for(unsigned int i = 0; i < tabTexture[MAX_GHOST].size(); i++)
+			tabTexture[MAX_GHOST][i]->renderTextureTestString(renderer, "goHome.png", this->GETx(), this->GETy());
 	}
 	else {
-		for (unsigned int i = 0; i < tabTexture[MAX_GHOST].size(); i++) {
-			tabTexture[MAX_GHOST][i]->renderTextureTestString(renderer, "not_Invincible.png", this->GETx(), this->GETy());
+		if (this->GETinvincible()) {
+			for (unsigned int i = 0; i < tabTexture[_type].size(); i++) {
+				if (tabTexture[_type][i]->renderTextureTestString(renderer, ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
+					"_" + ghostSkin[skin] + ".png", this->GETx(), this->GETy()))
+					return;
+			}
 		}
+		else
+			tabTexture[MAX_GHOST][skin]->render(renderer, this->GETx(), this->GETy());
 	}
 }
 Uint8 Ghost::GETtype()const {
 	return _type;
 }
+bool Ghost::GETgoHome()const {
+	return _goHome;
+}
 void Ghost::SETtype(Uint8 type) {
 	_type = type;
+}
+void Ghost::SETgoHome(bool goHome) {
+	_goHome = goHome;
 }

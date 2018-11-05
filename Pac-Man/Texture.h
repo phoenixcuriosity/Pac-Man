@@ -188,7 +188,7 @@ private:
 	// couleur appliquée au sous texte
 	SDL_Color _backcolor;
 
-	// taile du texte (1 - 160)
+	// taile du texte (int 1 - 160)
 	Uint8 _size;
 };
 /*
@@ -237,6 +237,7 @@ public:
 	virtual SDL_Texture* GETimageOn() const;
 	virtual bool GETon() const;
 
+	virtual void SETname(std::string msg);
 	virtual void SETalpha(Uint8 alpha);
 	virtual void SETon(bool);
 

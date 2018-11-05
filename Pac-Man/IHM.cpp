@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
+	last modification on this file on version:0.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -245,7 +245,11 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 		}
 	}
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "Ghost/not_Invincible.png", "not_Invincible.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "Ghost/not_Invincible_B.png", "not_Invincible_B.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "Ghost/not_Invincible_W.png", "not_Invincible_W.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "Ghost/goHome.png", "goHome.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);

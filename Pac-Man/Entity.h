@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
+	last modification on this file on version:0.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -25,12 +25,18 @@
 #define Entity_H
 
 #include "lib.h"
+
+struct Node {
+	Uint8 indexX = 0;
+	Uint8 indexY = 0;
+};
+
+
 // classe abstraite
 class Entity { 
 public:
 	// demande un mouvement de tous les objets Entity, conditions de victoire et de défaite
 	static void move(Sysinfo& sysinfo);
-
 
 public:
 	// initialisation des objets Entity au positions et paramètres pré-définis
@@ -45,25 +51,38 @@ public: // constructeurs et destructeur
 	~Entity();
 
 
+public:
+	/*
+		Algorithme de recherche de chemin le plus court entre 2 points
+	*/
+	void findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY);
+
+	/*
+		recherche si la case avec les indexX et indexY est déjà dans le chemin
+		*	-> retorune false si la case se trouve déjà dans le chemin
+		*	-> retourne true si la case ne fait pas encore parti du chemin
+	*/
+	bool notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY);
+
 public: // opérations sur l'objet
 	/*
 		test la future position de l'objet
-		retourne Not_Valid (false) si la future position est bloquée
-		retourne validCondition (true) si l'objet peut effectuer le mouvement vers la future position
+		*	-> retourne Not_Valid (false) si la future position est bloquée
+		*	-> retourne validCondition (true) si l'objet peut effectuer le mouvement vers la future position
 	*/
 	bool tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos);
 
 	/* 
-		cherche si l'objet est pleinement la case
-		retourne vrai si l'objet est effectivement pleinement la case
-		retourne faux sinon
+		cherche si l'objet est pleinement sur la case
+		*	-> retourne vrai si l'objet est effectivement pleinement la case
+		*	-> retourne faux sinon
 	*/
 	bool isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
 
 	/*
 		cherche si l'objet (centre) est sur la case
-		retourne vrai si l'objet est effectivement la case
-		retourne faux sinon
+		*	-> retourne vrai si l'objet est effectivement la case
+		*	-> retourne faux sinon
 	*/
 	bool isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j);
 
@@ -73,6 +92,7 @@ public: // opérations sur l'objet
 	// test de la position spécifique de téléporation
 	void teleport();
 
+	virtual void goHomeGhost();
 
 public: // affichage
 	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) = 0;
@@ -81,7 +101,9 @@ public: // assesseurs
 	std::string GETname()const;
 	unsigned int GETx()const;
 	unsigned int GETy()const;
+	// déduis de x
 	unsigned int GETxc()const;
+	// déduis de y
 	unsigned int GETyc()const;
 	Uint8 GETindexX()const;
 	Uint8 GETindexY()const;
@@ -92,12 +114,12 @@ public: // assesseurs
 	unsigned int GETtimeInvincible()const;
 	unsigned int GETvalue()const;
 	Uint8 GETvelocity()const;
+	std::vector<std::vector<Node>> GETtabPath()const;
+	std::vector<std::vector<Node>>& GETtabPathNONCONST();
 
 	void SETname(std::string name);
 	void SETx(unsigned int x);
 	void SETy(unsigned int y);
-	void SETxc(unsigned int);
-	void SETyc(unsigned int);
 	void SETindexX(Uint8 indexX);
 	void SETindexY(Uint8 indexY);
 	void SETcurrentHeading(Uint8);
@@ -107,6 +129,7 @@ public: // assesseurs
 	void SETtimeInvincible(unsigned int);
 	void SETvalue(unsigned int value);
 	void SETvelocity(Uint8 velocity);
+	void SETtabPath(std::vector<std::vector<Node>>& tabPath);
 
 private:
 	// nom de l'objet Entity
@@ -117,12 +140,6 @@ private:
 
 	// position en y sur la fenetre
 	unsigned int _y;
-
-	// position centre de l'objet en x sur la fenetre
-	unsigned int _xc;
-
-	// position centre de l'objet en y sur la fenetre
-	unsigned int _yc;
 
 	// index de la case en x map[x][y]
 	Uint8 _indexX;
@@ -150,6 +167,10 @@ private:
 
 	// vitesse en pixel de l'objet, par défaut INITIAL_VELOCITY = 2
 	Uint8 _velocity;
+
+	// tableau des differents chemins pour aller à la cible
+	std::vector<std::vector<Node>> _tabPath;
+
 };
 
 class Pacman : public Entity {
@@ -181,6 +202,8 @@ public: // opérations sur l'objet
 
 	// gestion des collisions entre Pacman et les objets Ghost
 	void collideGhost(std::vector<Ghost*>& ghost);
+
+	virtual void goHomeGhost();
 
 public: // affichage
 	// affiche le nombre de vie restante et le score du joueur
@@ -230,10 +253,12 @@ public: // opérations sur l'objet
 		*	-> retourne validCondition (1) si l'objet se trouve entre 2 cases et si la future direction est différente de la direction courante
 		*	-> retourne validNextHeading (2) si l'objet se trouve sur une case pleine et si la future direction est différente de la direction courante
 	*/
-	Uint8 search(Map& map);
+	Uint8 search(Map& map, Uint8 indexX, Uint8 indexY);
 
 	// créer une nouvelle direction future en fonction du type de Ghost
 	void makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman);
+
+	virtual void goHomeGhost();
 
 public: // affichage
 	// affichage de la Texture en fonction de la direction et de l'alternance du skin
@@ -241,11 +266,17 @@ public: // affichage
 
 public: // assesseurs
 	Uint8 GETtype()const;
+	bool GETgoHome()const;
+
 	void SETtype(Uint8 type);
+	void SETgoHome(bool goHome);
 
 private:
 	// type de Ghost : red, blue, yellow, pink 
 	Uint8 _type;
+
+	// permet de renvoyer le ghost au milieu (maison) lorqu'il est touché
+	bool _goHome;
 };
 
 #endif // !Entity_H

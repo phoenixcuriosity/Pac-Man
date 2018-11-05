@@ -364,27 +364,19 @@ void Button::createbutton(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 state
 
 	SDL_Texture *image = nullptr;
 	SDL_Texture *imageOn = nullptr;
-
-	if (tabbutton.size() > 0) {
-		i++;
+	
+	image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
+	imageOn = createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]);
+	if (alpha != nonTransparent) {
+		SDL_SetTextureAlphaMod(image, alpha);
+		SDL_SetTextureAlphaMod(imageOn, alpha);
 	}
-	for (i; i <= tabbutton.size(); i++) {
-		if (i == tabbutton.size()) {
-			image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
-			imageOn = createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]);
-			if (alpha != nonTransparent) {
-				SDL_SetTextureAlphaMod(image, alpha);
-				SDL_SetTextureAlphaMod(imageOn, alpha);
-			}
-			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-			centrage(x, y, iW, iH, cnt);
-			tabbutton.push_back(new Button(image, msg, statescreen, select, x, y, iW, iH,
+	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+	centrage(x, y, iW, iH, cnt);
+	tabbutton.push_back(new Button(image, msg, statescreen, select, x, y, iW, iH,
 				type, color, backcolor, size, alpha, imageOn, cnt));
 
-			IHM::logfileconsole("Create Button n:" + std::to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
-			break;
-		}
-	}
+	IHM::logfileconsole("Create Button n:" + std::to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
 }
 
 
@@ -463,6 +455,11 @@ SDL_Texture* Button::GETimageOn() const {
 }
 bool Button::GETon() const {
 	return _on;
+}
+void Button::SETname(std::string msg) {
+	if (this->GETname().compare(msg) != 0) {
+		IHM::logfileconsole("___ERROR : Button::SETname() : Le nom d'un bouton ne peut pas changer après initialisation");
+	}
 }
 void Button::SETon(bool state) {
 	_on = state;

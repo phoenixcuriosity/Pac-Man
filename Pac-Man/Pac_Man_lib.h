@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
+	last modification on this file on version:0.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -160,13 +160,6 @@ struct GameTime {
 	Uint8 seconds = 0;
 
 	Uint8 frame = 0;
-};
-struct ScorePlayer {
-	// score du joueur
-	unsigned int score = 0;
-
-	// nom du joueur
-	std::string name = "";
 };
 /*
 	*	Structure décrivant une case dans la map

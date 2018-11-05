@@ -26,6 +26,14 @@
 
 #include "lib.h"
 
+struct ScorePlayer {
+	// score du joueur
+	unsigned int score = 0;
+
+	// nom du joueur
+	std::string name = "";
+};
+
 class SaveReload {
 public: 
 	/* 

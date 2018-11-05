@@ -8,15 +8,15 @@ _loadScore Start_
 _loadScore End_
 _calculimage Start_
 Create Button n:0 msg = New Game Success
-Create Button n:1 msg = Reload Success
-Create Button n:2 msg = Option Success
-Create Button n:3 msg = Quit Success
+Create Button n:0 msg = New Game Success
+Create Button n:0 msg = New Game Success
+Create Button n:0 msg = New Game Success
 Create Button n:0 msg = Pause Success
-Create Button n:1 msg = Go to leader board (END GAME) Success
-Create Button n:2 msg = Save and Quit Success
+Create Button n:0 msg = Pause Success
+Create Button n:0 msg = Pause Success
 Create Button n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.290000 secondes
+temps d'execution de l'initialisation : 1.609000 secondes
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
@@ -25,10 +25,9 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
-_Ecrantitres Start_
-_Ecrantitres End_
-_Ecrantitres Start_
-_Ecrantitres End_
+Pacman hit a Ghost successfully
+Pacman lost a life
+Pacman hit a Ghost successfully
 _mainLoop End_
 _saveScore Start_
 _saveScore End_
@@ -87,7 +86,9 @@ Delete pink Texture name = Pink_L_2.png Success
 Delete pink Texture name = Pink_D_2.png Success
 Delete pink Texture name = Pink_R_2.png Success
 Delete ALL pink Texture Success
-Delete miscGhost Texture name = not_Invincible.png Success
+Delete miscGhost Texture name = not_Invincible_B.png Success
+Delete miscGhost Texture name = not_Invincible_W.png Success
+Delete miscGhost Texture name = goHome.png Success
 Delete ALL miscGhost Texture Success
 Delete collectibles Texture name = gold.png Success
 Delete collectibles Texture name = cherry.png Success
@@ -127,16 +128,6 @@ Delete txtscore Texte name = with your keyboard Success
 Delete txtscore Texte name = Remove last letter with backspace Success
 Delete txtscore Texte name = Press return when finish Success
 Delete ALL txtscore Texte Success
-Delete tabScore Texte name = robin      33200 Success
-Delete tabScore Texte name = azertyuiop      5800 Success
-Delete tabScore Texte name = lknf      3100 Success
-Delete tabScore Texte name = opnel      2600 Success
-Delete tabScore Texte name = godai      2000 Success
-Delete tabScore Texte name = qhrghq      1254 Success
-Delete tabScore Texte name = lol      1201 Success
-Delete tabScore Texte name = amazon      1200 Success
-Delete tabScore Texte name = klmo      1100 Success
-Delete tabScore Texte name = ikea      1000 Success
 Delete ALL tabScore Texte Success
 Delete Button ecrantitre name = New Game Success
 Delete Button ecrantitre name = Reload Success

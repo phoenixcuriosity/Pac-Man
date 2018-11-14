@@ -35,6 +35,10 @@ struct ScorePlayer {
 };
 
 class SaveReload {
+
+	/* *********************************************************
+						STATIC
+	 ********************************************************* */
 public: 
 	/* 
 		Enregistre les attributs des objets Entity ainsi que configuration de la map
@@ -50,6 +54,10 @@ public:
 	*/
 	static bool reload(Sysinfo& sysinfo);
 	
+
+	/* *********************************************************
+						METHODES
+	 ********************************************************* */
 public:
 	SaveReload();
 	~SaveReload() {};
@@ -75,6 +83,9 @@ public:
 
 	void SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer);
 
+	/* *********************************************************
+						ATTRIBUTS
+	 ********************************************************* */
 private:
 	// tableau contenant la liste des joueurs (nom et score)
 	std::vector<ScorePlayer> _tabScorePlayer;

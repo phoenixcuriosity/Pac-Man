@@ -2,10 +2,10 @@ numberOfScore=	10
 robin					33200
 za					28200
 eve					23200
+ghj					22300
 aa					18400
 ia					15100
 ll					13000
 oa					12600
 iafast					8600
 azertyuiop					5800
-azertyuiop					0

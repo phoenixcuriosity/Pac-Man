@@ -26,32 +26,41 @@
 
 #include "lib.h"
 
+// structure représentant une case de la grille pour etre utilisée dans findAPath()
 struct Node {
 	Uint8 indexX = 0;
 	Uint8 indexY = 0;
 };
 
+//--- Entity -------------------------------------------------------------------------------------------------------------------------------------
 
 // classe abstraite
 class Entity { 
+
+	/* *********************************************************
+						STATIC
+	 ********************************************************* */
 public:
 	// demande un mouvement de tous les objets Entity, conditions de victoire et de défaite
 	static void move(Sysinfo& sysinfo);
 
 public:
 	// initialisation des objets Entity au positions et paramètres pré-définis
-	static void initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
+	static void initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector<std::vector<Tile>>& map);
 
 	// destruction de tous les objets Entity
 	static void destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost);
 
 
+	/* *********************************************************
+						METHODES
+	 ********************************************************* */
 public: // constructeurs et destructeur
 	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
 	~Entity();
 
 
-public:
+public: // Algorithme
 	/*
 		Algorithme de recherche de chemin le plus court entre 2 points
 	*/
@@ -90,7 +99,7 @@ public: // opérations sur l'objet
 	void makeTheMove(bool validMove, unsigned int pos);
 
 	// test de la position spécifique de téléporation
-	void teleport();
+	void teleport(std::vector<std::vector<Tile>>& map);
 
 	virtual void goHomeGhost();
 
@@ -131,7 +140,11 @@ public: // assesseurs
 	void SETvelocity(Uint8 velocity);
 	void SETtabPath(std::vector<std::vector<Node>>& tabPath);
 
-private:
+
+	/* *********************************************************
+						ATTRIBUTS
+	 ********************************************************* */
+private: 
 	// nom de l'objet Entity
 	std::string _name;
 
@@ -147,6 +160,7 @@ private:
 	// index de la case en y map[x][y]
 	Uint8 _indexY;
 
+private:
 	// direction cardinal courante
 	Uint8 _currentHeading;
 
@@ -172,6 +186,8 @@ private:
 	std::vector<std::vector<Node>> _tabPath;
 
 };
+
+//--- Pacman ------------------------------------------------------------------------------------------------------------------------------------
 
 class Pacman : public Entity {
 public: // constructeurs et destructeur
@@ -231,6 +247,8 @@ private:
 	// permet de connaitre la valeur du dernier bonus mangé par pacman
 	unsigned int _typeOfValue;
 };
+
+//--- Ghost -------------------------------------------------------------------------------------------------------------------------------------
 
 class Ghost : public Entity {
 public: // constructeurs et destructeur

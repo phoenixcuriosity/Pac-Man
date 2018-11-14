@@ -34,8 +34,10 @@
 #include <ctime>
 #include <cmath>
 #include <vector>
+#include <iomanip>
 #include <exception>
 #include <stdexcept>
+#include "wtypes.h"
 
 #include "SDL2-2.0.8/include/SDL.h"
 #include "SDL2-2.0.8/include/SDL_ttf.h"
@@ -57,11 +59,11 @@ typedef struct Sysinfo Sysinfo;
 class IHM;
 class Texture;
 class Texte;
-class Button;
+class ButtonImage;
+class ButtonTexte;
 class Entity;
 class Pacman;
 class Ghost;
 class SaveReload;
-
 
 #endif

@@ -30,24 +30,43 @@
 #include "Entity.h"
 #include "SaveReload.h"
 
-// ********* CONSTANTES ******** //
+/* *********************************************************
+						 Constantes
+  ********************************************************* */
+
 //--- Constantes concernant l'ecran et la dimension de la fenetre  -----------------------------------------------------------------------------------
-
-// longueur de la fenetre en pixel
-const Uint16 SCREEN_WIDTH = 1920;
-
-// hauteur de la fenetre en pixel
-const Uint16 SCREEN_HEIGHT = 1088;
 
 // longueur et hauteur d'une case en pixel
 const Uint8 TILE_SIZE = 32;
+
+/*
+	Pendant le développement du jeux, les parametres optimaux ont été:
+	*	-> SCREEN_WIDTH = 1920 pixels 
+	*	-> SCREEN_HEIGHT = 1088 pixels
+	*	-> SCREEN_REFRESH_RATE = 60 Hz
+	SCREEN_WIDTH et SCREEN_HEIGHT doivent etre des multiples de TILE_SIZE pour que le placement des objets Entity fonctionne bien
+*/
+
+
+Uint16 getHorizontal();
+// longueur de la fenetre en pixel
+const Uint16 SCREEN_WIDTH = getHorizontal();
+
+Uint16 getVertical();
+// hauteur de la fenetre en pixel
+const Uint16 SCREEN_HEIGHT = getVertical();
+
+Uint8 getRefreshRate();
+// fréquence de rafraichissement de l'écran en Hz
+const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
+
 
 //--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
 
 // nombre maximal d'objets Ghost dans les tableau (peut servir d'index) 
 const Uint8 MAX_GHOST = 4;
 
-// nombre maximal de positions cardinales
+// nombre maximal de positions cardinales, lié à -> enum Heading_Type: Uint8 { UP, LEFT, DOWN, RIGHT };
 const Uint8 MAX_POS = 4;
 
 // nombre maximal d'animations par position cardinal
@@ -64,7 +83,7 @@ const Uint16 TEMPO_INVINCIBLE = 600;
 // vitesse des objets Entity en pixel
 const Uint8 INITIAL_VELOCITY = 2;
 
-//--- Constantes concernant les couleurs pour l'utilisation de la SDL  -------------------------------------------------------------------------------
+//--- Constantes concernant la SDL  -----------------------------------------------------------------------------------------------------------------
 
 /*
 	SDL_Color name {Red, Green, Blue, Alpha (transparance)} 
@@ -81,7 +100,13 @@ const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
 const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 const SDL_Color NoColor = { 0, 0, 0, 0 };
 
-// ********* ENUM ******** //
+// font utilisée pour ce programme
+const std::string fontFile = "arial.ttf";
+
+
+/* *********************************************************
+						 Enum
+  ********************************************************* */
 //--- enum concernant les objets Texture  -----------------------------------------------------------------------------------------------------------
 
 /*
@@ -137,29 +162,38 @@ enum BonusValue_Type{ nothing1, valuegold = 100, valuecherry = 200, valuestrawbe
 //--- enum concernant l'état dans le quel ce trouve le programme  ----------------------------------------------------------------------------------
 
 // différents état de l'écran
-enum State_Type: Uint8 { STATEnothing, STATEecrantitre, STATEplay, STATEscore };  
+enum State_Type: Uint8 { STATEnothing, STATEecranTitre, STATEplay, STATEscore };  
 
 // spécifications de la séléction
 enum Select_Type: Uint8 { selectnothing, pause, win, lost };	
 
 
 
-// ********* STRUCTURE ******** //
+/* *********************************************************
+						Structures
+  ********************************************************* */
 //---------------------- Structure niveau 2 ---------------------------------------------------------------------------------------------------------
 /*
 	*	structure contenant les données en rapport avec le temps du programme
 */
 struct GameTime {
 	// nombre d'heures de jeu
-	Uint8 hours = 0;
+	Uint8 hoursRunTime = 0;
 
 	// nombre de minutes de jeu, modulo 60
-	Uint8 minutes = 0;
+	Uint8 minutesRunTime = 0;
 
 	// nombre de seconde de jeu, modulo 60
-	Uint8 seconds = 0;
+	Uint8 secondsRunTime = 0;
 
-	Uint8 frame = 0;
+	Uint8 frameRunTime = 0;
+
+	// temps initial démarré en meme temps que frame  (référence)
+	clock_t t1RealTime = 0;
+	
+	clock_t t2RealTime = 0;
+
+	bool startTimerRealTime = false;
 };
 /*
 	*	Structure décrivant une case dans la map
@@ -209,8 +243,8 @@ struct Var {
 	// état de la sélection du joueur : selectnothing, pause, win, lost
 	Uint8 select = selectnothing;
 
-	// état de l'écran du joueur : STATEnothing, STATEecrantitre, STATEplay, STATEscore
-	Uint8 statescreen = STATEnothing;
+	// état de l'écran du joueur : STATEnothing, STATEecranTitre, STATEplay, STATEscore
+	Uint8 stateScreen = STATEnothing;
 
 	// variable de victoire
 	bool win = false;
@@ -239,7 +273,7 @@ struct Var {
 */
 struct AllTextures {
 	// tableau d'images contenu dans l'écran titre
-	std::vector<Texture*> imgecrantitre;
+	std::vector<Texture*> imgecranTitre;
 
 	// tableau d'images contenu dans le sol de la map
 	std::vector<Texture*> ground;
@@ -273,7 +307,7 @@ struct AllTextes {
 	TTF_Font *font[MAX_FONT] = {};
 
 	// tableau de textes contenu dans l'écran titre
-	std::vector<Texte*> txtEcrantitre;
+	std::vector<Texte*> txtecranTitre;
 
 	// tableau de textes contenu dans l'écran play
 	std::vector<Texte*> txtPlay;
@@ -291,14 +325,17 @@ struct AllTextes {
 	*	Contient tous les boutons
 */
 struct AllButtons {
-	// tableau de boutons contenu dans l'écran titre
-	std::vector<Button*> buttonEcrantitre;
+	// tableau de boutonsTexte contenu dans l'écran titre
+	std::vector<ButtonTexte*> buttonTexteEcranTitre;
+
+	// tableau de boutonsImage contenu dans l'écran titre
+	std::vector<ButtonImage*> buttonImageEcranTitre;
 
 	// tableau de boutons contenu dans l'écran play
-	std::vector<Button*> buttonPlay;
+	std::vector<ButtonTexte*> buttonTextePlay;
 
 	// tableau de boutons contenu dans l'écran Score
-	std::vector<Button*> buttonScore;
+	std::vector<ButtonTexte*> buttonTexteScore;
 };
 struct Map {
 	// Matrice contenant des structures Tile

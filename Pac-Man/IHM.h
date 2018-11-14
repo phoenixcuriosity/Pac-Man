@@ -27,6 +27,10 @@
 #include "lib.h"
 
 class IHM {
+
+	/* *********************************************************
+						 Init
+  ********************************************************* */
 public:
 	// initialisation des fichiers
 	static void initfile(const std::string& log);
@@ -60,44 +64,34 @@ public:
 	static void calculimage(Sysinfo&);
 
 
-public:
+
+
+	/* *********************************************************
+						 In Game
+  ********************************************************* */
+
+public: // evenements
+	// Gestion des evenements de type clavier, souris, joysticks...
+	static void eventSDL(Sysinfo& sysinfo);
+
 	// Handle Mouse Event	BUTTON_LEFT, BUTTON_RIGHT
 	static void mouse(Sysinfo& sysinfo, SDL_Event event);
 	
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	static void cliqueGauche(Sysinfo& sysinfo, SDL_Event event);
 
-	/*
-		Demande au joueur son pseudo pour etre placé dans le tableau des scores
-		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
-		Fonctionne par cast avec le tableau ASCII
-		-> retourne le nom entré par le joueur (std::string)
-	*/
-	static std::string getName(SDL_Renderer*& renderer, TTF_Font* font[], Var& var,
-		std::vector<Texte*> txtScore, std::vector<Texte*> tabScore, unsigned int position);
-
-	/*
-		Tri du tableau des scores dans le sens décroissant
-		recherche si le score fait lors de cette partie est dans le TOP10
-		-> retourne la position du joueur
-		-> retourne -1 si le joueur ne figure pas dans le TOP10
-	*/
-	static int8_t topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score);
-
-
-
-public:
-	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEecrantitre
-	static void ecrantitre(Sysinfo& syinfo);
+public: // affichage
+	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _stateScreen == STATEecranTitre
+	static void ecranTitre(Sysinfo& syinfo);
 	
-	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEscore
+	// Affiche toutes les textures ainsi que les boutons ayant l'attribut _stateScreen == STATEscore
 	static void ecranScore(Sysinfo& syinfo);
 
 	/*
-		Affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEplay
+		Affiche toutes les textures ainsi que les boutons ayant l'attribut _stateScreen == STATEplay
 		Cette fonction est appelée à la meme fréquence que la boucle principale
 	*/
-	static void alwaysrender(Sysinfo& syinfo);
+	static void alwaysRender(Sysinfo& syinfo);
 
 	/*
 		Affiche la map du niveau chargé :
@@ -115,6 +109,28 @@ public:
 	static void calculTime(GameTime& gameTime);
 
 
+
+
+	/* *********************************************************
+						 End Game
+  ********************************************************* */
+public:
+	/*
+		Demande au joueur son pseudo pour etre placé dans le tableau des scores
+		Ne gère que les minuscules et les chiffres 0 à 9 qui ne sont pas sur le pavé numérique
+		Fonctionne par cast avec le tableau ASCII
+		-> retourne le nom entré par le joueur (std::string)
+	*/
+	static std::string getName(SDL_Renderer*& renderer, TTF_Font* font[], Var& var,
+		std::vector<Texte*> txtScore, std::vector<Texte*> tabScore, unsigned int position);
+
+	/*
+		Tri du tableau des scores dans le sens décroissant
+		recherche si le score fait lors de cette partie est dans le TOP10
+		-> retourne la position du joueur
+		-> retourne -1 si le joueur ne figure pas dans le TOP10
+	*/
+	static int8_t topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int score);
 
 public:
 	// Destruction des allocations dynamiques et de la fenetre

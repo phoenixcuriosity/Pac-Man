@@ -27,10 +27,12 @@
 
 
 ///////////////////////////// ENTITY //////////////////////////////
-/* ENTITY :: STATIC */
+	/* *********************************************************
+						ENTITY::STATIC
+	 ********************************************************* */
 void Entity::move(Sysinfo& sysinfo) {
 
-	if (sysinfo.var.statescreen == STATEplay && sysinfo.var.select == selectnothing) {
+	if (sysinfo.var.stateScreen == STATEplay && sysinfo.var.select == selectnothing) {
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
 			sysinfo.ghost[i]->move(sysinfo.map, sysinfo);
 		sysinfo.pacman->move(sysinfo.map, sysinfo.ghost);
@@ -54,14 +56,16 @@ void Entity::move(Sysinfo& sysinfo) {
 		}
 	}
 }
-void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
+void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector<std::vector<Tile>>& map) {
 	destroyEntity(pacman, ghost);
-	pacman = new Pacman("player", 768, 608);
-	pacman->SETindexX(6); pacman->SETindexY(14);
-	ghost.push_back(new Ghost("Red", 960, 544, red));
-	ghost.push_back(new Ghost("Blue", 960, 544, blue));
-	ghost.push_back(new Ghost("Yellow", 960, 544, yellow));
-	ghost.push_back(new Ghost("Pink", 960, 544, pink));
+	pacman = new Pacman("player", map[1][1].tile_x, map[1][1].tile_y);
+	pacman->SETindexX(1); pacman->SETindexY(1);
+
+	unsigned int x = map[map.size() / 2][map[0].size() / 2].tile_x, y = map[map.size() / 2][map[0].size() / 2].tile_y;
+	ghost.push_back(new Ghost("Red", x, y, red));
+	ghost.push_back(new Ghost("Blue", x, y, blue));
+	ghost.push_back(new Ghost("Yellow", x, y, yellow));
+	ghost.push_back(new Ghost("Pink", x, y, pink));
 }
 void Entity::destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
 	if (pacman != nullptr) {
@@ -77,7 +81,12 @@ void Entity::destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
 	ghost.clear();
 }
 
-/* ENTITY :: METHODES */
+/* *********************************************************
+					ENTITY::METHODES
+ ********************************************************* */
+
+//--- constructeurs et destructeur ---------------------------------------------------------------------------------------------------------------
+
 Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value)
 	: _name(name), _x(x), _y(y), _value(value), _currentHeading(currentHeading),
 	_indexX(0), _indexY(0), _nextHeading(nextHeading), _invincible(true), _alternateSkin(false),
@@ -87,6 +96,9 @@ Entity::Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHe
 Entity::~Entity()
 {
 }
+
+//--- Algorithme ---------------------------------------------------------------------------------------------------------------------------------
+
 bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY) {
 	for (unsigned int i = 0; i < path.size(); i++) {
 		if (path[i].indexX == newIndexX && path[i].indexY == newIndexY)
@@ -104,13 +116,12 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		_tabPath.push_back(blankTab);
   
 		unsigned int indexTabFound = 0;
-		const unsigned int MAX_DIRECTION = 4;
-		int8_t tabX[MAX_DIRECTION] = { -1 , 1, 0 , 0 }, tabY[MAX_DIRECTION] = { 0, 0, -1, 1};
+		int8_t tabX[MAX_POS] = { -1 , 1, 0 , 0 }, tabY[MAX_POS] = { 0, 0, -1, 1};
 		bool breakLoop = false;
 		
 		for (unsigned int i = 0; i < _tabPath.size(); i++) {
 			if (!breakLoop) {
-				for (unsigned int m = 0; m < MAX_DIRECTION; m++) {
+				for (unsigned int m = 0; m < MAX_POS; m++) {
 
 					if ((unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]) < map.size()
 						&& (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) < map.size()) {
@@ -161,6 +172,9 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		_tabPath.clear();
 	}
 }
+
+//--- opérations sur l'objet -----------------------------------------------------------------------------------------------------------------------
+
 bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	unsigned int nextindexX = 0, nextindexY = 0;
 
@@ -253,15 +267,18 @@ void Entity::makeTheMove(bool validMove, unsigned int pos) {
 		}
 	}
 }
-void Entity::teleport(){
-	if (_x <= 592 && _y == 544)
-		_x = 1306;
-	else if (_x >= 1328 && _y == 544)
-		_x = 594;
+void Entity::teleport(std::vector<std::vector<Tile>>& map){
+	if (_x <= map[1][0].tile_x && _y == map[0][map[0].size() / 2].tile_y)
+		_x = map[map.size() - 2][0].tile_x;
+	else if (_x >= map[map.size() - 2][0].tile_x && _y == map[0][map[0].size() / 2].tile_y)
+		_x = map[1][0].tile_x;
 }
 void Entity::goHomeGhost() {
 
 }
+
+//--- assesseurs ---------------------------------------------------------------------------------------------------------------------------------
+
 std::string Entity::GETname()const {
 	return _name;
 }
@@ -425,7 +442,7 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 	makeTheMove(validMove, pos);
 	if(validMove)
 		collideGhost(ghost);
-	teleport();
+	teleport(map.matriceMap);
 	return 0;
 }
 Uint8 Pacman::search(Map& map) {
@@ -631,7 +648,7 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 	}
 
 	makeTheMove(validMove, pos);
-	teleport();
+	teleport(map.matriceMap);
 	makeNextHeading(map.matriceMap, sysinfo.pacman);
 
 	return 0;
@@ -680,28 +697,28 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 		break;
 	case blue:
 		posi = pacman->GETcurrentHeading() + 2;
-		posi = posi % 4;
+		posi = posi % MAX_POS;
 		this->SETnextHeading(posi);
 		break;
 	case yellow:
-		randomNextHeading = rand() % 4;
+		randomNextHeading = rand() % MAX_POS;
 		while (continuer) {
 			if (tryToMove(map, randomNextHeading)) {
 				continuer = false;
 				break;
 			}
-			randomNextHeading = rand() % 4;
+			randomNextHeading = rand() % MAX_POS;
 		}
 		this->SETnextHeading(randomNextHeading);
 		break;
 	case pink:
-		randomNextHeading = rand() % 4;
+		randomNextHeading = rand() % MAX_POS;
 		while (continuer) {
 			if (tryToMove(map, randomNextHeading)) {
 				continuer = false;
 				break;
 			}
-			randomNextHeading = rand() % 4;
+			randomNextHeading = rand() % MAX_POS;
 		}
 		this->SETnextHeading(randomNextHeading);
 		break;

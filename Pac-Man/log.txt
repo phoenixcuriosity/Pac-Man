@@ -7,28 +7,26 @@ SDL_Init Success
 _loadScore Start_
 _loadScore End_
 _calculimage Start_
-Create Button n:0 msg = New Game Success
-Create Button n:0 msg = New Game Success
-Create Button n:0 msg = New Game Success
-Create Button n:0 msg = New Game Success
-Create Button n:0 msg = Pause Success
-Create Button n:0 msg = Pause Success
-Create Button n:0 msg = Pause Success
-Create Button n:0 msg = Return to Title Screen Success
+Create ButtonTexte n:0 msg = New Game Success
+Create ButtonTexte n:1 msg = Reload Success
+Create ButtonTexte n:2 msg = Option Success
+Create ButtonTexte n:3 msg = Quit Success
+Create ButtonImage n:0 msg = confirm Success
+Create ButtonTexte n:0 msg = Pause Success
+Create ButtonTexte n:1 msg = Go to leader board (END GAME) Success
+Create ButtonTexte n:2 msg = Save and Quit Success
+Create ButtonTexte n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.609000 secondes
-_Ecrantitres Start_
-_Ecrantitres End_
-_mainLoop Start_
+temps d'execution de l'initialisation : 1.716000 secondes
+_ecranTitres Start_
+_ecranTitres End_
 Pacman is alive
 Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
 Pacman hit a Ghost successfully
-Pacman lost a life
 Pacman hit a Ghost successfully
-_mainLoop End_
 _saveScore Start_
 _saveScore End_
 *********_________ Start DeleteAll _________*********
@@ -97,18 +95,18 @@ Delete collectibles Texture name = lemon.png Success
 Delete collectibles Texture name = pear.png Success
 Delete collectibles Texture name = key.png Success
 Delete ALL collectibles Texture Success
-Delete imgecrantitre Texture name = linux.jpg Success
-Delete imgecrantitre Texture name = c++.jpg Success
-Delete imgecrantitre Texture name = sudo.jpg Success
-Delete imgecrantitre Texture name = PC_master_Race.jpg Success
-Delete imgecrantitre Texture name = matlab.jpg Success
-Delete ALL imgecrantitre Texture Success
-Delete txtecrantitre Texte name = Game dev in C++ and with SDL2.0.8 Success
-Delete txtecrantitre Texte name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
-Delete txtecrantitre Texte name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
-Delete txtecrantitre Texte name = With ALL DLC For Only 99.99$ what a deal !!! Success
-Delete txtecrantitre Texte name = Use your mouse to select Success
-Delete ALL txtecrantitre Texte Success
+Delete imgecranTitre Texture name = linux.jpg Success
+Delete imgecranTitre Texture name = c++.jpg Success
+Delete imgecranTitre Texture name = sudo.jpg Success
+Delete imgecranTitre Texture name = PC_master_Race.jpg Success
+Delete imgecranTitre Texture name = matlab.jpg Success
+Delete ALL imgecranTitre Texture Success
+Delete txtecranTitre Texte name = Game dev in C++ and with SDL2.0.8 Success
+Delete txtecranTitre Texte name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
+Delete txtecranTitre Texte name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
+Delete txtecranTitre Texte name = With ALL DLC For Only 99.99$ what a deal !!! Success
+Delete txtecranTitre Texte name = Use your mouse to select Success
+Delete ALL txtecranTitre Texte Success
 Delete txtplay Texte name = Your Score Success
 Delete txtplay Texte name = You can move Pacman Success
 Delete txtplay Texte name = by pressing arrows on your keyboard Success
@@ -129,17 +127,19 @@ Delete txtscore Texte name = Remove last letter with backspace Success
 Delete txtscore Texte name = Press return when finish Success
 Delete ALL txtscore Texte Success
 Delete ALL tabScore Texte Success
-Delete Button ecrantitre name = New Game Success
-Delete Button ecrantitre name = Reload Success
-Delete Button ecrantitre name = Option Success
-Delete Button ecrantitre name = Quit Success
-Delete ALL Button ecrantitre Success
+Delete Button ecranTitre name = New Game Success
+Delete Button ecranTitre name = Reload Success
+Delete Button ecranTitre name = Option Success
+Delete Button ecranTitre name = Quit Success
+Delete ALL Button ecranTitre Success
 Delete Button play name = Pause Success
 Delete Button play name = Go to leader board (END GAME) Success
 Delete Button play name = Save and Quit Success
 Delete ALL Button play Success
 Delete Button score name = Return to Title Screen Success
 Delete ALL Button score Success
+Delete Button ecranTitre name = confirm Success
+Delete ALL Button ecranTitre Success
 *********_________ End DeleteAll _________*********
 SDL_Quit Success
 ________PROGRAMME FINISH________

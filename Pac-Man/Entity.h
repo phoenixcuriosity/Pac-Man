@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -26,11 +26,84 @@
 
 #include "lib.h"
 
+
+/* *********************************************************
+						 Constantes
+  ********************************************************* */
+
+//--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
+
+// nombre maximal d'objets Ghost dans les tableau (peut servir d'index) 
+const Uint8 MAX_GHOST = 4;
+
+// nombre maximal de positions cardinales, lié à -> enum Heading_Type: Uint8 { UP, LEFT, DOWN, RIGHT };
+const Uint8 MAX_POS = 4;
+
+// nombre maximal d'animations par position cardinal
+const Uint8 MAX_SKIN = 2;
+
+//--- Constantes concernant les objets Entity  ------------------------------------------------------------------------------------------------------
+
+// temps en nombre de cycle de la boucle principale (60 boucles/s -> 600 boucles = 10s)
+const Uint16 TEMPO_INVINCIBLE = 600;
+
+// vitesse des objets Entity en pixel
+const Uint8 INITIAL_VELOCITY = 2;
+
+
+
+/* *********************************************************
+						 Enum
+  ********************************************************* */
+
+//--- enum concernant les objets Entity  -----------------------------------------------------------------------------------------------------------
+
+// contient les différents type de Ghost
+enum Ghost_Type : Uint8 { red, blue, yellow, pink };
+
+// type de directions
+enum Heading_Type : Uint8 { UP, LEFT, DOWN, RIGHT };
+
+/*
+	* type de retour des fonctions Pacman::move et Ghost::move
+	*	-> Not_Valid : la condition de mouvement n'est pas validée
+	*	-> validCondition : la contion de mouvement est validée tout de suite
+	*	-> validNextHeading : la condition de mouvement n'est pas validée tout de suite mais est gardé en mémoire
+*/
+enum Validation_Type : Uint8 { Not_Valid, validCondition, validNextHeading };
+
+//--- enum concernant les valeurs des bonus  -------------------------------------------------------------------------------------------------------
+
+// type de bonus sur la map
+enum Bonus_Type : Uint8 { nothing, gold, cherry, strawberry, peach, apple, key };
+
+// type de valeur des bonus
+enum BonusValue_Type { nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, ghost1 = 800, ghost2 = 1600, ghost3 = 3200, ghost4 = 10000, valuekey = 5000 };
+
+
+
+
+
+/* *********************************************************
+						Structures
+  ********************************************************* */
+
+
 // structure représentant une case de la grille pour etre utilisée dans findAPath()
 struct Node {
 	Uint8 indexX = 0;
 	Uint8 indexY = 0;
 };
+struct NodeA {
+	Uint8 indexX = 0;
+	Uint8 indexY = 0;
+	unsigned int cost = 0;
+};
+
+
+/* *********************************************************
+						Classes
+  ********************************************************* */
 
 //--- Entity -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -61,6 +134,9 @@ public: // constructeurs et destructeur
 
 
 public: // Algorithme
+
+	bool isBlock(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY, Uint8 dirChoice);
+
 	/*
 		Algorithme de recherche de chemin le plus court entre 2 points
 	*/
@@ -71,7 +147,7 @@ public: // Algorithme
 		*	-> retorune false si la case se trouve déjà dans le chemin
 		*	-> retourne true si la case ne fait pas encore parti du chemin
 	*/
-	bool notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY);
+	bool notPreviousTile(std::vector<NodeA>& path, Uint8 newIndexX, Uint8 newIndexY);
 
 public: // opérations sur l'objet
 	/*
@@ -104,7 +180,7 @@ public: // opérations sur l'objet
 	virtual void goHomeGhost();
 
 public: // affichage
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) = 0;
+	virtual void afficher(std::vector<Texture*> tabTexture[]) = 0;
 
 public: // assesseurs
 	std::string GETname()const;
@@ -226,7 +302,7 @@ public: // affichage
 	void afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]);
 
 	// affichage de la Texture en fonction de la direction et de l'alternance du skin
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]);
+	virtual void afficher(std::vector<Texture*> tabTexture[]);
 	
 public: // assesseurs
 	Uint8 GETlife()const;
@@ -280,7 +356,7 @@ public: // opérations sur l'objet
 
 public: // affichage
 	// affichage de la Texture en fonction de la direction et de l'alternance du skin
-	virtual void afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]);
+	virtual void afficher(std::vector<Texture*> tabTexture[]);
 
 public: // assesseurs
 	Uint8 GETtype()const;

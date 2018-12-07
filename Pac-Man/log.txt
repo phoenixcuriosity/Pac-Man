@@ -9,15 +9,16 @@ _loadScore End_
 _calculimage Start_
 Create ButtonTexte n:0 msg = New Game Success
 Create ButtonTexte n:1 msg = Reload Success
-Create ButtonTexte n:2 msg = Option Success
-Create ButtonTexte n:3 msg = Quit Success
-Create ButtonImage n:0 msg = confirm Success
-Create ButtonTexte n:0 msg = Pause Success
-Create ButtonTexte n:1 msg = Go to leader board (END GAME) Success
-Create ButtonTexte n:2 msg = Save and Quit Success
+Create ButtonTexte n:2 msg = Level 1 Success
+Create ButtonTexte n:3 msg = Level 2 Success
+Create ButtonTexte n:4 msg = Level 3 Success
+Create ButtonTexte n:5 msg = Quit Success
+Create ButtonTexte n:0 msg = Go to leader board (END GAME) Success
+Create ButtonTexte n:1 msg = Save and Quit Success
+Create ButtonImage n:0 msg = Pause Success
 Create ButtonTexte n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.716000 secondes
+temps d'execution de l'initialisation : 1.448000 secondes
 _ecranTitres Start_
 _ecranTitres End_
 Pacman is alive
@@ -25,121 +26,3 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
-Pacman hit a Ghost successfully
-Pacman hit a Ghost successfully
-_saveScore Start_
-_saveScore End_
-*********_________ Start DeleteAll _________*********
-Pacman is dead
-Red is dead
-Blue is dead
-Yellow is dead
-Pink is dead
-Delete ground Texture name = Black.bmp Success
-Delete ground Texture name = White.bmp Success
-Delete ground Texture name = map.png Success
-Delete ALL ground Texture Success
-Delete pacman Texture name = pacman_U_1.png Success
-Delete pacman Texture name = pacman_U_2.png Success
-Delete pacman Texture name = pacman_L_1.png Success
-Delete pacman Texture name = pacman_L_2.png Success
-Delete pacman Texture name = pacman_D_1.png Success
-Delete pacman Texture name = pacman_D_2.png Success
-Delete pacman Texture name = pacman_R_1.png Success
-Delete pacman Texture name = pacman_R_2.png Success
-Delete ALL pacman Texture Success
-Delete red Texture name = Red_U_1.png Success
-Delete red Texture name = Red_L_1.png Success
-Delete red Texture name = Red_D_1.png Success
-Delete red Texture name = Red_R_1.png Success
-Delete red Texture name = Red_U_2.png Success
-Delete red Texture name = Red_L_2.png Success
-Delete red Texture name = Red_D_2.png Success
-Delete red Texture name = Red_R_2.png Success
-Delete ALL red Texture Success
-Delete blue Texture name = Blue_U_1.png Success
-Delete blue Texture name = Blue_L_1.png Success
-Delete blue Texture name = Blue_D_1.png Success
-Delete blue Texture name = Blue_R_1.png Success
-Delete blue Texture name = Blue_U_2.png Success
-Delete blue Texture name = Blue_L_2.png Success
-Delete blue Texture name = Blue_D_2.png Success
-Delete blue Texture name = Blue_R_2.png Success
-Delete ALL blue Texture Success
-Delete yellow Texture name = Yellow_U_1.png Success
-Delete yellow Texture name = Yellow_L_1.png Success
-Delete yellow Texture name = Yellow_D_1.png Success
-Delete yellow Texture name = Yellow_R_1.png Success
-Delete yellow Texture name = Yellow_U_2.png Success
-Delete yellow Texture name = Yellow_L_2.png Success
-Delete yellow Texture name = Yellow_D_2.png Success
-Delete yellow Texture name = Yellow_R_2.png Success
-Delete ALL yellow Texture Success
-Delete pink Texture name = Pink_U_1.png Success
-Delete pink Texture name = Pink_L_1.png Success
-Delete pink Texture name = Pink_D_1.png Success
-Delete pink Texture name = Pink_R_1.png Success
-Delete pink Texture name = Pink_U_2.png Success
-Delete pink Texture name = Pink_L_2.png Success
-Delete pink Texture name = Pink_D_2.png Success
-Delete pink Texture name = Pink_R_2.png Success
-Delete ALL pink Texture Success
-Delete miscGhost Texture name = not_Invincible_B.png Success
-Delete miscGhost Texture name = not_Invincible_W.png Success
-Delete miscGhost Texture name = goHome.png Success
-Delete ALL miscGhost Texture Success
-Delete collectibles Texture name = gold.png Success
-Delete collectibles Texture name = cherry.png Success
-Delete collectibles Texture name = strawberry.png Success
-Delete collectibles Texture name = lemon.png Success
-Delete collectibles Texture name = pear.png Success
-Delete collectibles Texture name = key.png Success
-Delete ALL collectibles Texture Success
-Delete imgecranTitre Texture name = linux.jpg Success
-Delete imgecranTitre Texture name = c++.jpg Success
-Delete imgecranTitre Texture name = sudo.jpg Success
-Delete imgecranTitre Texture name = PC_master_Race.jpg Success
-Delete imgecranTitre Texture name = matlab.jpg Success
-Delete ALL imgecranTitre Texture Success
-Delete txtecranTitre Texte name = Game dev in C++ and with SDL2.0.8 Success
-Delete txtecranTitre Texte name = Developed by Joeffrey VILLERONCE and Robin SAUTER Success
-Delete txtecranTitre Texte name = New Super Pac-Man Plus DELUX Pro Turbo Edition Success
-Delete txtecranTitre Texte name = With ALL DLC For Only 99.99$ what a deal !!! Success
-Delete txtecranTitre Texte name = Use your mouse to select Success
-Delete ALL txtecranTitre Texte Success
-Delete txtplay Texte name = Your Score Success
-Delete txtplay Texte name = You can move Pacman Success
-Delete txtplay Texte name = by pressing arrows on your keyboard Success
-Delete txtplay Texte name = YOU DIED Success
-Delete txtplay Texte name = YOU WIN Success
-Delete ALL txtplay Texte Success
-Delete scoreValue Texte name = 100 Success
-Delete scoreValue Texte name = 200 Success
-Delete scoreValue Texte name = 400 Success
-Delete scoreValue Texte name = 800 Success
-Delete scoreValue Texte name = 1600 Success
-Delete scoreValue Texte name = 5000 Success
-Delete ALL scoreValue Texte Success
-Delete txtscore Texte name = TOP 10 SCORES Success
-Delete txtscore Texte name = Enter your name Success
-Delete txtscore Texte name = with your keyboard Success
-Delete txtscore Texte name = Remove last letter with backspace Success
-Delete txtscore Texte name = Press return when finish Success
-Delete ALL txtscore Texte Success
-Delete ALL tabScore Texte Success
-Delete Button ecranTitre name = New Game Success
-Delete Button ecranTitre name = Reload Success
-Delete Button ecranTitre name = Option Success
-Delete Button ecranTitre name = Quit Success
-Delete ALL Button ecranTitre Success
-Delete Button play name = Pause Success
-Delete Button play name = Go to leader board (END GAME) Success
-Delete Button play name = Save and Quit Success
-Delete ALL Button play Success
-Delete Button score name = Return to Title Screen Success
-Delete ALL Button score Success
-Delete Button ecranTitre name = confirm Success
-Delete ALL Button ecranTitre Success
-*********_________ End DeleteAll _________*********
-SDL_Quit Success
-________PROGRAMME FINISH________

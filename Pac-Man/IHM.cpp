@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -122,97 +122,78 @@ void IHM::forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, U
 		}
 	}
 }
-void IHM::initGrid(Map& map) {
-	map.matriceMap.clear();
-	Tile blankTile;
-	std::vector<Tile> blank;
-	for (Uint8 x = 0; x < map.map_length; x++) {
-		map.matriceMap.push_back(blank);
-		for (Uint8 y = 0; y < map.map_height; y++) {
+void IHM::initWall(Sysinfo& sysinfo) {
+	sysinfo.map.matriceMapWall.clear();
 
-			blankTile.indexX = x;
-			blankTile.indexY = y;
-			blankTile.tile_x = TILE_SIZE * x + (SCREEN_WIDTH / 2 - (map.map_length / 2 * TILE_SIZE));
-			blankTile.tile_y = TILE_SIZE * y + (SCREEN_HEIGHT / 2 - (map.map_height / 2 * TILE_SIZE));
-			if (x == 0 || x == map.map_length - 1 || y == 0 || y == map.map_height - 1) {
-				blankTile.wall = true;
-				blankTile.entity = nothing;
+	std::vector<bool> blank;
+	std::string comparaison;
+	bool wall = false;
+	unsigned int level = 0, length = 0, height = 0;
+	std::ifstream levelMap(sysinfo.file.levelMap);
+	if (levelMap) {
+		while (true) {
+			levelMap >> comparaison;
+			if (comparaison.compare("LevelMap=") == 0) {
+				levelMap >> level;
+				if (level == sysinfo.map.levelMap) {
+					levelMap >> comparaison;
+					if (comparaison.compare("map_length=") == 0) {
+						levelMap >> length;
+						sysinfo.map.map_length = (Uint8)length;
+						levelMap >> comparaison;
+						if (comparaison.compare("map_height=") == 0) {
+							levelMap >> height;
+							sysinfo.map.map_height = (Uint8)height;
+
+							for (Uint8 x = 0; x < sysinfo.map.map_length; x++) {
+								sysinfo.map.matriceMapWall.push_back(blank);
+								for (Uint8 y = 0; y < sysinfo.map.map_height; y++) {
+									levelMap >> wall;
+									sysinfo.map.matriceMapWall[x].push_back(wall);
+								}
+							}
+							return;
+						}
+					}
+				}
 			}
-			else {
-				blankTile.wall = false;
-				blankTile.entity = gold;
-			}
-			map.matriceMap[x].push_back(blankTile);
 		}
 	}
-	// ouverture
-	initTile(map.matriceMap[0][12], false, nothing);
-	initTile(map.matriceMap[map.map_length - 1][12], false, nothing);
+	else
+		std::cout << std::endl << "ERREUR: Impossible d'ouvrir le fichier : " + sysinfo.file.levelMap;
+}
+void IHM::initGrid(Map& map) {
 
-	// 
+	map.matriceMap.clear();
+	std::vector<Tile> blank;
+	Tile blankTile;
+
+	if (map.matriceMapWall.size() == map.map_length && map.matriceMapWall[0].size() == map.map_height) {
+
+		for (Uint8 x = 0; x < map.map_length; x++) {
+			map.matriceMap.push_back(blank);
+			for (Uint8 y = 0; y < map.map_height; y++) {
+				blankTile.indexX = x;
+				blankTile.indexY = y;
+				blankTile.tile_x = TILE_SIZE * x + (SCREEN_WIDTH / 2 - (map.map_length / 2 * TILE_SIZE));
+				blankTile.tile_y = TILE_SIZE * y + (SCREEN_HEIGHT / 2 - (map.map_height / 2 * TILE_SIZE));
+
+				if (map.matriceMapWall[y][x]) {
+					blankTile.wall = true;
+					blankTile.entity = nothing;
+				}
+				else {
+					blankTile.wall = false;
+					blankTile.entity = gold;
+				}
+				map.matriceMap[x].push_back(blankTile);
+			}
+		}
+	}
 	initTile(map.matriceMap[1][1], false, cherry);
 	initTile(map.matriceMap[1][map.map_height - 2], false, strawberry);
 	initTile(map.matriceMap[map.map_length - 2][1], false, peach);
 	initTile(map.matriceMap[map.map_length - 2][map.map_height - 2], false, apple);
-
-	// ghost spawn
-	forme(map.matriceMap[11][11], map.matriceMap, 3, 3, false);
-	initTile(map.matriceMap[12][10], false, nothing);
-
-	// blocs de murs
-	forme(map.matriceMap[1][11], map.matriceMap, 4, 1); // 1
-	forme(map.matriceMap[1][13], map.matriceMap, 4, 1); // 2
-	forme(map.matriceMap[2][2], map.matriceMap, 4, 2); // 3
-	forme(map.matriceMap[2][5], map.matriceMap, 2, 3); // 4
-	forme(map.matriceMap[2][9], map.matriceMap, 2, 1); // 5
-	forme(map.matriceMap[2][15], map.matriceMap, 4, 2); // 6
-	forme(map.matriceMap[2][18], map.matriceMap, 1, 5); // 7
-	forme(map.matriceMap[4][18], map.matriceMap, 2, 2); // 8
-	forme(map.matriceMap[4][21], map.matriceMap, 2, 2); // 9
-	forme(map.matriceMap[5][5], map.matriceMap, 1, 5); // 10
-	initTile(map.matriceMap[6][11], true, nothing); // 11a
-	initTile(map.matriceMap[6][13], true, nothing); // 12a
-	forme(map.matriceMap[7][2], map.matriceMap, 1, 3); // 13
-	forme(map.matriceMap[7][6], map.matriceMap, 1, 2); // 11b
-	forme(map.matriceMap[7][8], map.matriceMap, 2, 4); // 11c
-	forme(map.matriceMap[7][13], map.matriceMap, 2, 4); // 12b
-	forme(map.matriceMap[7][18], map.matriceMap, 2, 3); // 14
-	forme(map.matriceMap[7][22], map.matriceMap, 4, 1); // 15a
-	forme(map.matriceMap[9][2], map.matriceMap, 2, 5); // 16
-	forme(map.matriceMap[10][8], map.matriceMap, 5, 1); // 17a
-	forme(map.matriceMap[10][10], map.matriceMap, 2, 1); // 18a
-	forme(map.matriceMap[10][11], map.matriceMap, 1, 4); // 18b
-	initTile(map.matriceMap[10][16], true, nothing); // 19
-	forme(map.matriceMap[10][18], map.matriceMap, 5, 1); // 20a
-	forme(map.matriceMap[10][20], map.matriceMap, 1, 2); // 15b
-	forme(map.matriceMap[11][14], map.matriceMap, 3, 1); // 18c
-	forme(map.matriceMap[12][1], map.matriceMap, 1, 4); // 21
-	forme(map.matriceMap[12][6], map.matriceMap, 1, 2); // 17b
-	forme(map.matriceMap[12][16], map.matriceMap, 1, 2); // 20b
-	forme(map.matriceMap[12][20], map.matriceMap, 1, 4); // 22
-	forme(map.matriceMap[13][10], map.matriceMap, 2, 1); // 18d
-	forme(map.matriceMap[14][2], map.matriceMap, 2, 5); // 23
-	forme(map.matriceMap[14][11], map.matriceMap, 1, 4); // 18e
-	initTile(map.matriceMap[14][16], true, nothing); // 24
-	forme(map.matriceMap[14][20], map.matriceMap, 1, 2); // 25a
-	forme(map.matriceMap[14][22], map.matriceMap, 4, 1); // 25b
-	forme(map.matriceMap[16][8], map.matriceMap, 2, 4); // 26a
-	forme(map.matriceMap[16][13], map.matriceMap, 2, 4); // 27a
-	forme(map.matriceMap[16][18], map.matriceMap, 2, 3); // 28
-	forme(map.matriceMap[17][2], map.matriceMap, 1, 3); // 29
-	forme(map.matriceMap[17][6], map.matriceMap, 1, 2); // 26b
-	initTile(map.matriceMap[18][11], true, nothing); // 26c
-	initTile(map.matriceMap[18][13], true, nothing); // 27b
-	forme(map.matriceMap[19][2], map.matriceMap, 4, 2); // 30
-	forme(map.matriceMap[19][5], map.matriceMap, 1, 5); // 31
-	forme(map.matriceMap[19][15], map.matriceMap, 4, 2); // 32
-	forme(map.matriceMap[19][18], map.matriceMap, 2, 2); // 33
-	forme(map.matriceMap[19][21], map.matriceMap, 2, 2); // 34
-	forme(map.matriceMap[20][11], map.matriceMap, 4, 1); // 35
-	forme(map.matriceMap[20][13], map.matriceMap, 4, 1); // 36
-	forme(map.matriceMap[21][5], map.matriceMap, 2, 3); // 37
-	forme(map.matriceMap[21][9], map.matriceMap, 2, 1); // 38
-	forme(map.matriceMap[22][18], map.matriceMap, 1, 5); // 39
 }
 void IHM::calculimage(Sysinfo& sysinfo) {
 	logfileconsole("_calculimage Start_");
@@ -292,23 +273,28 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
 		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
+		shaded, "Level 1", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2 - 150, initspacemenu += spacemenu, nonTransparent, center);
+	// set level
+	sysinfo.allButtons.buttonTexteEcranTitre[sysinfo.allButtons.buttonTexteEcranTitre.size() - 1]->SETon(true);
+	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
+		shaded, "Level 2", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, center);
+	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
+		shaded, "Level 3", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2 + 150, initspacemenu, nonTransparent, center);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
 		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
-
-	ButtonImage::createButtonImage(sysinfo.screen.renderer, sysinfo.allButtons.buttonImageEcranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "Boutons/EcranTitre/confirm.png", "confirm", nonTransparent, 1500, 0, 64, 64, center_x);
 
 
 
 
 	sysinfo.var.stateScreen = STATEplay;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTextePlay,
-		shaded, "Pause", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, 0, nonTransparent, center_x);
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTextePlay,
 		shaded, "Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTextePlay,
 		shaded, "Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64, nonTransparent);
+
+	ButtonImage::createButtonImage(sysinfo.screen.renderer, sysinfo.allButtons.buttonImagePlay, sysinfo.var.stateScreen, sysinfo.var.select,
+		IPath + "Boutons/Play/pause.jpg", "Pause", nonTransparent, SCREEN_WIDTH / 2, 0, 64, 64, center_x);
+
 
 	sysinfo.var.stateScreen = STATEscore;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteScore,
@@ -333,7 +319,7 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 
 	sysinfo.var.stateScreen = STATEplay;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
-		blended, "Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 50, nonTransparent, center_x);
+		blended, "Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 100, nonTransparent, center_x);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
 		blended, "You can move Pacman", { 0, 255, 0, 255 }, NoColor, 24, 100, 500, nonTransparent);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
@@ -428,36 +414,40 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 	switch (sysinfo.var.stateScreen) {
 	case STATEplay:
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTextePlay.size(); i++) { // recherche si une bouton est dans ces coordonnées
-			if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte((std::string)"Pause", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
-				sysinfo.allButtons.buttonTextePlay[i]->changeOn();
-				if (sysinfo.allButtons.buttonTextePlay[i]->GETon())
-					sysinfo.var.select = pause;
-				else
-					sysinfo.var.select = selectnothing;
-				return;
-			}
-			else if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte((std::string)"Save and Quit", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+			if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte("Save and Quit", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				SaveReload::save(sysinfo);
 				sysinfo.var.continuer = false;
 				return;
 			}
-			else if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte((std::string)"Go to leader board (END GAME)", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte("Go to leader board (END GAME)", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				sysinfo.var.stateScreen = STATEscore;
 				sysinfo.var.select = pause;
 				ecranScore(sysinfo);
 				return;
 			}
 		}
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonImagePlay.size(); i++) {
+			if (sysinfo.allButtons.buttonImagePlay[i]->searchButtonImage("Pause", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+				sysinfo.allButtons.buttonImagePlay[i]->changeOn();
+				if (sysinfo.allButtons.buttonImagePlay[i]->GETon())
+					sysinfo.var.select = pause;
+				else
+					sysinfo.var.select = selectnothing;
+				return;
+			}
+		}
 		break;
 	case STATEecranTitre:
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTexteEcranTitre.size(); i++) {
-			if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte((std::string)"New Game", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+			if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("New Game", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				sysinfo.var.stateScreen = STATEplay;
+				initWall(sysinfo);
 				initGrid(sysinfo.map);
 				Entity::initEntity(sysinfo.pacman, sysinfo.ghost, sysinfo.map.matriceMap);
 				return;
 			}
-			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte((std::string)"Reload", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("Reload", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+				initWall(sysinfo);
 				initGrid(sysinfo.map);
 				Entity::initEntity(sysinfo.pacman, sysinfo.ghost, sysinfo.map.matriceMap);
 				if(SaveReload::reload(sysinfo))
@@ -466,26 +456,42 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 					sysinfo.var.continuer = false;
 				return;
 			}
-			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte((std::string)"Option", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
-				sysinfo.var.continuer = false;
-				return;
-			}
-			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte((std::string)"Quit", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
-				sysinfo.var.continuer = false;
-				return;
-			}
-		}
-		for (unsigned int i = 0; i < sysinfo.allButtons.buttonImageEcranTitre.size(); i++) {
-			if (sysinfo.allButtons.buttonImageEcranTitre[i]->searchButtonImage((std::string)"confirm", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
-				sysinfo.allButtons.buttonImageEcranTitre[i]->changeOn();
+			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("Level 1", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+				for (unsigned int k = 0; k < sysinfo.allButtons.buttonTexteEcranTitre.size(); k++)
+					sysinfo.allButtons.buttonTexteEcranTitre[k]->SETon(false);
+				sysinfo.allButtons.buttonTexteEcranTitre[i]->changeOn();
+				if (sysinfo.allButtons.buttonTexteEcranTitre[i]->GETon())
+					sysinfo.map.levelMap = 0;
 				ecranTitre(sysinfo);
+				return;
+			}
+			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("Level 2", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+				for (unsigned int k = 0; k < sysinfo.allButtons.buttonTexteEcranTitre.size(); k++)
+					sysinfo.allButtons.buttonTexteEcranTitre[k]->SETon(false);
+				sysinfo.allButtons.buttonTexteEcranTitre[i]->changeOn();
+				if (sysinfo.allButtons.buttonTexteEcranTitre[i]->GETon())
+					sysinfo.map.levelMap = 1;
+				ecranTitre(sysinfo);
+				return;
+			}
+			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("Level 3", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+				for (unsigned int k = 0; k < sysinfo.allButtons.buttonTexteEcranTitre.size(); k++)
+					sysinfo.allButtons.buttonTexteEcranTitre[k]->SETon(false);
+				sysinfo.allButtons.buttonTexteEcranTitre[i]->changeOn();
+				if (sysinfo.allButtons.buttonTexteEcranTitre[i]->GETon())
+					sysinfo.map.levelMap = 2;
+				ecranTitre(sysinfo);
+				return;
+			}
+			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("Quit", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+				sysinfo.var.continuer = false;
 				return;
 			}
 		}
 		break;
 	case STATEscore:
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTexteScore.size(); i++) {
-			if (sysinfo.allButtons.buttonTexteScore[i]->searchButtonTexte((std::string)"Return to Title Screen", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
+			if (sysinfo.allButtons.buttonTexteScore[i]->searchButtonTexte("Return to Title Screen", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				sysinfo.var.select = selectnothing;
 				ecranTitre(sysinfo);
 				return;
@@ -505,16 +511,16 @@ void IHM::ecranTitre(Sysinfo& sysinfo) {
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 	for (unsigned int i = 0; i < sysinfo.allTextes.txtecranTitre.size(); i++)
-		sysinfo.allTextes.txtecranTitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.stateScreen, sysinfo.var.select);
+		sysinfo.allTextes.txtecranTitre[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 
 	for (unsigned int i = 0; i < sysinfo.allTextures.imgecranTitre.size(); i++)
-		sysinfo.allTextures.imgecranTitre[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.stateScreen, sysinfo.var.select);
+		sysinfo.allTextures.imgecranTitre[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 
 	for (unsigned int i = 0; i < sysinfo.allButtons.buttonTexteEcranTitre.size(); i++)
-		sysinfo.allButtons.buttonTexteEcranTitre[i]->renderButtonTexte(sysinfo.screen.renderer, sysinfo.var.stateScreen);
+		sysinfo.allButtons.buttonTexteEcranTitre[i]->renderButtonTexte(sysinfo.var.stateScreen);
 
 	for (unsigned int i = 0; i < sysinfo.allButtons.buttonImageEcranTitre.size(); i++)
-		sysinfo.allButtons.buttonImageEcranTitre[i]->renderButtonImage(sysinfo.screen.renderer, sysinfo.var.stateScreen);
+		sysinfo.allButtons.buttonImageEcranTitre[i]->renderButtonImage(sysinfo.var.stateScreen);
 
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
@@ -543,16 +549,16 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
 	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
-		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.stateScreen, sysinfo.var.select);
+		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 	for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++) {
-		if (sysinfo.allTextes.txtScore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
+		if (sysinfo.allTextes.txtScore[i]->renderTextureTestString("TOP 10 SCORES"))
 			break;
 	}
 		
 
 	if (position != -1) { // si dans le top 10
 		for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++)
-			sysinfo.allTextes.txtScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.stateScreen, sysinfo.var.select);
+			sysinfo.allTextes.txtScore[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 		SDL_RenderPresent(sysinfo.screen.renderer);
 		sysinfo.var.saveReload.GETtabScorePlayerNONCONST()[position].name = getName(sysinfo.screen.renderer,sysinfo.allTextes.font,
 			sysinfo.var, sysinfo.allTextes.txtScore, sysinfo.allTextes.tabScore, position);
@@ -561,13 +567,13 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
 	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
-		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.stateScreen, sysinfo.var.select);
+		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 	for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++) {
-		if (sysinfo.allTextes.txtScore[i]->renderTextureTestString(sysinfo.screen.renderer, "TOP 10 SCORES"))
+		if (sysinfo.allTextes.txtScore[i]->renderTextureTestString("TOP 10 SCORES"))
 			break;
 	}
 	for (unsigned int i = 0; i < sysinfo.allButtons.buttonTexteScore.size(); i++)
-		sysinfo.allButtons.buttonTexteScore[i]->renderButtonTexte(sysinfo.screen.renderer, sysinfo.var.stateScreen);
+		sysinfo.allButtons.buttonTexteScore[i]->renderButtonTexte(sysinfo.var.stateScreen);
 	SDL_RenderPresent(sysinfo.screen.renderer);
 
 	logfileconsole("_ecranTitres End_");
@@ -585,24 +591,15 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 		SDL_SetRenderDrawColor(sysinfo.screen.renderer, 128, 128, 128, 0xFF);
 		afficherMap(sysinfo);
 
-		
-		sysinfo.var.gameTime.t2RealTime = clock();
-		calculTime(sysinfo.var.gameTime);
-		if (!sysinfo.var.gameTime.startTimerRealTime) {
-			sysinfo.var.gameTime.startTimerRealTime = true;
-			sysinfo.var.gameTime.t1RealTime = clock();
+		sysinfo.var.gameTime.SETt2RealTime(clock());
+		if (sysinfo.var.select != pause) 
+			sysinfo.var.gameTime.calculTime();
+		if (!sysinfo.var.gameTime.GETstartTimerRealTime()) {
+			sysinfo.var.gameTime.SETstartTimerRealTime(true);
+			sysinfo.var.gameTime.SETt1RealTime(clock());
 		}
+		sysinfo.var.gameTime.affichage(sysinfo.screen.renderer, sysinfo.allTextes.font);
 		
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, blended, "Run Time : " +
-			std::to_string(sysinfo.var.gameTime.hoursRunTime) + ":"+ std::to_string(sysinfo.var.gameTime.minutesRunTime) + ":"
-			+ std::to_string(sysinfo.var.gameTime.secondsRunTime), Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
-
-		std::ostringstream stream;
-		stream << std::fixed << std::setprecision(0) << (((double)sysinfo.var.gameTime.t2RealTime - (double)sysinfo.var.gameTime.t1RealTime) / CLOCKS_PER_SEC);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, blended, "Real Time : " +
-			stream.str() + " secondes", Black, NoColor, 24, SCREEN_WIDTH - 300, 50, center_x);
-
-	
 
 		/*
 			changement de skin toutes 10 boucles (10 frames)
@@ -616,19 +613,19 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 
 
 		for (unsigned int i = 0; i < sysinfo.allTextes.txtPlay.size(); i++) {
-			sysinfo.allTextes.txtPlay[i]->renderTextureTestStates(sysinfo.screen.renderer, sysinfo.var.stateScreen, sysinfo.var.select);
+			sysinfo.allTextes.txtPlay[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 		}
 
 		//
 		std::vector<Texture*> pacmanTab[1] = { sysinfo.allTextures.pacman };
 		sysinfo.pacman->afficherStats(sysinfo.screen.renderer, sysinfo.allTextes.font);
-		sysinfo.pacman->afficher(sysinfo.screen.renderer, pacmanTab);
+		sysinfo.pacman->afficher(pacmanTab);
 
 		
 		std::vector<Texture*> ghostTab[MAX_GHOST + 1] = { sysinfo.allTextures.red, sysinfo.allTextures.blue,
 		sysinfo.allTextures.yellow, sysinfo.allTextures.pink , sysinfo.allTextures.miscGhost };
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
-			sysinfo.ghost[i]->afficher(sysinfo.screen.renderer, ghostTab);
+			sysinfo.ghost[i]->afficher(ghostTab);
 
 
 		sysinfo.var.moduloScore = (sysinfo.var.moduloScore + 1) % (SCREEN_REFRESH_RATE / 2);
@@ -637,19 +634,19 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 				sysinfo.var.tempoScore = sysinfo.pacman->GETtypeOfValue();
 			switch (sysinfo.var.tempoScore) {
 			case valuegold:
-				sysinfo.allTextes.scoreValue[gold - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[gold - 1]->render(sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuecherry:
-				sysinfo.allTextes.scoreValue[cherry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[cherry - 1]->render(sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuestrawberry:
-				sysinfo.allTextes.scoreValue[strawberry - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[strawberry - 1]->render(sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valuepeach:
-				sysinfo.allTextes.scoreValue[peach - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[peach - 1]->render(sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			case valueapple:
-				sysinfo.allTextes.scoreValue[apple - 1]->render(sysinfo.screen.renderer, sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
+				sysinfo.allTextes.scoreValue[apple - 1]->render(sysinfo.pacman->GETx() + TILE_SIZE, sysinfo.pacman->GETy() + TILE_SIZE);
 				break;
 			}
 
@@ -658,7 +655,9 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 		}
 
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTextePlay.size(); i++)
-			sysinfo.allButtons.buttonTextePlay[i]->renderButtonTexte(sysinfo.screen.renderer, sysinfo.var.stateScreen);
+			sysinfo.allButtons.buttonTextePlay[i]->renderButtonTexte(sysinfo.var.stateScreen);
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonImagePlay.size(); i++)
+			sysinfo.allButtons.buttonImagePlay[i]->renderButtonImage(sysinfo.var.stateScreen);
 
 
 		SDL_RenderPresent(sysinfo.screen.renderer);
@@ -677,11 +676,11 @@ void IHM::afficherMap(Sysinfo& sysinfo) {
 	for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
 		for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
 			if (sysinfo.map.matriceMap[i][j].wall)
-				sysinfo.allTextures.ground[blackTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
+				sysinfo.allTextures.ground[blackTile]->render(sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
 			else {
-				sysinfo.allTextures.ground[whiteTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
+				sysinfo.allTextures.ground[whiteTile]->render(sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
 				if (sysinfo.map.matriceMap[i][j].entity != nothing)
-					sysinfo.allTextures.collectibles[sysinfo.map.matriceMap[i][j].entity - 1]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
+					sysinfo.allTextures.collectibles[sysinfo.map.matriceMap[i][j].entity - 1]->render(sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
 			}
 		}
 	}
@@ -697,17 +696,6 @@ void IHM::afficherMap(Sysinfo& sysinfo) {
 		}
 	}
 	*/
-}
-void IHM::calculTime(GameTime& gameTime) {
-	gameTime.frameRunTime = (gameTime.frameRunTime + 1) % 60;
-	if (gameTime.frameRunTime == 0) {
-		gameTime.secondsRunTime = (gameTime.secondsRunTime + 1) % 60;
-		if (gameTime.secondsRunTime == 0) {
-			gameTime.minutesRunTime = (gameTime.minutesRunTime + 1) % 60;
-			if (gameTime.minutesRunTime == 0)
-				gameTime.hoursRunTime++;
-		}
-	}
 }
 
 /* *********************************************************
@@ -755,14 +743,13 @@ std::string IHM::getName(SDL_Renderer*& renderer, TTF_Font* font[], Var& var,
 
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 				SDL_RenderClear(renderer);
-				tabScore[position]->SETname(name + "      " + std::to_string(var.saveReload.GETtabScorePlayer()[position].score),
-					renderer, font);
-				tabScore[position]->SETtxtcolor(Yellow, renderer, font);
+				tabScore[position]->SETname(name + "      " + std::to_string(var.saveReload.GETtabScorePlayer()[position].score));
+				tabScore[position]->SETtxtcolor(Yellow);
 
 				for (unsigned int i = 0; i < tabScore.size(); i++)
-					tabScore[i]->renderTextureTestStates(renderer, var.stateScreen, var.select);
+					tabScore[i]->renderTextureTestStates(var.stateScreen, var.select);
 				for (unsigned int i = 0; i < txtScore.size(); i++)
-					txtScore[i]->renderTextureTestStates(renderer, var.stateScreen, var.select);
+					txtScore[i]->renderTextureTestStates(var.stateScreen, var.select);
 				SDL_RenderPresent(renderer);
 			}
 			validCharacter = false;
@@ -834,6 +821,7 @@ void IHM::deleteAll(Sysinfo& sysinfo) {
 	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonTexteScore, "Button score");
 
 	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonImageEcranTitre, "Button ecranTitre");
+	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonImagePlay, "Button play");
 
 	SDL_DestroyRenderer(sysinfo.screen.renderer);
 	SDL_DestroyWindow(sysinfo.screen.window);
@@ -842,3 +830,78 @@ void IHM::deleteAll(Sysinfo& sysinfo) {
 	logfileconsole("*********_________ End DeleteAll _________*********");
 }
 
+
+
+//--- GameTime --------------------------------------------------------------------------------------------------------------------------------------
+
+GameTime::GameTime(): _hoursRunTime(0), _minutesRunTime(0), _secondsRunTime(0), _frameRunTime(0),
+_t1RealTime(0), _t2RealTime(0), _startTimerRealTime(false)
+{
+}
+GameTime::~GameTime()
+{
+}
+void GameTime::calculTime() {
+	_frameRunTime = (_frameRunTime + 1) % 60;
+	if (_frameRunTime == 0) {
+		_secondsRunTime = (_secondsRunTime + 1) % 60;
+		if (_secondsRunTime == 0) {
+			_minutesRunTime = (_minutesRunTime + 1) % 60;
+			if (_minutesRunTime == 0)
+				_hoursRunTime++;
+		}
+	}
+}
+void GameTime::affichage(SDL_Renderer*& renderer, TTF_Font* font[]) {
+	Texte::writeTexte(renderer, font, blended, "Run Time : " +
+		std::to_string(_hoursRunTime) + ":" + std::to_string(_minutesRunTime) + ":"
+		+ std::to_string(_secondsRunTime), Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
+
+	std::ostringstream stream;
+	stream << std::fixed << std::setprecision(0) << (((double)_t2RealTime - (double)_t1RealTime) / CLOCKS_PER_SEC);
+	Texte::writeTexte(renderer, font, blended, "Real Time : " +
+		stream.str() + " secondes", Black, NoColor, 24, SCREEN_WIDTH - 300, 50, center_x);
+}
+Uint8 GameTime::GEThoursRunTime()const {
+	return _hoursRunTime;
+}
+Uint8 GameTime::GETminutesRunTime()const {
+	return _minutesRunTime;
+}
+Uint8 GameTime::GETsecondsRunTime()const {
+	return _secondsRunTime;
+}
+Uint8 GameTime::GETframeRunTime()const {
+	return _frameRunTime;
+}
+clock_t GameTime::GETt1RealTime()const {
+	return _t1RealTime;
+}
+clock_t GameTime::GETt2RealTime()const {
+	return _t2RealTime;
+}
+bool GameTime::GETstartTimerRealTime()const {
+	return _startTimerRealTime;
+}
+
+void GameTime::SEThoursRunTime(Uint8 hoursRunTime) {
+	_hoursRunTime = hoursRunTime;
+}
+void GameTime::SETminutesRunTime(Uint8 minutesRunTime) {
+	_minutesRunTime = minutesRunTime;
+}
+void GameTime::SETsecondsRunTime(Uint8 secondsRunTime) {
+	_secondsRunTime = secondsRunTime;
+}
+void GameTime::SETframeRunTime(Uint8 frameRunTime) {
+	_frameRunTime = frameRunTime;
+}
+void GameTime::SETt1RealTime(clock_t t1RealTime) {
+	_t1RealTime = t1RealTime;
+}
+void GameTime::SETt2RealTime(clock_t t2RealTime) {
+	_t2RealTime = t2RealTime;
+}
+void GameTime::SETstartTimerRealTime(bool startTimerRealTime) {
+	_startTimerRealTime = startTimerRealTime;
+}

@@ -22,7 +22,6 @@
 */
 
 #include "Pac_Man_lib.h"
-#include "SaveReload.h"
 
 /* *********************************************************
 			Calcul des Constantes de Pac_Man_lib.h

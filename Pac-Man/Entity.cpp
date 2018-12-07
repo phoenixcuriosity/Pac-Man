@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -62,7 +62,7 @@ void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector
 	pacman->SETindexX(1); pacman->SETindexY(1);
 
 	unsigned int x = map[map.size() / 2][map[0].size() / 2].tile_x, y = map[map.size() / 2][map[0].size() / 2].tile_y;
-	ghost.push_back(new Ghost("Red", x, y, red));
+	ghost.push_back(new Ghost("Red", map[12][9].tile_x, map[12][9].tile_y, red));
 	ghost.push_back(new Ghost("Blue", x, y, blue));
 	ghost.push_back(new Ghost("Yellow", x, y, yellow));
 	ghost.push_back(new Ghost("Pink", x, y, pink));
@@ -99,16 +99,233 @@ Entity::~Entity()
 
 //--- Algorithme ---------------------------------------------------------------------------------------------------------------------------------
 
-bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY) {
+bool Entity::notPreviousTile(std::vector<NodeA>& path, Uint8 newIndexX, Uint8 newIndexY) {
+
+	if (newIndexX == 12 && (newIndexY == 12 || newIndexY == 11))
+		return true;
 	for (unsigned int i = 0; i < path.size(); i++) {
 		if (path[i].indexX == newIndexX && path[i].indexY == newIndexY)
 			return false;
 	}
 	return true;
 }
+bool Entity::isBlock(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY, Uint8 dirChoice) {
+	switch(dirChoice){
+	case UP:
+		if (map[indexX][indexY - 1].wall)
+			return true;
+		break;
+	case LEFT:
+		if (map[indexX - 1][indexY].wall)
+			return true;
+		break;
+	case DOWN:
+		if (map[indexX][indexY + 1].wall)
+			return true;
+		break;
+	case RIGHT:
+		if (map[indexX + 1][indexY].wall)
+			return true;
+		break;
+	}
+	return false;
+}
 void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY) {
 	if (_indexX != indexX || _indexY != indexY) {
 
+		std::vector<NodeA> blankTab, newPath;
+		NodeA blankTile;
+		blankTile.indexX = _indexX; blankTile.indexY = _indexY;
+		blankTab.push_back(blankTile);
+		//tab.push_back(blankTab);
+
+		Uint8 dirChoice = 10;
+		Uint8 deltaX = 0;
+		Uint8 deltaY = 0;
+
+
+		for (unsigned int i = 0; i < blankTab.size(); i++) {
+			deltaX = abs(blankTab[i].indexX - indexX);
+			deltaY = abs(blankTab[i].indexY - indexY);
+			if (deltaX > deltaY) {
+				if (blankTab[i].indexX > indexX) { // vers la gauche
+					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
+						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
+							if (blankTab[i].indexY > indexY) {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = DOWN;
+								}
+								else
+									dirChoice = UP;
+							}
+							else {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = UP;
+								}
+								else
+									dirChoice = DOWN;
+							}
+
+						}
+						else
+							dirChoice = RIGHT;
+					}
+					else
+						dirChoice = LEFT;
+				}
+				else {
+					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
+						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
+							if (blankTab[i].indexY > indexY) {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = DOWN;
+								}
+								else
+									dirChoice = UP;
+							}
+							else {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = UP;
+								}
+								else
+									dirChoice = DOWN;
+							}
+
+						}
+						else
+							dirChoice = LEFT;
+					}
+					else
+						dirChoice = RIGHT;
+				}
+			}
+			else {
+				if (blankTab[i].indexY > indexY) {
+					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
+						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
+							if (blankTab[i].indexX > indexX) {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = RIGHT;
+								}
+								else
+									dirChoice = LEFT;
+							}
+							else {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = LEFT;
+								}
+								else
+									dirChoice = RIGHT;
+							}
+						}
+						else
+							dirChoice = DOWN;
+					}
+					else
+						dirChoice = UP;
+				}
+				else {
+					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
+						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
+							if (blankTab[i].indexX > indexX) {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = RIGHT;
+								}
+								else
+									dirChoice = LEFT;
+							}
+							else {
+								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
+									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
+										dirChoice = 10;
+									}
+									else
+										dirChoice = LEFT;
+								}
+								else
+									dirChoice = RIGHT;
+							}
+						}
+						else
+							dirChoice = UP;
+					}
+					else
+						dirChoice = DOWN;
+				}
+			}
+
+			switch (dirChoice) {
+			case UP:
+				blankTile.indexX = blankTab[i].indexX;
+				blankTile.indexY = blankTab[i].indexY - 1;
+				blankTab.push_back(blankTile);
+				break;
+			case LEFT:
+				blankTile.indexX = blankTab[i].indexX - 1;
+				blankTile.indexY = blankTab[i].indexY;
+				blankTab.push_back(blankTile);
+				break;
+			case DOWN:
+				blankTile.indexX = blankTab[i].indexX;
+				blankTile.indexY = blankTab[i].indexY + 1;
+				blankTab.push_back(blankTile);
+				break;
+			case RIGHT:
+				blankTile.indexX = blankTab[i].indexX + 1;
+				blankTile.indexY = blankTab[i].indexY;
+				blankTab.push_back(blankTile);
+				break;
+			}
+
+			if (blankTile.indexX == indexX && blankTile.indexY == indexY) {
+				if (blankTab[0].indexX != blankTab[1].indexX) {
+					if (blankTab[1].indexX < blankTab[0].indexX)
+						_nextHeading = LEFT;
+					else
+						_nextHeading = RIGHT;
+				}
+				else {
+					if (blankTab[1].indexY < blankTab[0].indexY)
+						_nextHeading = UP;
+					else
+						_nextHeading = DOWN;
+				}
+
+				return;
+			}
+		}
+
+
+
+		/*
 		std::vector<Node> blankTab, newPath;
 		Node blankTile;
 		blankTile.indexX = _indexX; blankTile.indexY = _indexY;
@@ -170,6 +387,7 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		}
 
 		_tabPath.clear();
+		*/
 	}
 }
 
@@ -561,7 +779,7 @@ void Pacman::goHomeGhost() {
 }
 void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
 	Texte::writeTexte(renderer, font,
-		blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 76, center_x);
+		blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 126, center_x);
 	Texte::writeTexte(renderer, font,
 		shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
 	Texte::writeTexte(renderer, font,
@@ -570,13 +788,13 @@ void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
 		Texte::writeTexte(renderer,font,
 			blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / 60), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
 }
-void Pacman::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) {
+void Pacman::afficher(std::vector<Texture*> tabTexture[]) {
 	std::string pacmanPos[MAX_POS] = { "U", "L", "D", "R" }, pacmanSkin[MAX_SKIN] = { "1", "2" };
 	unsigned int skin = 0;
 	if (this->GETalternateSkin())
 		skin = 1;
 	for (unsigned int i = 0; i < tabTexture[0].size(); i++) {
-		if (tabTexture[0][i]->renderTextureTestString(renderer, "pacman_" + pacmanPos[this->GETcurrentHeading()]
+		if (tabTexture[0][i]->renderTextureTestString("pacman_" + pacmanPos[this->GETcurrentHeading()]
 			+ "_" + pacmanSkin[skin] + ".png", this->GETx(), this->GETy()))
 			return;
 	}
@@ -727,7 +945,7 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 void Ghost::goHomeGhost() {
 	_goHome = false;
 }
-void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]) {
+void Ghost::afficher(std::vector<Texture*> tabTexture[]) {
 	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAX_POS] = { "U", "L", "D", "R" }, ghostSkin[MAX_SKIN] = { "1", "2" };
 	Uint8 skin = 0;
 	if (this->GETalternateSkin())
@@ -735,18 +953,18 @@ void Ghost::afficher(SDL_Renderer*& renderer, std::vector<Texture*> tabTexture[]
 
 	if (_goHome) {
 		for(unsigned int i = 0; i < tabTexture[MAX_GHOST].size(); i++)
-			tabTexture[MAX_GHOST][i]->renderTextureTestString(renderer, "goHome.png", this->GETx(), this->GETy());
+			tabTexture[MAX_GHOST][i]->renderTextureTestString("goHome.png", this->GETx(), this->GETy());
 	}
 	else {
 		if (this->GETinvincible()) {
 			for (unsigned int i = 0; i < tabTexture[_type].size(); i++) {
-				if (tabTexture[_type][i]->renderTextureTestString(renderer, ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
+				if (tabTexture[_type][i]->renderTextureTestString(ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
 					"_" + ghostSkin[skin] + ".png", this->GETx(), this->GETy()))
 					return;
 			}
 		}
 		else
-			tabTexture[MAX_GHOST][skin]->render(renderer, this->GETx(), this->GETy());
+			tabTexture[MAX_GHOST][skin]->render(this->GETx(), this->GETy());
 	}
 }
 Uint8 Ghost::GETtype()const {

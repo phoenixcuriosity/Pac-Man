@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -42,12 +42,13 @@
 #include "SDL2-2.0.8/include/SDL.h"
 #include "SDL2-2.0.8/include/SDL_ttf.h"
 #include "SDL2-2.0.8/include/SDL_image.h"
+#include "SDL2-2.0.8/include/SDL_mixer.h"
 
 typedef struct Node Node;
+typedef struct NodeA NodeA;
 typedef struct ScorePlayer ScorePlayer;
 typedef struct Screen Screen;
 typedef struct File File;
-typedef struct GameTime GameTime;
 typedef struct Var Var;
 typedef struct Tile Tile;
 typedef struct AllTextures AllTextures;
@@ -57,6 +58,7 @@ typedef struct Map Map;
 typedef struct Sysinfo Sysinfo;
 
 class IHM;
+class GameTime;
 class Texture;
 class Texte;
 class ButtonImage;

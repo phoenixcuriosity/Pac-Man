@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -52,6 +52,8 @@ public:
 	// creer une forme à partir de la case visée, celle-ci représente le point en haut à gauche de la forme
 	static void forme(Tile& tmap, std::vector<std::vector<Tile>>& map, Uint8 length, Uint8 height, bool wall = true);
 	
+	static void initWall(Sysinfo& sysinfo);
+
 	// Initialisation d'un niveau unique de Pacman
 	static void initGrid(Map& map);
 	
@@ -101,15 +103,7 @@ public: // affichage
 	*/
 	static void afficherMap(Sysinfo& sysinfo);
 
-	/*
-		Affiche le temps passé depuis le début du New Game
-		Compte sur le fait que la boucle fonctionne à la fréquence de l'écran (ici 60Hz)
-		si la boucle principale prend plus que 1/60 s alors le temps affiché sera décalé
-	*/
-	static void calculTime(GameTime& gameTime);
-
-
-
+	
 
 	/* *********************************************************
 						 End Game
@@ -136,7 +130,6 @@ public:
 	// Destruction des allocations dynamiques et de la fenetre
 	static void deleteAll(Sysinfo&);
 };
-
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 	unsigned int size = dytab.size();
@@ -153,5 +146,61 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 		IHM::logfileconsole("Delete ALL " + name + " Success");
 }
 
+#endif IHM_H
 
-#endif
+#ifndef GameTime_H
+#define GameTime_H
+//--- GameTime --------------------------------------------------------------------------------------------------------------------------------------
+
+class GameTime {
+public:
+	GameTime();
+	~GameTime();
+
+public:
+	/*
+		Affiche le temps passé depuis le début du New Game
+		Compte sur le fait que la boucle fonctionne à la fréquence de l'écran (ici 60Hz)
+		si la boucle principale prend plus que 1/60 s alors le temps affiché sera décalé
+	*/
+	void calculTime();
+
+	void affichage(SDL_Renderer*& renderer, TTF_Font* font[]);
+
+public:
+	Uint8 GEThoursRunTime()const;
+	Uint8 GETminutesRunTime()const;
+	Uint8 GETsecondsRunTime()const;
+	Uint8 GETframeRunTime()const;
+	clock_t GETt1RealTime()const;
+	clock_t GETt2RealTime()const;
+	bool GETstartTimerRealTime()const;
+
+	void SEThoursRunTime(Uint8 hoursRunTime);
+	void SETminutesRunTime(Uint8 minutesRunTime);
+	void SETsecondsRunTime(Uint8 secondsRunTime);
+	void SETframeRunTime(Uint8 frameRunTime);
+	void SETt1RealTime(clock_t t1RealTime);
+	void SETt2RealTime(clock_t t2RealTime);
+	void SETstartTimerRealTime(bool startTimerRealTime);
+
+private:
+	// nombre d'heures de jeu
+	Uint8 _hoursRunTime;
+
+	// nombre de minutes de jeu, modulo 60
+	Uint8 _minutesRunTime;
+
+	// nombre de seconde de jeu, modulo 60
+	Uint8 _secondsRunTime;
+
+	Uint8 _frameRunTime;
+
+	// temps initial démarré en meme temps que frame  (référence)
+	clock_t _t1RealTime;
+
+	clock_t _t2RealTime;
+
+	bool _startTimerRealTime;
+};
+#endif GameTime_H

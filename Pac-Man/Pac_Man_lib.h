@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -29,6 +29,7 @@
 #include "IHM.h"
 #include "Entity.h"
 #include "SaveReload.h"
+#include "Texture.h"
 
 /* *********************************************************
 						 Constantes
@@ -61,103 +62,14 @@ Uint8 getRefreshRate();
 const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
 
-//--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
-
-// nombre maximal d'objets Ghost dans les tableau (peut servir d'index) 
-const Uint8 MAX_GHOST = 4;
-
-// nombre maximal de positions cardinales, lié à -> enum Heading_Type: Uint8 { UP, LEFT, DOWN, RIGHT };
-const Uint8 MAX_POS = 4;
-
-// nombre maximal d'animations par position cardinal
-const Uint8 MAX_SKIN = 2;
-
-// nombre maximal de polices de la font (ici arial)
-const Uint8 MAX_FONT = 160;
-
-//--- Constantes concernant les objets Entity  ------------------------------------------------------------------------------------------------------
-
-// temps en nombre de cycle de la boucle principale (60 boucles/s -> 600 boucles = 10s)
-const Uint16 TEMPO_INVINCIBLE = 600;
-
-// vitesse des objets Entity en pixel
-const Uint8 INITIAL_VELOCITY = 2;
-
-//--- Constantes concernant la SDL  -----------------------------------------------------------------------------------------------------------------
-
-/*
-	SDL_Color name {Red, Green, Blue, Alpha (transparance)} 
-	chaque parametre est codé sur 8 bit -> Uint8  (de 0 à 255)
-*/
-
-const SDL_Color Black = { 0, 0, 0, 255 };
-const SDL_Color White = { 255, 255, 255, 255 };
-const SDL_Color Red = { 255, 0, 0, 255 };
-const SDL_Color Green = { 0, 255, 0, 255 };
-const SDL_Color Blue = { 0, 0, 255, 255 };
-const SDL_Color Yellow = { 255, 255, 0, 255 };
-const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
-const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
-const SDL_Color NoColor = { 0, 0, 0, 0 };
-
-// font utilisée pour ce programme
-const std::string fontFile = "arial.ttf";
 
 
 /* *********************************************************
 						 Enum
   ********************************************************* */
-//--- enum concernant les objets Texture  -----------------------------------------------------------------------------------------------------------
-
-/*
-	* type de texte :
-	*	-> blended : sans couleur de fond
-	*	-> shaded : avec une couleur de fond
-*/
-enum Texte_Type : Uint8 { NA, blended, shaded};
-
-/*
-	* type de transparance :
-	*	-> 0 transparance totale
-	*	-> 255 totalement visible
-*/
-enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTransparent = 255 };
-
-/*
-	* type de centrage :	
-	*	-> nocenter : les positions x et y ne changent pas
-	*	-> center_x : la position y ne change pas et centre la position x en focntion de la longueur du texte
-	*	-> center_y : la position x ne change pas et centre la position y en focntion de hauteur du texte
-	*	-> center : centre totalement le texte en fonction de sa longueur et de sa hauteur
-*/
-enum Center_Type: Uint8 { nocenter, center_x, center_y, center };
 
 // contient les index concernant le tableau de Texture ground
 enum Ground_Type: Uint8 { blackTile, whiteTile, mapTile}; 
-
-//--- enum concernant les objets Entity  -----------------------------------------------------------------------------------------------------------
-
-// contient les différents type de Ghost
-enum Ghost_Type: Uint8 { red, blue, yellow, pink};
-
-// type de directions
-enum Heading_Type: Uint8 { UP, LEFT, DOWN, RIGHT };
-
-/* 
-	* type de retour des fonctions Pacman::move et Ghost::move
-	*	-> Not_Valid : la condition de mouvement n'est pas validée
-	*	-> validCondition : la contion de mouvement est validée tout de suite
-	*	-> validNextHeading : la condition de mouvement n'est pas validée tout de suite mais est gardé en mémoire
-*/
-enum Validation_Type: Uint8 { Not_Valid, validCondition, validNextHeading};
-
-//--- enum concernant les valeurs des bonus  -------------------------------------------------------------------------------------------------------
-
-// type de bonus sur la map
-enum Bonus_Type: Uint8 { nothing, gold, cherry, strawberry, peach, apple, key};
-
-// type de valeur des bonus
-enum BonusValue_Type{ nothing1, valuegold = 100, valuecherry = 200, valuestrawberry = 400, valuepeach = 800, valueapple = 1600, ghost1 = 800, ghost2 = 1600, ghost3 = 3200, ghost4 = 10000,valuekey = 5000};
 
 //--- enum concernant l'état dans le quel ce trouve le programme  ----------------------------------------------------------------------------------
 
@@ -174,42 +86,20 @@ enum Select_Type: Uint8 { selectnothing, pause, win, lost };
   ********************************************************* */
 //---------------------- Structure niveau 2 ---------------------------------------------------------------------------------------------------------
 /*
-	*	structure contenant les données en rapport avec le temps du programme
-*/
-struct GameTime {
-	// nombre d'heures de jeu
-	Uint8 hoursRunTime = 0;
-
-	// nombre de minutes de jeu, modulo 60
-	Uint8 minutesRunTime = 0;
-
-	// nombre de seconde de jeu, modulo 60
-	Uint8 secondsRunTime = 0;
-
-	Uint8 frameRunTime = 0;
-
-	// temps initial démarré en meme temps que frame  (référence)
-	clock_t t1RealTime = 0;
-	
-	clock_t t2RealTime = 0;
-
-	bool startTimerRealTime = false;
-};
-/*
 	*	Structure décrivant une case dans la map
 */
 struct Tile {
 	// numéro de la case en x map[x][y]
-	Uint8 indexX = 0; 
+	Uint8 indexX = NULL; 
 
 	// numéro de la case en y map[x][y]
-	Uint8 indexY = 0; 
+	Uint8 indexY = NULL;
 
 	// position en x sur l'écran
-	unsigned int tile_x = 0;
+	unsigned int tile_x = NULL;
 
 	// position en y sur l'écran
-	unsigned int tile_y = 0;
+	unsigned int tile_y = NULL;
 
 	// s'il y a un mur ou non
 	bool wall = false;
@@ -230,9 +120,10 @@ struct Screen {
 */
 struct File {
 	const std::string log = "log.txt";
-	const std::string score = "save/scores.txt";
-	std::string saveMap = "save/saveMap.txt";
-	std::string saveEntity = "save/saveEntity.txt";
+	const std::string score = "save/scores.save";
+	const std::string saveMap = "save/saveMap.save";
+	const std::string saveEntity = "save/saveEntity.save";
+	const std::string levelMap = "save/levelMap.pacman";
 };
 struct Var {
 	/*** type primitif	***/
@@ -240,10 +131,16 @@ struct Var {
 	// variable permettant de quitter la boucle principale donc le jeu
 	bool continuer = true;
 
-	// état de la sélection du joueur : selectnothing, pause, win, lost
+	/*
+		état de la sélection du joueur
+		enum Select_Type: Uint8 { selectnothing, pause, win, lost };
+	*/
 	Uint8 select = selectnothing;
 
-	// état de l'écran du joueur : STATEnothing, STATEecranTitre, STATEplay, STATEscore
+	/* 
+		état de l'écran du joueur
+		enum State_Type: Uint8 { STATEnothing, STATEecranTitre, STATEplay, STATEscore };
+	*/
 	Uint8 stateScreen = STATEnothing;
 
 	// variable de victoire
@@ -265,7 +162,11 @@ struct Var {
 	// classe permettant la sauvegarde et le chargement
 	SaveReload saveReload;
 
-	// structure contenant les données en rapport avec le temps du programme
+	/*
+		classe contenant les données en rapport avec le temps du programme
+		*	-> RunTime : dépend du nombre de cycle de la boucle prinicpale par seconde
+		*	-> RealTime : temps calculé par le système
+	*/
 	GameTime gameTime;
 };
 /*
@@ -334,18 +235,28 @@ struct AllButtons {
 	// tableau de boutons contenu dans l'écran play
 	std::vector<ButtonTexte*> buttonTextePlay;
 
+	// tableau de boutonsImage contenu dans l'écran play
+	std::vector<ButtonImage*> buttonImagePlay;
+
 	// tableau de boutons contenu dans l'écran Score
 	std::vector<ButtonTexte*> buttonTexteScore;
 };
 struct Map {
+
+	// Matrice contenant les murs de la map -> donné par save/levelMap.txt
+	std::vector<std::vector<bool>> matriceMapWall;
+
 	// Matrice contenant des structures Tile
 	std::vector<std::vector<Tile>> matriceMap;
 
-	// longueur de la map en TILE_SIZE
-	Uint8 map_length = 25;
+	// longueur de la map en TILE_SIZE -> donné par save/levelMap.txt
+	Uint8 map_length = NULL;
 
-	// hauteur de la map en TILE_SIZE
-	Uint8 map_height = 25;
+	// hauteur de la map en TILE_SIZE -> donné par save/levelMap.txt
+	Uint8 map_height = NULL;
+
+	// valeur courante du niveau chargé
+	Uint8 levelMap = 0;
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
 struct Sysinfo {

@@ -1,3 +1,21 @@
-﻿  IHM.cpp
-c:\users\robin\documents\github\pac-man\pac-man\ihm.cpp(691): warning C4100: 'font' : paramètre formel non référencé
+﻿  Entity.cpp
+c:\users\robin\documents\github\pac-man\pac-man\entity.cpp(693): warning C4100: 'pacman' : paramètre formel non référencé
+c:\users\robin\documents\github\pac-man\pac-man\entity.cpp(694): warning C4189: 'posi' : variable locale initialisée mais non référencée
+  main.cpp
+c:\users\robin\documents\github\pac-man\pac-man\main.cpp(65): warning C4100: 'argv' : paramètre formel non référencé
+c:\users\robin\documents\github\pac-man\pac-man\main.cpp(65): warning C4100: 'argc' : paramètre formel non référencé
+c:\users\robin\documents\github\pac-man\pac-man\main.cpp(86): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+  IHM.cpp
+c:\users\robin\documents\github\pac-man\pac-man\ihm.cpp(718): warning C4100: 'font' : paramètre formel non référencé
+  SaveReload.cpp
+  Texture.cpp
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(457): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(459): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(472): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(474): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(577): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(579): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(592): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\pac-man\pac-man\texture.cpp(594): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+  Génération de code en cours...
   Pac-Man.vcxproj -> C:\Users\Robin\Documents\GitHub\Pac-Man\Debug\Pac-Man.exe

@@ -76,6 +76,7 @@ int main(int argc, char** argv) {
 	if (IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextes.font)) {
 		if (sysinfo.var.saveReload.loadScore(sysinfo.file.score)) {
 			IHM::calculimage(sysinfo);
+			IHM::initMusic(sysinfo.music);
 
 			t2 = clock();
 			IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC) + " secondes");
@@ -83,6 +84,9 @@ int main(int argc, char** argv) {
 			IHM::ecranTitre(sysinfo);
 
 			int SDL_EnableUNICODE(SDL_ENABLE); // on azerty
+
+			Mix_PlayMusic(sysinfo.music[music_intro], -1);
+
 
 			while (sysinfo.var.continuer) {
 				/*
@@ -107,31 +111,9 @@ int main(int argc, char** argv) {
 			sysinfo.var.saveReload.saveScore(sysinfo.file.score);
 		}
 		IHM::deleteAll(sysinfo);
-		TTF_Quit();
-		IMG_Quit();
-		SDL_Quit();
 	}
 	IHM::logfileconsole("SDL_Quit Success");
 	IHM::logfileconsole("________PROGRAMME FINISH________");
 	return EXIT_SUCCESS;
 }
-
-/*
-
-Sysinfo* ptr = &sysinfo;
-
-cout << endl << (*ptr).variable.continuer;
-
-test(ptr);
-
-cout << endl << (*ptr).variable.continuer;
-ptr = nullptr;
-
-
-void test(void* ptr) {
-	cout << endl << (*(Sysinfo*)ptr).variable.continuer;
-	(*(Sysinfo*)ptr).variable.continuer= false;
-}
-
-*/
 

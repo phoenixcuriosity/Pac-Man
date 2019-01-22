@@ -135,8 +135,6 @@ public: // constructeurs et destructeur
 
 public: // Algorithme
 
-	bool isBlock(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY, Uint8 dirChoice);
-
 	/*
 		Algorithme de recherche de chemin le plus court entre 2 points
 	*/
@@ -147,7 +145,7 @@ public: // Algorithme
 		*	-> retorune false si la case se trouve déjà dans le chemin
 		*	-> retourne true si la case ne fait pas encore parti du chemin
 	*/
-	bool notPreviousTile(std::vector<NodeA>& path, Uint8 newIndexX, Uint8 newIndexY);
+	bool notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY);
 
 public: // opérations sur l'objet
 	/*

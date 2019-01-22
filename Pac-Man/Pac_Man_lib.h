@@ -61,7 +61,8 @@ Uint8 getRefreshRate();
 // fréquence de rafraichissement de l'écran en Hz
 const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
-
+// nombre de musiques
+const Uint8 MAX_MUSIC = 4;
 
 
 /* *********************************************************
@@ -69,7 +70,10 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
   ********************************************************* */
 
 // contient les index concernant le tableau de Texture ground
-enum Ground_Type: Uint8 { blackTile, whiteTile, mapTile}; 
+enum Ground_Type: Uint8 { blackTile, whiteTile}; 
+
+// contient les index concernant le tableau de Mix_Music*
+enum Music_Type : Uint8 { music_intro, music_game, music_died, music_score};
 
 //--- enum concernant l'état dans le quel ce trouve le programme  ----------------------------------------------------------------------------------
 
@@ -154,9 +158,8 @@ struct Var {
 
 	// garde la dernier valeur du bonus mangé par Pacman  
 	unsigned int tempoScore = 0;
+
 	
-
-
 	/*** type personnalisé	***/
 
 	// classe permettant la sauvegarde et le chargement
@@ -265,6 +268,9 @@ struct Sysinfo {
 
 	// contient les noms et le chemins des fichiers .txt 
 	File file;
+
+	// Musiques du jeu
+	Mix_Music *music[MAX_MUSIC] = {};
 
 	// contient des variables non organisées
 	Var var;

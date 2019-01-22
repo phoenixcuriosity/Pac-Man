@@ -23,7 +23,6 @@
 
 #include "Entity.h"
 #include "Pac_Man_lib.h"
-#include "Texture.h"
 
 
 ///////////////////////////// ENTITY //////////////////////////////
@@ -49,6 +48,7 @@ void Entity::move(Sysinfo& sysinfo) {
 		if (sysinfo.pacman->GETlife() == 0) {
 			sysinfo.var.select = lost;
 			IHM::logfileconsole("End Game");
+			Mix_PlayMusic(sysinfo.music[music_died], 1);
 		}
 		if(sysinfo.var.win) {
 			sysinfo.var.select = win;
@@ -99,243 +99,26 @@ Entity::~Entity()
 
 //--- Algorithme ---------------------------------------------------------------------------------------------------------------------------------
 
-bool Entity::notPreviousTile(std::vector<NodeA>& path, Uint8 newIndexX, Uint8 newIndexY) {
-
-	if (newIndexX == 12 && (newIndexY == 12 || newIndexY == 11))
-		return true;
+bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY) {
 	for (unsigned int i = 0; i < path.size(); i++) {
 		if (path[i].indexX == newIndexX && path[i].indexY == newIndexY)
 			return false;
 	}
 	return true;
 }
-bool Entity::isBlock(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY, Uint8 dirChoice) {
-	switch(dirChoice){
-	case UP:
-		if (map[indexX][indexY - 1].wall)
-			return true;
-		break;
-	case LEFT:
-		if (map[indexX - 1][indexY].wall)
-			return true;
-		break;
-	case DOWN:
-		if (map[indexX][indexY + 1].wall)
-			return true;
-		break;
-	case RIGHT:
-		if (map[indexX + 1][indexY].wall)
-			return true;
-		break;
-	}
-	return false;
-}
 void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY) {
 	if (_indexX != indexX || _indexY != indexY) {
 
-		std::vector<NodeA> blankTab, newPath;
-		NodeA blankTile;
-		blankTile.indexX = _indexX; blankTile.indexY = _indexY;
-		blankTab.push_back(blankTile);
-		//tab.push_back(blankTab);
-
-		Uint8 dirChoice = 10;
-		Uint8 deltaX = 0;
-		Uint8 deltaY = 0;
-
-
-		for (unsigned int i = 0; i < blankTab.size(); i++) {
-			deltaX = abs(blankTab[i].indexX - indexX);
-			deltaY = abs(blankTab[i].indexY - indexY);
-			if (deltaX > deltaY) {
-				if (blankTab[i].indexX > indexX) { // vers la gauche
-					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
-						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
-							if (blankTab[i].indexY > indexY) {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = DOWN;
-								}
-								else
-									dirChoice = UP;
-							}
-							else {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = UP;
-								}
-								else
-									dirChoice = DOWN;
-							}
-
-						}
-						else
-							dirChoice = RIGHT;
-					}
-					else
-						dirChoice = LEFT;
-				}
-				else {
-					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
-						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
-							if (blankTab[i].indexY > indexY) {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = DOWN;
-								}
-								else
-									dirChoice = UP;
-							}
-							else {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = UP;
-								}
-								else
-									dirChoice = DOWN;
-							}
-
-						}
-						else
-							dirChoice = LEFT;
-					}
-					else
-						dirChoice = RIGHT;
-				}
-			}
-			else {
-				if (blankTab[i].indexY > indexY) {
-					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
-						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
-							if (blankTab[i].indexX > indexX) {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = RIGHT;
-								}
-								else
-									dirChoice = LEFT;
-							}
-							else {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = LEFT;
-								}
-								else
-									dirChoice = RIGHT;
-							}
-						}
-						else
-							dirChoice = DOWN;
-					}
-					else
-						dirChoice = UP;
-				}
-				else {
-					if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, DOWN) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY + 1)) {
-						if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, UP) || !notPreviousTile(blankTab, blankTab[i].indexX, blankTab[i].indexY - 1)) {
-							if (blankTab[i].indexX > indexX) {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = RIGHT;
-								}
-								else
-									dirChoice = LEFT;
-							}
-							else {
-								if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, RIGHT) || !notPreviousTile(blankTab, blankTab[i].indexX + 1, blankTab[i].indexY)) {
-									if (isBlock(map, blankTab[i].indexX, blankTab[i].indexY, LEFT) || !notPreviousTile(blankTab, blankTab[i].indexX - 1, blankTab[i].indexY)) {
-										dirChoice = 10;
-									}
-									else
-										dirChoice = LEFT;
-								}
-								else
-									dirChoice = RIGHT;
-							}
-						}
-						else
-							dirChoice = UP;
-					}
-					else
-						dirChoice = DOWN;
-				}
-			}
-
-			switch (dirChoice) {
-			case UP:
-				blankTile.indexX = blankTab[i].indexX;
-				blankTile.indexY = blankTab[i].indexY - 1;
-				blankTab.push_back(blankTile);
-				break;
-			case LEFT:
-				blankTile.indexX = blankTab[i].indexX - 1;
-				blankTile.indexY = blankTab[i].indexY;
-				blankTab.push_back(blankTile);
-				break;
-			case DOWN:
-				blankTile.indexX = blankTab[i].indexX;
-				blankTile.indexY = blankTab[i].indexY + 1;
-				blankTab.push_back(blankTile);
-				break;
-			case RIGHT:
-				blankTile.indexX = blankTab[i].indexX + 1;
-				blankTile.indexY = blankTab[i].indexY;
-				blankTab.push_back(blankTile);
-				break;
-			}
-
-			if (blankTile.indexX == indexX && blankTile.indexY == indexY) {
-				if (blankTab[0].indexX != blankTab[1].indexX) {
-					if (blankTab[1].indexX < blankTab[0].indexX)
-						_nextHeading = LEFT;
-					else
-						_nextHeading = RIGHT;
-				}
-				else {
-					if (blankTab[1].indexY < blankTab[0].indexY)
-						_nextHeading = UP;
-					else
-						_nextHeading = DOWN;
-				}
-
-				return;
-			}
-		}
-
-
-
-		/*
 		std::vector<Node> blankTab, newPath;
 		Node blankTile;
 		blankTile.indexX = _indexX; blankTile.indexY = _indexY;
 		blankTab.push_back(blankTile);
 		_tabPath.push_back(blankTab);
-  
+
 		unsigned int indexTabFound = 0;
-		int8_t tabX[MAX_POS] = { -1 , 1, 0 , 0 }, tabY[MAX_POS] = { 0, 0, -1, 1};
+		int8_t tabX[MAX_POS] = { -1 , 1, 0 , 0 }, tabY[MAX_POS] = { 0, 0, -1, 1 };
 		bool breakLoop = false;
-		
+
 		for (unsigned int i = 0; i < _tabPath.size(); i++) {
 			if (!breakLoop) {
 				for (unsigned int m = 0; m < MAX_POS; m++) {
@@ -367,7 +150,7 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 			else
 				break;
 		}
-		
+
 		if (_tabPath[indexTabFound].size() > 1) {
 			if (_tabPath[0][0].indexX != _tabPath[indexTabFound][1].indexX) {
 				if (_tabPath[indexTabFound][1].indexX < _tabPath[0][0].indexX)
@@ -387,7 +170,6 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		}
 
 		_tabPath.clear();
-		*/
 	}
 }
 
@@ -766,7 +548,7 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost) {
 			IHM::logfileconsole("Pacman hit a Ghost successfully");
 		}
 		else {
-			this->SETx(608);
+			this->SETx(640);
 			this->SETy(544);
 			if (_life > 0)
 				_life--;
@@ -879,21 +661,23 @@ Uint8 Ghost::search(Map& map, Uint8 indexX, Uint8 indexY) {
 			if (isOnFullTile(map.matriceMap, i, j)) {
 				this->SETindexX(i);
 				this->SETindexY(j);
-				if (_type == red) {
-					if(_goHome)
-						findAPath(map.matriceMap, map.map_length / 2, map.map_height / 2);
-					else
-						findAPath(map.matriceMap, indexX, indexY);
-					condition = validNextHeading;
-					return condition;
-				}
+				if (_goHome)
+					findAPath(map.matriceMap, map.map_length / 2, map.map_height / 2);
 				else {
-					if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
-						condition = validCondition; // évite de changer et de revenir en arrière
-					else
+					if (_type == red || _type == blue) {
+						findAPath(map.matriceMap, indexX, indexY);
 						condition = validNextHeading;
-					return condition;
+						return condition;
+					}
+					else {
+						if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
+							condition = validCondition; // évite de changer et de revenir en arrière
+						else
+							condition = validNextHeading;
+						return condition;
+					}
 				}
+				
 			}
 			
 			if (isOnTile(map.matriceMap, i, j)) {
@@ -914,9 +698,9 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 	case red:
 		break;
 	case blue:
-		posi = pacman->GETcurrentHeading() + 2;
-		posi = posi % MAX_POS;
-		this->SETnextHeading(posi);
+		//posi = pacman->GETcurrentHeading() + 2;
+		//posi = posi % MAX_POS;
+		//this->SETnextHeading(posi);
 		break;
 	case yellow:
 		randomNextHeading = rand() % MAX_POS;

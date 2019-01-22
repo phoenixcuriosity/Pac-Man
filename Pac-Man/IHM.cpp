@@ -21,11 +21,8 @@
 
 */
 
-
 #include "IHM.h"
 #include "Pac_Man_lib.h"
-#include "Texture.h"
-#include "SaveReload.h"
 
 
 /* *********************************************************
@@ -100,6 +97,17 @@ bool IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		}
 		else
 			logfileconsole("TTF_Init Success");
+
+		
+		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+		{
+			logfileconsole("SDL_mixer could not initialize!");
+			printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+			return false;
+		}
+		else
+			logfileconsole("SDL_mixer Success");
+		
 
 
 		for (Uint8 i = 1; i < MAX_FONT; i++)
@@ -190,6 +198,13 @@ void IHM::initGrid(Map& map) {
 			}
 		}
 	}
+	forme(map.matriceMap[map.map_length / 2 - 1][map.map_height / 2 - 1], map.matriceMap, 3, 3, false);
+
+	initTile(map.matriceMap[map.map_length / 2][map.map_height / 2 - 2], false, nothing);
+
+	initTile(map.matriceMap[0][map.map_length / 2], false, nothing);
+	initTile(map.matriceMap[map.map_length - 1][map.map_height / 2], false, nothing);
+
 	initTile(map.matriceMap[1][1], false, cherry);
 	initTile(map.matriceMap[1][map.map_height - 2], false, strawberry);
 	initTile(map.matriceMap[map.map_length - 2][1], false, peach);
@@ -251,13 +266,13 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 
 	sysinfo.var.stateScreen = STATEecranTitre;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2, NULL, NULL, center);
+		IPath + "ecranTitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 600, SCREEN_HEIGHT / 2 - 50, NULL, NULL, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 500, SCREEN_HEIGHT / 2 + 400, NULL, NULL, center);
+		IPath + "ecranTitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 600, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2, NULL, NULL, center);
+		IPath + "ecranTitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 600, SCREEN_HEIGHT / 2 - 50, NULL, NULL, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 + 400, NULL, NULL, center);
+		IPath + "ecranTitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 600, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
 		IPath + "ecranTitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
 	
@@ -361,7 +376,19 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	sysinfo.var.select = selectnothing;
 	logfileconsole("_calculimage End_");
 }
+void IHM::initMusic(Mix_Music* music[]){
 
+	Mix_VolumeMusic(4);
+
+	music[music_intro] = Mix_LoadMUS("music/Codex_1.mp3");
+
+	music[music_game] = Mix_LoadMUS("music/Codex_2.mp3");
+
+	music[music_died] = Mix_LoadMUS("music/Dark Souls - You Died Sound Effect.mp3");
+
+	music[music_score] = Mix_LoadMUS("music/Codex_3.mp3");
+
+}
 
 /* *********************************************************
 						 In Game
@@ -422,6 +449,7 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 			else if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte("Go to leader board (END GAME)", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				sysinfo.var.stateScreen = STATEscore;
 				sysinfo.var.select = pause;
+				Mix_PlayMusic(sysinfo.music[music_score], -1);
 				ecranScore(sysinfo);
 				return;
 			}
@@ -444,6 +472,7 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 				initWall(sysinfo);
 				initGrid(sysinfo.map);
 				Entity::initEntity(sysinfo.pacman, sysinfo.ghost, sysinfo.map.matriceMap);
+				Mix_PlayMusic(sysinfo.music[music_game], -1);
 				return;
 			}
 			else if (sysinfo.allButtons.buttonTexteEcranTitre[i]->searchButtonTexte("Reload", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
@@ -494,6 +523,7 @@ void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 			if (sysinfo.allButtons.buttonTexteScore[i]->searchButtonTexte("Return to Title Screen", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				sysinfo.var.select = selectnothing;
 				ecranTitre(sysinfo);
+				Mix_PlayMusic(sysinfo.music[music_intro], -1);
 				return;
 			}
 		}
@@ -668,11 +698,6 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 	//cout << endl << "temps d'execution de alwaysRender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 }
 void IHM::afficherMap(Sysinfo& sysinfo) {
-	/*
-		à utiliser si besoin de changer la map -> commenter l'autre partie du code
-		screenshot de l'ecran et rogner sous paint pour n'utiliser que la map -> map.png à mettre dans le dossier image
-	*/
-	
 	for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
 		for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
 			if (sysinfo.map.matriceMap[i][j].wall)
@@ -684,18 +709,6 @@ void IHM::afficherMap(Sysinfo& sysinfo) {
 			}
 		}
 	}
-	
-
-	/*
-	sysinfo.allTextures.ground[mapTile]->render(sysinfo.screen.renderer, sysinfo.map.matriceMap[0][0].tile_x, sysinfo.map.matriceMap[0][0].tile_y);
-	for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
-		for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
-			if (!sysinfo.map.matriceMap[i][j].wall && sysinfo.map.matriceMap[i][j].entity != nothing)
-				sysinfo.allTextures.collectibles[sysinfo.map.matriceMap[i][j].entity - 1]->render(sysinfo.screen.renderer,
-					sysinfo.map.matriceMap[i][j].tile_x, sysinfo.map.matriceMap[i][j].tile_y);
-		}
-	}
-	*/
 }
 
 /* *********************************************************
@@ -823,10 +836,17 @@ void IHM::deleteAll(Sysinfo& sysinfo) {
 	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonImageEcranTitre, "Button ecranTitre");
 	deleteDyTabPlayerAndTextures(sysinfo.allButtons.buttonImagePlay, "Button play");
 
+	for(Uint8 i = 0; i < MAX_MUSIC; i++)
+		Mix_FreeMusic(sysinfo.music[i]);
 	SDL_DestroyRenderer(sysinfo.screen.renderer);
 	SDL_DestroyWindow(sysinfo.screen.window);
 	sysinfo.screen.renderer = nullptr;
 	sysinfo.screen.window = nullptr;
+
+	Mix_CloseAudio();
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
 	logfileconsole("*********_________ End DeleteAll _________*********");
 }
 

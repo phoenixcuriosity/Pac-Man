@@ -39,10 +39,10 @@
 #include <stdexcept>
 #include "wtypes.h"
 
-#include "SDL2-2.0.8/include/SDL.h"
-#include "SDL2-2.0.8/include/SDL_ttf.h"
-#include "SDL2-2.0.8/include/SDL_image.h"
-#include "SDL2-2.0.8/include/SDL_mixer.h"
+#include "SDL2-2.0.9/include/SDL.h"
+#include "SDL2-2.0.9/include/SDL_ttf.h"
+#include "SDL2-2.0.9/include/SDL_image.h"
+#include "SDL2-2.0.9/include/SDL_mixer.h"
 
 typedef struct Node Node;
 typedef struct NodeA NodeA;

@@ -65,6 +65,8 @@ public:
 	*/
 	static void calculimage(Sysinfo&);
 
+	static void initMusic(Mix_Music* music[]);
+
 
 
 

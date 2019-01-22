@@ -2,7 +2,7 @@
 
 	Pac-Man
 	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
+	last modification on this file on version:0.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
@@ -23,45 +23,6 @@
 
 #include "Pac_Man_lib.h"
 
-/* *********************************************************
-			Calcul des Constantes de Pac_Man_lib.h
-  ********************************************************* */
-
-// Donne la valeur en pixel de la longueur et de la largeur de l'écran
-Uint16 getHorizontal(){
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.right % TILE_SIZE)) == 0)
-		return (Uint16)desktop.right;
-	return (Uint16)desktop.right + (TILE_SIZE - complete);
-}
-Uint16 getVertical(){
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.bottom % TILE_SIZE)) == 0)
-		return (Uint16)desktop.bottom;
-	return (Uint16)desktop.bottom + (TILE_SIZE - complete);
-}
-// Donne la fréquence de rafraichissement de l'écran en Hz
-Uint8 getRefreshRate() {
-	DEVMODE screen;
-	memset(&screen, 0, sizeof(DEVMODE));
-	if (EnumDisplaySettings(NULL, 0, &screen)) {
-		return (Uint8)screen.dmDisplayFrequency;
-	}
-	return 0;
-}
-
-
-
-
-/* *********************************************************
-						MAIN
-  ********************************************************* */
 int main(int argc, char** argv) {
 	Sysinfo sysinfo;
 	

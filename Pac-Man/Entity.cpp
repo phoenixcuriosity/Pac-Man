@@ -657,14 +657,18 @@ Uint8 Ghost::search(Map& map, Uint8 indexX, Uint8 indexY) {
 	Uint8 condition = 0;
 	for (Uint8 i = 0; i < map.map_length; i++) {
 		for (Uint8 j = 0; j < map.map_height; j++) {
-			
+
 			if (isOnFullTile(map.matriceMap, i, j)) {
 				this->SETindexX(i);
 				this->SETindexY(j);
-				if (_goHome)
+
+				if (_goHome) {
 					findAPath(map.matriceMap, map.map_length / 2, map.map_height / 2);
+					condition = validNextHeading;
+					return condition;
+				}
 				else {
-					if (_type == red || _type == blue) {
+					if (_type == red) {
 						findAPath(map.matriceMap, indexX, indexY);
 						condition = validNextHeading;
 						return condition;
@@ -679,7 +683,7 @@ Uint8 Ghost::search(Map& map, Uint8 indexX, Uint8 indexY) {
 				}
 				
 			}
-			
+
 			if (isOnTile(map.matriceMap, i, j)) {
 				this->SETindexX(i);
 				this->SETindexY(j);

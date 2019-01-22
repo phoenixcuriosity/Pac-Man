@@ -49,15 +49,40 @@ const Uint8 TILE_SIZE = 32;
 */
 
 
-Uint16 getHorizontal();
+// Donne la valeur en pixel de la longueur et de la largeur de l'écran
+inline Uint16 getHorizontal() {
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.right % TILE_SIZE)) == 0)
+		return (Uint16)desktop.right;
+	return (Uint16)desktop.right + (TILE_SIZE - complete);
+}
 // longueur de la fenetre en pixel
 const Uint16 SCREEN_WIDTH = getHorizontal();
 
-Uint16 getVertical();
+inline Uint16 getVertical() {
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.bottom % TILE_SIZE)) == 0)
+		return (Uint16)desktop.bottom;
+	return (Uint16)desktop.bottom + (TILE_SIZE - complete);
+}
 // hauteur de la fenetre en pixel
 const Uint16 SCREEN_HEIGHT = getVertical();
 
-Uint8 getRefreshRate();
+// Donne la fréquence de rafraichissement de l'écran en Hz
+inline Uint8 getRefreshRate() {
+	DEVMODE screen;
+	memset(&screen, 0, sizeof(DEVMODE));
+	if (EnumDisplaySettings(NULL, 0, &screen)) {
+		return (Uint8)screen.dmDisplayFrequency;
+	}
+	return 0;
+}
 // fréquence de rafraichissement de l'écran en Hz
 const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 

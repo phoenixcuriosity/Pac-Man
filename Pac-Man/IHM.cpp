@@ -631,32 +631,26 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 		sysinfo.var.gameTime.affichage(sysinfo.screen.renderer, sysinfo.allTextes.font);
 		
 
-		/*
-			changement de skin toutes 10 boucles (10 frames)
-		*/
-		sysinfo.var.modulo = (sysinfo.var.modulo + 1) % (SCREEN_REFRESH_RATE / 6);
-		if (sysinfo.var.modulo == 0) {
-			sysinfo.pacman->SETalternateSkin(!sysinfo.pacman->GETalternateSkin());
+		if (sysinfo.var.select == !pause) {
+			/*
+				changement de skin toutes 10 boucles (10 frames)
+			*/
+			sysinfo.var.modulo = (sysinfo.var.modulo + 1) % (SCREEN_REFRESH_RATE / 6);
+			if (sysinfo.var.modulo == 0) {
+				sysinfo.pacman->SETalternateSkin(!sysinfo.pacman->GETalternateSkin());
+				for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
+					sysinfo.ghost[i]->SETalternateSkin(!sysinfo.ghost[i]->GETalternateSkin());
+			}
+
+			std::vector<Texture*> ghostTab[MAX_GHOST + 1] = { sysinfo.allTextures.red, sysinfo.allTextures.blue,
+			sysinfo.allTextures.yellow, sysinfo.allTextures.pink , sysinfo.allTextures.miscGhost };
 			for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
-				sysinfo.ghost[i]->SETalternateSkin(!sysinfo.ghost[i]->GETalternateSkin());
+				sysinfo.ghost[i]->afficher(ghostTab);
 		}
-
-
-		for (unsigned int i = 0; i < sysinfo.allTextes.txtPlay.size(); i++) {
-			sysinfo.allTextes.txtPlay[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
-		}
-
-		//
+		
 		std::vector<Texture*> pacmanTab[1] = { sysinfo.allTextures.pacman };
 		sysinfo.pacman->afficherStats(sysinfo.screen.renderer, sysinfo.allTextes.font);
 		sysinfo.pacman->afficher(pacmanTab);
-
-		
-		std::vector<Texture*> ghostTab[MAX_GHOST + 1] = { sysinfo.allTextures.red, sysinfo.allTextures.blue,
-		sysinfo.allTextures.yellow, sysinfo.allTextures.pink , sysinfo.allTextures.miscGhost };
-		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
-			sysinfo.ghost[i]->afficher(ghostTab);
-
 
 		sysinfo.var.moduloScore = (sysinfo.var.moduloScore + 1) % (SCREEN_REFRESH_RATE / 2);
 		if (sysinfo.pacman->GETtypeOfValue() != 0 || sysinfo.var.tempoScore != 0) {
@@ -688,6 +682,8 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 			sysinfo.allButtons.buttonTextePlay[i]->renderButtonTexte(sysinfo.var.stateScreen);
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonImagePlay.size(); i++)
 			sysinfo.allButtons.buttonImagePlay[i]->renderButtonImage(sysinfo.var.stateScreen);
+		for (unsigned int i = 0; i < sysinfo.allTextes.txtPlay.size(); i++)
+			sysinfo.allTextes.txtPlay[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 
 
 		SDL_RenderPresent(sysinfo.screen.renderer);

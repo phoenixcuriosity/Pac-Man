@@ -68,8 +68,6 @@ public:
 	static void initMusic(Mix_Music* music[]);
 
 
-
-
 	/* *********************************************************
 						 In Game
   ********************************************************* */
@@ -170,21 +168,21 @@ public:
 	void affichage(SDL_Renderer*& renderer, TTF_Font* font[]);
 
 public:
-	Uint8 GEThoursRunTime()const;
-	Uint8 GETminutesRunTime()const;
-	Uint8 GETsecondsRunTime()const;
-	Uint8 GETframeRunTime()const;
-	clock_t GETt1RealTime()const;
-	clock_t GETt2RealTime()const;
-	bool GETstartTimerRealTime()const;
+	inline Uint8 GEThoursRunTime()const { return _hoursRunTime; };
+	inline Uint8 GETminutesRunTime()const { return _minutesRunTime; };
+	inline Uint8 GETsecondsRunTime()const { return _secondsRunTime; };
+	inline Uint8 GETframeRunTime()const { return _frameRunTime; };
+	inline clock_t GETt1RealTime()const { return _t1RealTime; };
+	inline clock_t GETt2RealTime()const { return _t2RealTime; };
+	inline bool GETstartTimerRealTime()const { return _startTimerRealTime; };
 
-	void SEThoursRunTime(Uint8 hoursRunTime);
-	void SETminutesRunTime(Uint8 minutesRunTime);
-	void SETsecondsRunTime(Uint8 secondsRunTime);
-	void SETframeRunTime(Uint8 frameRunTime);
-	void SETt1RealTime(clock_t t1RealTime);
-	void SETt2RealTime(clock_t t2RealTime);
-	void SETstartTimerRealTime(bool startTimerRealTime);
+	inline void SEThoursRunTime(Uint8 hoursRunTime) { _hoursRunTime = hoursRunTime; };
+	inline void SETminutesRunTime(Uint8 minutesRunTime) { _minutesRunTime = minutesRunTime; };
+	inline void SETsecondsRunTime(Uint8 secondsRunTime) { _secondsRunTime = secondsRunTime; };
+	inline void SETframeRunTime(Uint8 frameRunTime) { _frameRunTime = frameRunTime; };
+	inline void SETt1RealTime(clock_t t1RealTime) { _t1RealTime = t1RealTime; };
+	inline void SETt2RealTime(clock_t t2RealTime) { _t2RealTime = t2RealTime; };
+	inline void SETstartTimerRealTime(bool startTimerRealTime) { _startTimerRealTime = startTimerRealTime; };
 
 private:
 	// nombre d'heures de jeu

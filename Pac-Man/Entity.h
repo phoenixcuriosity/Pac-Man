@@ -70,7 +70,7 @@ enum Heading_Type : Uint8 { UP, LEFT, DOWN, RIGHT };
 	*	-> validCondition : la contion de mouvement est validée tout de suite
 	*	-> validNextHeading : la condition de mouvement n'est pas validée tout de suite mais est gardé en mémoire
 */
-enum Validation_Type : Uint8 { Not_Valid, validCondition, validNextHeading };
+enum Validation_Type : Uint8 { Not_Valid, validCondition, validNextHeading, trySecondTime };
 
 //--- enum concernant les valeurs des bonus  -------------------------------------------------------------------------------------------------------
 
@@ -181,38 +181,38 @@ public: // affichage
 	virtual void afficher(std::vector<Texture*> tabTexture[]) = 0;
 
 public: // assesseurs
-	std::string GETname()const;
-	unsigned int GETx()const;
-	unsigned int GETy()const;
+	inline std::string GETname()const { return _name; };
+	inline unsigned int GETx()const { return _x; };
+	inline unsigned int GETy()const { return _y; };
 	// déduis de x
-	unsigned int GETxc()const;
+	inline unsigned int GETxc()const { return _x + TILE_SIZE / 2; };
 	// déduis de y
-	unsigned int GETyc()const;
-	Uint8 GETindexX()const;
-	Uint8 GETindexY()const;
-	Uint8 GETcurrentHeading()const;
-	Uint8 GETnextHeading()const;
-	bool GETalternateSkin()const;
-	bool GETinvincible()const;
-	unsigned int GETtimeInvincible()const;
-	unsigned int GETvalue()const;
-	Uint8 GETvelocity()const;
-	std::vector<std::vector<Node>> GETtabPath()const;
-	std::vector<std::vector<Node>>& GETtabPathNONCONST();
+	inline unsigned int GETyc()const { return _y + TILE_SIZE / 2; };
+	inline Uint8 GETindexX()const { return _indexX; };
+	inline Uint8 GETindexY()const { return _indexY; };
+	inline Uint8 GETcurrentHeading()const { return _currentHeading; };
+	inline Uint8 GETnextHeading()const { return _nextHeading; };
+	inline bool GETalternateSkin()const { return _alternateSkin; };
+	inline bool GETinvincible()const { return _invincible; };
+	inline unsigned int GETtimeInvincible()const { return _timeInvincible; };
+	inline unsigned int GETvalue()const { return _value; };
+	inline Uint8 GETvelocity()const { return _velocity; };
+	inline std::vector<std::vector<Node>> GETtabPath()const { return _tabPath; };
+	inline std::vector<std::vector<Node>>& GETtabPathNONCONST() { return _tabPath; };
 
-	void SETname(std::string name);
-	void SETx(unsigned int x);
-	void SETy(unsigned int y);
-	void SETindexX(Uint8 indexX);
-	void SETindexY(Uint8 indexY);
-	void SETcurrentHeading(Uint8);
-	void SETnextHeading(Uint8);
-	void SETalternateSkin(bool);
-	void SETinvincible(bool);
-	void SETtimeInvincible(unsigned int);
-	void SETvalue(unsigned int value);
-	void SETvelocity(Uint8 velocity);
-	void SETtabPath(std::vector<std::vector<Node>>& tabPath);
+	inline void SETname(std::string name) { _name = name; };
+	inline void SETx(unsigned int x) { _x = x; };
+	inline void SETy(unsigned int y) { _y = y; };
+	inline void SETindexX(Uint8 indexX) { _indexX = indexX; };
+	inline void SETindexY(Uint8 indexY) { _indexY = indexY; };
+	inline void SETcurrentHeading(Uint8 currentHeading) { _currentHeading = currentHeading; };
+	inline void SETnextHeading(Uint8 nextHeading) { _nextHeading = nextHeading; };
+	inline void SETalternateSkin(bool alternateSkin) { _alternateSkin = alternateSkin; };
+	inline void SETinvincible(bool invincible) { _invincible = invincible; };
+	inline void SETtimeInvincible(unsigned int timeInvincible) { _timeInvincible = timeInvincible; };
+	inline void SETvalue(unsigned int value) { _value = value; };
+	inline void SETvelocity(Uint8 velocity) { _velocity = velocity; };
+	inline void SETtabPath(std::vector<std::vector<Node>>& tabPath) { _tabPath = tabPath; };
 
 
 	/* *********************************************************
@@ -291,9 +291,11 @@ public: // opérations sur l'objet
 	void value(std::vector<std::vector<Tile>>& map, bool validMove);
 
 	// gestion des collisions entre Pacman et les objets Ghost
-	void collideGhost(std::vector<Ghost*>& ghost);
+	void collideGhost(std::vector<Ghost*>& ghost, Map& map);
 
 	virtual void goHomeGhost();
+
+	virtual void pathForecast(Map& map);
 
 public: // affichage
 	// affiche le nombre de vie restante et le score du joueur
@@ -301,15 +303,17 @@ public: // affichage
 
 	// affichage de la Texture en fonction de la direction et de l'alternance du skin
 	virtual void afficher(std::vector<Texture*> tabTexture[]);
-	
-public: // assesseurs
-	Uint8 GETlife()const;
-	Uint8 GETpowerUP()const;
-	unsigned int GETtypeOfValue()const;
 
-	void SETlife(Uint8 life);
-	void SETpowerUP(Uint8 powerUP);
-	void SETtypeOfValue(unsigned int);
+public: // assesseurs
+	inline Uint8 GETlife()const { return _life; };
+	inline Uint8 GETpowerUP()const { return _powerUP; };
+	inline unsigned int GETtypeOfValue()const { return _typeOfValue; };
+	inline Uint8 GETindexXpred()const { return _indexXPred; };
+	inline Uint8 GETindexYpred()const { return _indexYPred; };
+
+	inline void SETlife(Uint8 life) { _life = life; };
+	inline void SETpowerUP(Uint8 powerUP) { _powerUP = powerUP; };
+	inline void SETtypeOfValue(unsigned int typeOfValue) { _typeOfValue = typeOfValue; };
 
 private:
 	// vie restant de Pacman, valeur par défaut 3
@@ -320,6 +324,11 @@ private:
 
 	// permet de connaitre la valeur du dernier bonus mangé par pacman
 	unsigned int _typeOfValue;
+
+	// noeud de la future intersection
+	Uint8 _indexXPred;
+
+	Uint8 _indexYPred;
 };
 
 //--- Ghost -------------------------------------------------------------------------------------------------------------------------------------
@@ -345,7 +354,7 @@ public: // opérations sur l'objet
 		*	-> retourne validCondition (1) si l'objet se trouve entre 2 cases et si la future direction est différente de la direction courante
 		*	-> retourne validNextHeading (2) si l'objet se trouve sur une case pleine et si la future direction est différente de la direction courante
 	*/
-	Uint8 search(Map& map, Uint8 indexX, Uint8 indexY);
+	Uint8 search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacPred, Uint8 indexYPacPred);
 
 	// créer une nouvelle direction future en fonction du type de Ghost
 	void makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman);
@@ -357,11 +366,11 @@ public: // affichage
 	virtual void afficher(std::vector<Texture*> tabTexture[]);
 
 public: // assesseurs
-	Uint8 GETtype()const;
-	bool GETgoHome()const;
+	inline Uint8 GETtype()const { return _type; };
+	inline bool GETgoHome()const { return _goHome; };
 
-	void SETtype(Uint8 type);
-	void SETgoHome(bool goHome);
+	inline void SETtype(Uint8 type) { _type = type; };
+	inline void SETgoHome(bool goHome) { _goHome = goHome; };
 
 private:
 	// type de Ghost : red, blue, yellow, pink 

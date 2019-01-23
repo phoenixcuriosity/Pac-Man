@@ -171,30 +171,50 @@ public: // opérations sur l'objet et affichage
 	virtual bool renderTextureTestStringAndStates(std::string msg, Uint8 stateScreen, int xc = -1, int yc = -1);
 
 public: // assesseurs
-	virtual SDL_Texture* GETtexture() const;
-	virtual SDL_Texture* GETtextureNonConst();
-	virtual SDL_Rect GETdst()const;
-	virtual int GETdstx()const;
-	virtual int GETdsty()const;
-	virtual int GETdstw()const;
-	virtual int GETdsth()const;
-	virtual std::string GETname() const;
-	virtual Uint8 GETstateScreen() const;
-	virtual Uint8 GETselect()const;
-	virtual Uint8 GETalpha()const;
-	virtual Uint8 GETcenter()const;
+	inline virtual SDL_Texture* GETtexture() const { return _texture; };
+	inline virtual SDL_Texture* GETtextureNonConst() { return _texture; };
+	inline virtual SDL_Rect GETdst()const { return _dst; };
+	inline virtual int GETdstx()const { return _dst.x; };
+	inline virtual int GETdsty()const { return _dst.y; };
+	inline virtual int GETdstw()const { return _dst.w; };
+	inline virtual int GETdsth()const { return _dst.h; };
+	inline virtual std::string GETname() const { return _name; };
+	inline virtual Uint8 GETstateScreen() const { return _stateScreen; };
+	inline virtual Uint8 GETselect()const { return _select; };
+	inline virtual Uint8 GETalpha()const { return _alpha; };
+	inline virtual Uint8 GETcenter()const { return _center; };
 
-	virtual void SETtexture(SDL_Texture* texture);
-	virtual void SETdstx(int x);
-	virtual void SETdsty(int y);
-	virtual void SETdstw(int w);
-	virtual void SETdsth(int h);
-	virtual void SETname(std::string msg);
-	virtual void SETalpha(Uint8);
-	virtual void SETcenter(Uint8);
+	inline virtual void SETtexture(SDL_Texture* texture) {
+		if (_texture != texture) {
+			if (_texture != nullptr) {
+				SDL_DestroyTexture(_texture);
+				_texture = nullptr;
+			}
+			_texture = texture;
+		}
+	};
+	inline virtual void SETdstx(int x) { _dst.x = x; };
+	inline virtual void SETdsty(int y) { _dst.y = y; };
+	inline virtual void SETdstw(int w) { _dst.w = w; };
+	inline virtual void SETdsth(int h) { _dst.h = h; };
+	inline virtual void SETname(std::string msg) { _name = msg; };
+	inline virtual void SETalpha(Uint8 alpha){
+		if (_alpha != alpha) {
+			_alpha = alpha;
+			if (SDL_SetTextureAlphaMod(_texture, _alpha) != 0)
+				_alpha = 255;
+		}
+	}
+	inline virtual void SETcenter(Uint8) {
+		if (_center != center) {
+			_center = center;
+			centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
+		}
+	};
+
 
 protected:// assesseurs
-	SDL_Renderer *& GETrenderer();
+	inline SDL_Renderer *& GETrenderer() { return _renderer; };
 
 	/* *********************************************************
 						Texture::ATTRIBUTS
@@ -282,10 +302,10 @@ public:
 	virtual void resizeTexte();
 
 public: // assesseurs
-	virtual Uint8 GETtype()const;
-	virtual SDL_Color GETtxtcolor() const;
-	virtual SDL_Color GETbackcolor() const;
-	virtual Uint8 GETsize()const;
+	inline virtual Uint8 GETtype()const { return _type; };
+	inline virtual SDL_Color GETtxtcolor() const { return _txtcolor; };
+	inline virtual SDL_Color GETbackcolor() const { return _backcolor; };
+	inline virtual Uint8 GETsize()const { return _size; };
 
 	virtual void SETname(std::string msg);
 	virtual void SETtype(Uint8 type);
@@ -294,7 +314,7 @@ public: // assesseurs
 	virtual void SETbackcolor(SDL_Color backcolor);
 
 protected:
-	TTF_Font** GETfont();
+	inline TTF_Font** GETfont() { return _font; };
 
 	/* *********************************************************
 						Texte::ATTRIBUTS

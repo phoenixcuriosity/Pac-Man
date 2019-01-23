@@ -78,10 +78,10 @@ public:
 	bool loadScore(const std::string& score);
 
 public:
-	std::vector<ScorePlayer> GETtabScorePlayer()const;
-	std::vector<ScorePlayer>& GETtabScorePlayerNONCONST();
+	inline std::vector<ScorePlayer> GETtabScorePlayer()const { return _tabScorePlayer; };
+	inline std::vector<ScorePlayer>& GETtabScorePlayerNONCONST() { return _tabScorePlayer; };
 
-	void SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer);
+	inline void SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer) { _tabScorePlayer = tabScorePlayer; };
 
 	/* *********************************************************
 						ATTRIBUTS

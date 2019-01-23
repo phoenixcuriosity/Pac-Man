@@ -37,9 +37,6 @@
 
 //--- Constantes concernant l'ecran et la dimension de la fenetre  -----------------------------------------------------------------------------------
 
-// longueur et hauteur d'une case en pixel
-const Uint8 TILE_SIZE = 32;
-
 /*
 	Pendant le développement du jeux, les parametres optimaux ont été:
 	*	-> SCREEN_WIDTH = 1920 pixels 
@@ -178,7 +175,7 @@ struct Var {
 	// modulo permettant de passer un nombre de fois pré-défini par seconde (max 60/s -> flag : SDL_RENDERER_PRESENTVSYNC)
 	Uint8 modulo = 0;
 
-	// nombre de cycles ou l'on affiche la valeur du bonus mangé par Pacman  
+	// nombre de cycles où l'on affiche la valeur du bonus mangé par Pacman  
 	Uint8 moduloScore = 0;
 
 	// garde la dernier valeur du bonus mangé par Pacman  
@@ -287,6 +284,14 @@ struct Map {
 	Uint8 levelMap = 0;
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
+/*
+	* Structure où toutes les variables importantes du programme sont organisées en sous structures ou classes
+	* Contient notamement : 
+	*						-> les Textures, Boutons et Textes
+	*						-> les Entités (Ghost et Pacman)
+	*						-> les variables de la fenetre SDL
+	*						-> les variable de la map
+*/
 struct Sysinfo {
 	// contient les données en rapport à la SDL 
 	Screen screen;

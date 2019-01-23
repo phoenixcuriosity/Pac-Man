@@ -141,82 +141,6 @@ bool Texture::renderTextureTestStringAndStates(std::string msg, Uint8 stateScree
 	}
 	return false;
 }
-SDL_Texture* Texture::GETtexture() const {
-	return _texture;
-}
-SDL_Texture* Texture::GETtextureNonConst() {
-	return _texture;
-}
-SDL_Rect Texture::GETdst()const {
-	return _dst;
-}
-int Texture::GETdstx()const {
-	return _dst.x;
-}
-int Texture::GETdsty()const {
-	return _dst.y;
-}
-int Texture::GETdstw()const {
-	return _dst.w;
-}
-int Texture::GETdsth()const {
-	return _dst.h;
-}
-std::string Texture::GETname() const {
-	return _name;
-}
-Uint8 Texture::GETstateScreen() const {
-	return _stateScreen;
-}
-Uint8 Texture::GETselect() const {
-	return _select;
-}
-Uint8 Texture::GETalpha() const {
-	return _alpha;
-}
-Uint8 Texture::GETcenter() const {
-	return _center;
-}
-void Texture::SETtexture(SDL_Texture* texture) {
-	if (_texture != texture) {
-		if (_texture != nullptr) {
-			SDL_DestroyTexture(_texture);
-			_texture = nullptr;
-		}
-		_texture = texture;
-	}
-}
-void Texture::SETdstx(int x) {
-	_dst.x = x;
-}
-void Texture::SETdsty(int y) {
-	_dst.y = y;
-}
-void Texture::SETdstw(int w) {
-	_dst.w = w;
-}
-void Texture::SETdsth(int h) {
-	_dst.h = h;
-}
-void Texture::SETname(std::string msg) {
-	_name = msg;
-}
-void Texture::SETalpha(Uint8 alpha) {
-	if (_alpha != alpha) {
-		_alpha = alpha;
-		if (SDL_SetTextureAlphaMod(_texture, _alpha) != 0)
-			IHM::logSDLError(std::cout, "alpha : ");
-	}
-}
-void Texture::SETcenter(Uint8 center) {
-	if (_center != center) {
-		_center = center;
-		centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
-	}
-}
-SDL_Renderer *& Texture::GETrenderer() {
-	return _renderer;
-}
 
 
 
@@ -285,22 +209,6 @@ Texte::~Texte()
 	for (unsigned int i = 0; i < MAX_FONT; i++)
 		_font[i] = nullptr;
 }
-Uint8 Texte::GETtype()const {
-	return _type;
-}
-SDL_Color Texte::GETtxtcolor() const {
-	return _txtcolor;
-}
-SDL_Color Texte::GETbackcolor() const {
-	return _backcolor;
-}
-Uint8 Texte::GETsize()const {
-	return _size;
-}
-TTF_Font** Texte::GETfont() {
-	return _font;
-}
-
 
 void Texte::SETname(std::string msg) {
 	if (this->GETname().compare(msg) != 0) {

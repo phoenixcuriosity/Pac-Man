@@ -236,12 +236,3 @@ SaveReload::SaveReload()
 {
 }
 
-std::vector<ScorePlayer> SaveReload::GETtabScorePlayer()const {
-	return _tabScorePlayer;
-}
-std::vector<ScorePlayer>& SaveReload::GETtabScorePlayerNONCONST() {
-	return _tabScorePlayer;
-}
-void SaveReload::SETtabScorePlayer(std::vector<ScorePlayer>& tabScorePlayer) {
-	_tabScorePlayer = tabScorePlayer;
-}

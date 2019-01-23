@@ -24,6 +24,9 @@
 #ifndef lib_H
 #define lib_H
 
+/* *********************************************************
+	*				Include Standard
+********************************************************* */
 
 #include <iostream>
 #include <ostream>
@@ -39,10 +42,18 @@
 #include <stdexcept>
 #include "wtypes.h"
 
+/* *********************************************************
+	*				Include SDL
+********************************************************* */
+
 #include "SDL2-2.0.9/include/SDL.h"
 #include "SDL2-2.0.9/include/SDL_ttf.h"
 #include "SDL2-2.0.9/include/SDL_image.h"
 #include "SDL2-2.0.9/include/SDL_mixer.h"
+
+/* *********************************************************
+	*				Structures
+********************************************************* */
 
 typedef struct Node Node;
 typedef struct NodeA NodeA;
@@ -57,6 +68,11 @@ typedef struct AllButtons AllButtons;
 typedef struct Map Map;
 typedef struct Sysinfo Sysinfo;
 
+
+/* *********************************************************
+	*				Classes
+********************************************************* */
+
 class IHM;
 class GameTime;
 class Texture;
@@ -67,5 +83,12 @@ class Entity;
 class Pacman;
 class Ghost;
 class SaveReload;
+
+/* *********************************************************
+*			Constantes Principales du Programme
+********************************************************* */
+
+// longueur et hauteur d'une case en pixel
+const Uint8 TILE_SIZE = 32;
 
 #endif

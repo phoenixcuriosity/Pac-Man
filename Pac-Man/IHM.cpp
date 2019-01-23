@@ -561,20 +561,25 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 	logfileconsole("_ecranTitres Start_");
 
 	sysinfo.var.stateScreen = STATEscore;
+	
+	// recherche du top 10 et position actuel
 	int8_t position = 0;
 	ScorePlayer p; p.name = ""; p.score = sysinfo.pacman->GETvalue();
 	sysinfo.var.saveReload.GETtabScorePlayerNONCONST().push_back(p);
 	position = topScore(sysinfo.var.saveReload.GETtabScorePlayerNONCONST(), p.score);
 	
+	// destruction des Textes concernant les scores avant le classement
 	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
 		delete sysinfo.allTextes.tabScore[i];
 	sysinfo.allTextes.tabScore.clear();
+
+
+	// recréation des Textes avec la position actuel
 	unsigned int initspacemenu = 200;
 	for (unsigned int i = 0; i < sysinfo.var.saveReload.GETtabScorePlayer().size(); i++)
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.tabScore,
 			blended, sysinfo.var.saveReload.GETtabScorePlayer()[i].name + "      " + std::to_string(sysinfo.var.saveReload.GETtabScorePlayer()[i].score),
 			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, nonTransparent, center_x);
-
 
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
@@ -593,9 +598,9 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 		sysinfo.var.saveReload.GETtabScorePlayerNONCONST()[position].name = getName(sysinfo.screen.renderer,sysinfo.allTextes.font,
 			sysinfo.var, sysinfo.allTextes.txtScore, sysinfo.allTextes.tabScore, position);
 	}
-
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
+
 	for (unsigned int i = 0; i < sysinfo.allTextes.tabScore.size(); i++)
 		sysinfo.allTextes.tabScore[i]->renderTextureTestStates(sysinfo.var.stateScreen, sysinfo.var.select);
 	for (unsigned int i = 0; i < sysinfo.allTextes.txtScore.size(); i++) {
@@ -614,13 +619,12 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 
 	switch (sysinfo.var.stateScreen) {
 	case STATEplay:
-		/*
-			fond gris et affichage de la map avec les couloirs et murs
-		*/
+		//fond gris et affichage de la map avec les couloirs et murs
 		SDL_RenderClear(sysinfo.screen.renderer);
 		SDL_SetRenderDrawColor(sysinfo.screen.renderer, 128, 128, 128, 0xFF);
 		afficherMap(sysinfo);
 
+		// affichage chronomètre
 		sysinfo.var.gameTime.SETt2RealTime(clock());
 		if (sysinfo.var.select != pause) 
 			sysinfo.var.gameTime.calculTime();
@@ -642,6 +646,7 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 					sysinfo.ghost[i]->SETalternateSkin(!sysinfo.ghost[i]->GETalternateSkin());
 			}
 
+			// affichage des Ghost
 			std::vector<Texture*> ghostTab[MAX_GHOST + 1] = { sysinfo.allTextures.red, sysinfo.allTextures.blue,
 			sysinfo.allTextures.yellow, sysinfo.allTextures.pink , sysinfo.allTextures.miscGhost };
 			for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
@@ -652,6 +657,8 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 		sysinfo.pacman->afficherStats(sysinfo.screen.renderer, sysinfo.allTextes.font);
 		sysinfo.pacman->afficher(pacmanTab);
 
+
+		// afficher des valeurs des bonus mangés
 		sysinfo.var.moduloScore = (sysinfo.var.moduloScore + 1) % (SCREEN_REFRESH_RATE / 2);
 		if (sysinfo.pacman->GETtypeOfValue() != 0 || sysinfo.var.tempoScore != 0) {
 			if (sysinfo.pacman->GETtypeOfValue() != 0)
@@ -678,6 +685,7 @@ void IHM::alwaysRender(Sysinfo& sysinfo) {
 				sysinfo.var.tempoScore = 0;
 		}
 
+		// affichage des textes et boutons du menu play
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTextePlay.size(); i++)
 			sysinfo.allButtons.buttonTextePlay[i]->renderButtonTexte(sysinfo.var.stateScreen);
 		for (unsigned int i = 0; i < sysinfo.allButtons.buttonImagePlay.size(); i++)
@@ -748,6 +756,7 @@ std::string IHM::getName(SDL_Renderer*& renderer, TTF_Font* font[], Var& var,
 
 			if (validChange) {
 				if (validCharacter)
+					// rajoute un caractère si le touche enfoncé est une lettre valide
 					name += (char)event.key.keysym.sym;
 
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -755,6 +764,7 @@ std::string IHM::getName(SDL_Renderer*& renderer, TTF_Font* font[], Var& var,
 				tabScore[position]->SETname(name + "      " + std::to_string(var.saveReload.GETtabScorePlayer()[position].score));
 				tabScore[position]->SETtxtcolor(Yellow);
 
+				// maj visuel
 				for (unsigned int i = 0; i < tabScore.size(); i++)
 					tabScore[i]->renderTextureTestStates(var.stateScreen, var.select);
 				for (unsigned int i = 0; i < txtScore.size(); i++)
@@ -780,6 +790,8 @@ int8_t IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int scor
 		if (score == 0)
 			maxSize--;
 	}
+
+	// classement des scores
 	while (newTabScore.size() < maxSize) { // TOP 10 SCORES
 		for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
 			if (tabScorePlayer[i].score > player.score) {
@@ -794,6 +806,7 @@ int8_t IHM::topScore(std::vector<ScorePlayer>& tabScorePlayer, unsigned int scor
 	}
 	tabScorePlayer = newTabScore;
 
+	// retourne la position dans le top 10 du score actuel s'il est dans le top 10
 	int8_t positionToReturn = -1;
 	for (unsigned int i = 0; i < tabScorePlayer.size(); i++) {
 		if (tabScorePlayer[i].score == score)
@@ -877,47 +890,4 @@ void GameTime::affichage(SDL_Renderer*& renderer, TTF_Font* font[]) {
 	stream << std::fixed << std::setprecision(0) << (((double)_t2RealTime - (double)_t1RealTime) / CLOCKS_PER_SEC);
 	Texte::writeTexte(renderer, font, blended, "Real Time : " +
 		stream.str() + " secondes", Black, NoColor, 24, SCREEN_WIDTH - 300, 50, center_x);
-}
-Uint8 GameTime::GEThoursRunTime()const {
-	return _hoursRunTime;
-}
-Uint8 GameTime::GETminutesRunTime()const {
-	return _minutesRunTime;
-}
-Uint8 GameTime::GETsecondsRunTime()const {
-	return _secondsRunTime;
-}
-Uint8 GameTime::GETframeRunTime()const {
-	return _frameRunTime;
-}
-clock_t GameTime::GETt1RealTime()const {
-	return _t1RealTime;
-}
-clock_t GameTime::GETt2RealTime()const {
-	return _t2RealTime;
-}
-bool GameTime::GETstartTimerRealTime()const {
-	return _startTimerRealTime;
-}
-
-void GameTime::SEThoursRunTime(Uint8 hoursRunTime) {
-	_hoursRunTime = hoursRunTime;
-}
-void GameTime::SETminutesRunTime(Uint8 minutesRunTime) {
-	_minutesRunTime = minutesRunTime;
-}
-void GameTime::SETsecondsRunTime(Uint8 secondsRunTime) {
-	_secondsRunTime = secondsRunTime;
-}
-void GameTime::SETframeRunTime(Uint8 frameRunTime) {
-	_frameRunTime = frameRunTime;
-}
-void GameTime::SETt1RealTime(clock_t t1RealTime) {
-	_t1RealTime = t1RealTime;
-}
-void GameTime::SETt2RealTime(clock_t t2RealTime) {
-	_t2RealTime = t2RealTime;
-}
-void GameTime::SETstartTimerRealTime(bool startTimerRealTime) {
-	_startTimerRealTime = startTimerRealTime;
 }

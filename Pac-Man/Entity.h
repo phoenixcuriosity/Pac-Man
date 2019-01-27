@@ -28,7 +28,7 @@
 
 
 /* *********************************************************
-						 Constantes
+	*					 Constantes
   ********************************************************* */
 
 //--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ const Uint8 INITIAL_VELOCITY = 2;
 
 
 /* *********************************************************
-						 Enum
+	*					 Enum
   ********************************************************* */
 
 //--- enum concernant les objets Entity  -----------------------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ enum BonusValue_Type { nothing1, valuegold = 100, valuecherry = 200, valuestrawb
 
 
 /* *********************************************************
-						Structures
+	*					Structures
   ********************************************************* */
 
 
@@ -102,7 +102,7 @@ struct NodeA {
 
 
 /* *********************************************************
-						Classes
+	*					Classes
   ********************************************************* */
 
 //--- Entity -------------------------------------------------------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ struct NodeA {
 class Entity { 
 
 	/* *********************************************************
-						STATIC
+		*				STATIC
 	 ********************************************************* */
 public:
 	// demande un mouvement de tous les objets Entity, conditions de victoire et de défaite
@@ -126,7 +126,7 @@ public:
 
 
 	/* *********************************************************
-						METHODES
+		*				METHODES
 	 ********************************************************* */
 public: // constructeurs et destructeur
 	Entity(std::string name, unsigned int x, unsigned int y, Uint8 currentHeading, Uint8 nextHeading, unsigned int value = 0);
@@ -136,7 +136,9 @@ public: // constructeurs et destructeur
 public: // Algorithme
 
 	/*
-		Algorithme de recherche de chemin le plus court entre 2 points
+		Algorithme de recherche : 
+		*	-> actuellement implenté : glouton
+		*	-> futur version : A*
 	*/
 	void findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY);
 
@@ -216,7 +218,7 @@ public: // assesseurs
 
 
 	/* *********************************************************
-						ATTRIBUTS
+		*				ATTRIBUTS
 	 ********************************************************* */
 private: 
 	// nom de l'objet Entity

@@ -36,7 +36,7 @@
 #define Texture_H
 
 /* *********************************************************
-						 Constantes
+	*					 Constantes
   ********************************************************* */
 
 //--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ const std::string fontFile = "arial.ttf";
 
 
 /* *********************************************************
-						 Enum
+	*					 Enum
   ********************************************************* */
 
 //--- enum concernant les objets Texture  -----------------------------------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
 
 
 /* *********************************************************
-						 Classes
+	*					 Classes
   ********************************************************* */
 
 //--- Texture --------------------------------------------------------------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
 class Texture {
 
 	/* *********************************************************
-						Texture::STATIC
+	*					Texture::STATIC
 	 ********************************************************* */
 public:
 	/*
@@ -142,7 +142,7 @@ public:
 
 
 	/* *********************************************************
-						Texture::METHODES
+		*				Texture::METHODES
 	 ********************************************************* */
 public:
 	Texture(SDL_Renderer*& renderer,
@@ -217,7 +217,7 @@ protected:// assesseurs
 	inline SDL_Renderer *& GETrenderer() { return _renderer; };
 
 	/* *********************************************************
-						Texture::ATTRIBUTS
+		*				Texture::ATTRIBUTS
 	 ********************************************************* */
 private:
 	// ptr sur le renderer crée par la SDL
@@ -253,7 +253,7 @@ private:
 class Texte : public Texture {
 
 	/* *********************************************************
-						Texte::STATIC
+		*				Texte::STATIC
 	 ********************************************************* */
 public:
 	/*
@@ -279,7 +279,7 @@ public:
 
 
 	/* *********************************************************
-						Texte::METHODES
+		*				Texte::METHODES
 	 ********************************************************* */
 public:
 	Texte(SDL_Renderer*& renderer, TTF_Font* font[],
@@ -317,7 +317,7 @@ protected:
 	inline TTF_Font** GETfont() { return _font; };
 
 	/* *********************************************************
-						Texte::ATTRIBUTS
+		*				Texte::ATTRIBUTS
 	 ********************************************************* */
 private:
 
@@ -349,7 +349,7 @@ private:
 class ButtonImage : public Texture {
 
 	/* *********************************************************
-						ButtonImage::STATIC
+		*				ButtonImage::STATIC
 	 ********************************************************* */
 public:
 	/*
@@ -387,7 +387,7 @@ public: // assesseurs
 
 
 	/* *********************************************************
-						ButtonImage::ATTRIBUTS
+		*				ButtonImage::ATTRIBUTS
 	 ********************************************************* */
 private:
 	// ptr sur la SDL_Texture : image du bouton activé
@@ -420,7 +420,7 @@ private:
 class ButtonTexte : public Texte {
 
 	/* *********************************************************
-						ButtonTexte::STATIC
+		*				ButtonTexte::STATIC
 	 ********************************************************* */
 public:
 	/*
@@ -432,7 +432,7 @@ public:
 
 
 	/* *********************************************************
-						ButtonTexte::METHODES
+		*				ButtonTexte::METHODES
 	 ********************************************************* */
 public:
 	ButtonTexte(SDL_Renderer *renderer, TTF_Font *font[],
@@ -462,7 +462,7 @@ public: // assesseurs
 
 
 	/* *********************************************************
-						ButtonTexte::ATTRIBUTS
+		*				ButtonTexte::ATTRIBUTS
 	 ********************************************************* */
 private:
 	// ptr sur la SDL_Texture : image du bouton activé

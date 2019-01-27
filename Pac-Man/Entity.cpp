@@ -31,12 +31,13 @@
 	 ********************************************************* */
 void Entity::move(Sysinfo& sysinfo) {
 
+	// mouvement de tous objets Entity
 	if (sysinfo.var.stateScreen == STATEplay && sysinfo.var.select == selectnothing) {
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
 			sysinfo.ghost[i]->move(sysinfo.map, sysinfo);
 		sysinfo.pacman->move(sysinfo.map, sysinfo.ghost);
 
-
+		// recherche si Pacman a mangé toutes les pastilles
 		sysinfo.var.win = true;
 		for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
 			for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
@@ -59,11 +60,14 @@ void Entity::move(Sysinfo& sysinfo) {
 }
 void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector<std::vector<Tile>>& map) {
 	destroyEntity(pacman, ghost);
+
+	// initialisation des positions de Pacman au milieu de gauche de la grille
 	Uint8 initialPosIndexX = 3, initialPosIndexY = map[initialPosIndexX][map[initialPosIndexX].size() / 2].indexY;
 	pacman = new Pacman("player", map[initialPosIndexX][initialPosIndexY].tile_x, map[initialPosIndexX][initialPosIndexY].tile_y);
 	pacman->SETindexX(initialPosIndexX);
 	pacman->SETindexY(initialPosIndexY);
 
+	// initialisation des positions des Ghost au milieu
 	unsigned int x = map[map.size() / 2][map[0].size() / 2].tile_x, y = map[map.size() / 2][map[0].size() / 2].tile_y;
 	ghost.push_back(new Ghost("Red", x, y, red));
 	ghost.push_back(new Ghost("Blue", x, y, blue));
@@ -112,7 +116,10 @@ bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 new
 void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY) {
 	if (_indexX != indexX || _indexY != indexY) {
 
+		// tableau d'un chemin constitué de Node
 		std::vector<Node> blankTab, newPath;
+
+		// Node 1 : position initiale de l'objet
 		Node blankTile;
 		blankTile.indexX = _indexX; blankTile.indexY = _indexY;
 		blankTab.push_back(blankTile);
@@ -122,6 +129,12 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		int8_t tabX[MAX_POS] = { -1 , 1, 0 , 0 }, tabY[MAX_POS] = { 0, 0, -1, 1 };
 		bool breakLoop = false;
 
+		/* 
+		*	Recherche sur un Node si les 4 directions sont disponibles (pas de mur)
+		*		-> Si la direction testée est libre alors un nouveau chemin est créé à partir de l'ancien chemin
+		*	Chaque chemin a au moins le Node initial en commun
+		*	L'algorithme s'arrete une fois que le premier chemin trouve la cible (forcement le chemin le plus court)
+		*/
 		for (unsigned int i = 0; i < _tabPath.size(); i++) {
 			if (!breakLoop) {
 				for (unsigned int m = 0; m < MAX_POS; m++) {
@@ -154,6 +167,7 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 				break;
 		}
 
+		// affectation du nextHeading en fonction du chemin le plus court
 		if (_tabPath[indexTabFound].size() > 1) {
 			if (_tabPath[0][0].indexX != _tabPath[indexTabFound][1].indexX) {
 				if (_tabPath[indexTabFound][1].indexX < _tabPath[0][0].indexX)
@@ -181,6 +195,7 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	unsigned int nextindexX = 0, nextindexY = 0;
 
+	// recherche si la prochaine direction est disponible (pas de mur)
 	switch (pos) {
 	case UP:
 		nextindexX = _indexX;
@@ -303,6 +318,9 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 	bool validMove = false;
 	
 	if (secondLoop == -1) {
+		// cherche une première fois à faire un mouvement
+		// test avec nextHeading et currentHeading
+
 		switch (validTryToMove = search(map)) {
 		case Not_Valid:
 			break;
@@ -324,6 +342,9 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 		}
 	}
 	else {
+		// cherche une deuxième fois à faire un mouvement après l'echec du premier test de mouvement
+		// test uniquement currentHeading
+
 		if ((validTryToMove = search(map)) != Not_Valid) {
 			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
 				validMove = validCondition;
@@ -646,13 +667,6 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 	Uint8 randomNextHeading = 0;
 	bool continuer = true;
 	switch (_type) {
-	case red:
-		break;
-	case blue:
-		//posi = pacman->GETcurrentHeading() + 2;
-		//posi = posi % MAX_POS;
-		//this->SETnextHeading(posi);
-		break;
 	case yellow:
 		randomNextHeading = rand() % MAX_POS;
 		while (continuer) {

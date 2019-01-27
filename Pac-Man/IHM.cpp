@@ -222,8 +222,6 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.stateScreen, sysinfo.var.select,
 		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "map.png", "map.png", (Uint8)255, -1, -1, NULL, NULL);
 
 	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, Pos[MAX_POS] = { "U", "L", "D", "R" };
 	for (unsigned int i = 0; i < MAX_POS; i++) {
@@ -232,7 +230,7 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 				IPath + "pacman/pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", "pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
 	}
 
-	// permet de charger les 32 Textures des Ghost (8 par Ghost, dont 4 pour les position avec le 1er skin et les 4 autres pour l'autre skin(alternateskin))
+	// permet de charger les 32 Textures des Ghost (8 par Ghost, dont 4 pour les positions avec le 1er skin et les 4 autres pour l'autre skin(alternateskin))
 	std::vector<Texture*>* ghostTab[MAX_GHOST] = { &sysinfo.allTextures.red, &sysinfo.allTextures.blue,
 		&sysinfo.allTextures.yellow, &sysinfo.allTextures.pink };
 	for (unsigned int i = 0; i < MAX_GHOST; i++) { // nb de ghost
@@ -277,6 +275,12 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 		IPath + "ecranTitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
 	
 
+
+	/*
+	*	Partie obsolète
+	*	Futur version : chargement des boutons et des textes à partir d'un fichier
+	*				-> permet que l'utlisateur puisse rajouter des textes facilement (sans compilation)
+	*/
 
 	/* *********************************************************
 						 Buttons
@@ -440,7 +444,8 @@ void IHM::mouse(Sysinfo& sysinfo, SDL_Event event) {
 void IHM::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 	switch (sysinfo.var.stateScreen) {
 	case STATEplay:
-		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTextePlay.size(); i++) { // recherche si une bouton est dans ces coordonnées
+		// recherche si un bouton est dans ces coordonnées
+		for (unsigned int i = 0; i < sysinfo.allButtons.buttonTextePlay.size(); i++) { 
 			if (sysinfo.allButtons.buttonTextePlay[i]->searchButtonTexte("Save and Quit", sysinfo.var.stateScreen, event.button.x, event.button.y)) {
 				SaveReload::save(sysinfo);
 				sysinfo.var.continuer = false;

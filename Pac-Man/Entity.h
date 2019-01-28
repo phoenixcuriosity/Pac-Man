@@ -91,13 +91,13 @@ enum BonusValue_Type { nothing1, valuegold = 100, valuecherry = 200, valuestrawb
 
 // structure représentant une case de la grille pour etre utilisée dans findAPath()
 struct Node {
-	Uint8 indexX = 0;
-	Uint8 indexY = 0;
+	Uint8 indexX = NULL;
+	Uint8 indexY = NULL;
 };
 struct NodeA {
-	Uint8 indexX = 0;
-	Uint8 indexY = 0;
-	unsigned int cost = 0;
+	Uint8 indexX = NULL;
+	Uint8 indexY = NULL;
+	unsigned int cost = NULL;
 };
 
 
@@ -297,6 +297,7 @@ public: // opérations sur l'objet
 
 	virtual void goHomeGhost();
 
+	// prévision en ligne droite de la futur case de Pacman
 	virtual void pathForecast(Map& map);
 
 public: // affichage
@@ -358,7 +359,7 @@ public: // opérations sur l'objet
 	*/
 	Uint8 search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacPred, Uint8 indexYPacPred);
 
-	// créer une nouvelle direction future en fonction du type de Ghost
+	// crée une nouvelle direction future aléatoire pour pink et yellow
 	void makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman);
 
 	virtual void goHomeGhost();

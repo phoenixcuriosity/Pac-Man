@@ -19,7 +19,7 @@ Create ButtonTexte n:1 msg = Save and Quit Success
 Create ButtonImage n:0 msg = Pause Success
 Create ButtonTexte n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.676000 secondes
+temps d'execution de l'initialisation : 1.665000 secondes
 _ecranTitres Start_
 _ecranTitres End_
 Pacman is alive
@@ -27,8 +27,38 @@ Red is alive
 Blue is alive
 Yellow is alive
 Pink is alive
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
 Pacman lost a life
 Pacman lost a life
+Pacman lost a life
+End Game
+_ecranTitres Start_
+_ecranTitres End_
+_ecranTitres Start_
+_ecranTitres End_
+_ecranTitres Start_
+_ecranTitres End_
+Pacman is dead
+Red is dead
+Blue is dead
+Yellow is dead
+Pink is dead
+Pacman is alive
+Red is alive
+Blue is alive
+Yellow is alive
+Pink is alive
+Pacman lost a life
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman lost a life
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
+Pacman hit a Ghost successfully
 Pacman lost a life
 End Game
 _ecranTitres Start_
@@ -133,16 +163,11 @@ Delete txtscore Texte name = with your keyboard Success
 Delete txtscore Texte name = Remove last letter with backspace Success
 Delete txtscore Texte name = Press return when finish Success
 Delete ALL txtscore Texte Success
-Delete tabScore Texte name = robinhood      34800 Success
-Delete tabScore Texte name = kindergardenisthebest      34000 Success
-Delete tabScore Texte name = robin      33200 Success
-Delete tabScore Texte name = darksouls      32500 Success
-Delete tabScore Texte name = nibor      28700 Success
-Delete tabScore Texte name = za      28200 Success
-Delete tabScore Texte name = eve      23200 Success
-Delete tabScore Texte name = ghj      22300 Success
-Delete tabScore Texte name = gghfygyyytfy      19700 Success
-Delete tabScore Texte name = ggjj      19400 Success
+Delete tabScore Texte name = jh      27600 Success
+Delete tabScore Texte name = goal      14700 Success
+Delete tabScore Texte name = jhj      10400 Success
+Delete tabScore Texte name = 334t      6500 Success
+Delete tabScore Texte name = robin      4400 Success
 Delete ALL tabScore Texte Success
 Delete Button ecranTitre name = New Game Success
 Delete Button ecranTitre name = Reload Success

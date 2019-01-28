@@ -852,6 +852,7 @@ void IHM::deleteAll(Sysinfo& sysinfo) {
 
 	for(Uint8 i = 0; i < MAX_MUSIC; i++)
 		Mix_FreeMusic(sysinfo.music[i]);
+
 	SDL_DestroyRenderer(sysinfo.screen.renderer);
 	SDL_DestroyWindow(sysinfo.screen.window);
 	sysinfo.screen.renderer = nullptr;

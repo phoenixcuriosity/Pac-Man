@@ -39,8 +39,8 @@ void Entity::move(Sysinfo& sysinfo) {
 
 		// recherche si Pacman a mangé toutes les pastilles
 		sysinfo.var.win = true;
-		for (Uint8 i = 0; i < sysinfo.map.map_length; i++) {
-			for (Uint8 j = 0; j < sysinfo.map.map_height; j++) {
+		for (Uint8 i = 0; i < sysinfo.map.map_length && sysinfo.var.win; i++) {
+			for (Uint8 j = 0; j < sysinfo.map.map_height && sysinfo.var.win; j++) {
 				if (sysinfo.map.matriceMap[i][j].entity) {
 					sysinfo.var.win = false;
 					break;
@@ -195,7 +195,10 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	unsigned int nextindexX = 0, nextindexY = 0;
 
-	// recherche si la prochaine direction est disponible (pas de mur)
+	/*
+		recherche si la prochaine direction est disponible (pas de mur)
+			si elle est disponible l'objet ce déplace de "velocity" pixels dans cette direction
+	*/
 	switch (pos) {
 	case UP:
 		nextindexX = _indexX;
@@ -343,7 +346,7 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 	}
 	else {
 		// cherche une deuxième fois à faire un mouvement après l'echec du premier test de mouvement
-		// test uniquement currentHeading
+		// test uniquement sur currentHeading
 
 		if ((validTryToMove = search(map)) != Not_Valid) {
 			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
@@ -372,8 +375,9 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 	}
 
 	makeTheMove(validMove, pos);
-	if(validMove)
-		collideGhost(ghost, map);
+	
+	collideGhost(ghost, map);
+	
 	teleport(map.matriceMap);
 
 	pathForecast(map);
@@ -536,8 +540,9 @@ void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
 		blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 126, center_x);
 	Texte::writeTexte(renderer, font,
 		shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
-	Texte::writeTexte(renderer, font,
-		blended, std::to_string(this->GETx()) + " , " + std::to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
+	// debug positions pacman sur l'ecran
+	//Texte::writeTexte(renderer, font,
+	//	blended, std::to_string(this->GETx()) + " , " + std::to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
 	if (this->GETinvincible())
 		Texte::writeTexte(renderer,font,
 			blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / SCREEN_REFRESH_RATE), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
@@ -612,7 +617,7 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 
 	makeTheMove(validMove, pos);
 	teleport(map.matriceMap);
-	makeNextHeading(map.matriceMap, sysinfo.pacman);
+	makeNextHeading(map.matriceMap, sysinfo.pacman); 
 
 	return 0;
 }
@@ -663,11 +668,10 @@ Uint8 Ghost::search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacP
 	return condition;
 }
 void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman) {
-	Uint8 posi = 0;
 	Uint8 randomNextHeading = 0;
 	bool continuer = true;
-	switch (_type) {
-	case yellow:
+	
+	if(_type == yellow || _type == pink){
 		randomNextHeading = rand() % MAX_POS;
 		while (continuer) {
 			if (tryToMove(map, randomNextHeading)) {
@@ -677,18 +681,6 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 			randomNextHeading = rand() % MAX_POS;
 		}
 		this->SETnextHeading(randomNextHeading);
-		break;
-	case pink:
-		randomNextHeading = rand() % MAX_POS;
-		while (continuer) {
-			if (tryToMove(map, randomNextHeading)) {
-				continuer = false;
-				break;
-			}
-			randomNextHeading = rand() % MAX_POS;
-		}
-		this->SETnextHeading(randomNextHeading);
-		break;
 	}
 }
 void Ghost::goHomeGhost() {

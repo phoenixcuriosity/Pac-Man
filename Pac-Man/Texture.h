@@ -1,23 +1,24 @@
-  /*
+/*
 
-	Pac-Man
-	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
+   Pac-Man
+   Copyright SAUTER Robin (robin.sauter@orange.fr)
+   last modification on this file on version : 0.18
+   file version : 1.1
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
+   You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -95,7 +96,7 @@ enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTran
 */
 enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
 
-
+enum Rotation_Type : Uint16 {no_angle, inverse = 180};
 
 /* *********************************************************
 	*					 Classes
@@ -129,7 +130,7 @@ public:
 		*	- Uint8 cnt								- le type de centrage -> enum Center_Type
 	*/
 	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, Uint8 stateScreen, Uint8 select,
-		std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint8 cnt = nocenter);
+		std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint16 angle, Uint8 cnt = nocenter);
 
 	/*
 		permet de centrer la Texture selon :
@@ -147,7 +148,7 @@ public:
 public:
 	Texture(SDL_Renderer*& renderer,
 		SDL_Texture* image, std::string msg, Uint8 stateScreen, Uint8 select,
-		unsigned int x, unsigned int y, int w, int h, Uint8 alpha, Uint8 center = nocenter);
+		unsigned int x, unsigned int y, int w, int h, Uint8 alpha, Uint16 angle, Uint8 center = nocenter);
 	~Texture();
 
 public:
@@ -160,9 +161,6 @@ public: // opérations sur l'objet et affichage
 
 	// Test les attributs _stateScreen et _select qui correspondent au moment de l'appel puis permet de rendre la Texture au coordonnées voulues
 	virtual void renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x = -1, int y = -1);
-
-	// Test les attributs _stateScreen et _select qui correspondend au moment de l'appel puis permet de rendre la Texture au coordonnées voulues avec un angle
-	virtual void renderTextureTestStatesAngle(Uint8 stateScreen, int xc = -1, int yc = -1, unsigned int angle = 0);
 
 	// Test l'attribut _name qui correspond au moment de l'appel puis permet de rendre la Texture au coordonnées voulues
 	virtual bool renderTextureTestString(std::string msg, int xc = -1, int yc = -1);
@@ -183,6 +181,7 @@ public: // assesseurs
 	inline virtual Uint8 GETselect()const { return _select; };
 	inline virtual Uint8 GETalpha()const { return _alpha; };
 	inline virtual Uint8 GETcenter()const { return _center; };
+	inline virtual Uint16 GETangle()const { return _angle; };
 
 	inline virtual void SETtexture(SDL_Texture* texture) {
 		if (_texture != texture) {
@@ -211,7 +210,7 @@ public: // assesseurs
 			centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
 		}
 	};
-
+	inline virtual void SETangle(Uint16 angle) { _angle = angle; };
 
 protected:// assesseurs
 	inline SDL_Renderer *& GETrenderer() { return _renderer; };
@@ -243,6 +242,9 @@ private:
 
 	// centrage de la Texture (nocenter, center_x, center_y, center)
 	Uint8 _center;
+
+	// angle de rotation de la texture (0 = pas d'angle)
+	Uint16 _angle;
 };
 #endif Texture_H
 
@@ -268,14 +270,14 @@ public:
 	*/
 	static void loadTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 stateScreen, Uint8 select,
 		std::vector<Texte*>& tabTexte, Uint8 type, std::string msg,
-		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 cnt = nocenter);
+		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint16 angle, Uint8 cnt = nocenter);
 
 	/*
 		créer un ptr sur SDL_Texture temporaire pour afficher le texte à l'écran
 		le ptr et la SDL_Texture sont détruit après l'affichage
 	*/
 	static void writeTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 type, std::string msg, SDL_Color color,
-		SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint8 cnt = nocenter);
+		SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint16 angle, Uint8 cnt = nocenter);
 
 
 	/* *********************************************************
@@ -284,7 +286,7 @@ public:
 public:
 	Texte(SDL_Renderer*& renderer, TTF_Font* font[],
 		SDL_Texture* image, std::string msg, Uint8 stateScreen, Uint8 select, int x, int y, int w, int h,
-		Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, Uint8 center = nocenter);
+		Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, Uint16 angle, Uint8 center = nocenter);
 	~Texte();
 
 public: // opérations sur l'objet
@@ -356,7 +358,7 @@ public:
 		création et ajout d'un objet ButtonTexte dans le tableau de ButtonTexte choisi
 	*/
 	static void createButtonImage(SDL_Renderer*& renderer, std::vector<ButtonImage*>& tabButtonImage, Uint8 stateScreen, Uint8 select,
-		std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint8 cnt = nocenter);
+		std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint16 angle, Uint8 cnt = nocenter);
 
 	/* *********************************************************
 						ButtonImage::METHODES
@@ -364,7 +366,7 @@ public:
 public:
 	ButtonImage(SDL_Renderer*& renderer,
 		SDL_Texture* image, const std::string& msg, Uint8 stateScreen, Uint8 select, int x, int y, int w, int h,
-		Uint8 alpha, SDL_Texture* imageOn, Uint8 center = nocenter);
+		Uint8 alpha, Uint16 angle, SDL_Texture* imageOn, Uint8 center = nocenter);
 	~ButtonImage();
 
 public: // opérations sur l'objet
@@ -428,7 +430,7 @@ public:
 	*/
 	static void createButtonTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 stateScreen, Uint8 select,
 		std::vector<ButtonTexte*>& tabButtonTexte, Uint8 type, std::string msg,
-		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint8 centerButtonTexte = nocenter);
+		SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint16 angle, Uint8 centerButtonTexte = nocenter);
 
 
 	/* *********************************************************
@@ -437,7 +439,7 @@ public:
 public:
 	ButtonTexte(SDL_Renderer *renderer, TTF_Font *font[],
 		SDL_Texture* image, std::string msg, Uint8 stateScreen, Uint8 select, int x, int y, int w, int h,
-		Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, SDL_Texture* imageOn, Uint8 center = nocenter);
+		Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, Uint16 angle, SDL_Texture* imageOn, Uint8 center = nocenter);
 	~ButtonTexte();
 
 public: // opérations sur l'objet

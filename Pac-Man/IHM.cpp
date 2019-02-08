@@ -1,23 +1,24 @@
 /*
 
-	Pac-Man
-	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
+   Pac-Man
+   Copyright SAUTER Robin (robin.sauter@orange.fr)
+   last modification on this file on version : 0.18
+   file version : 1.0
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
+   You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -219,15 +220,15 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	std::string IPath = "image/";
 	sysinfo.var.stateScreen = STATEplay;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "tile32/Black.bmp", "Black.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "tile32/White.bmp", "White.bmp", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 
 	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, Pos[MAX_POS] = { "U", "L", "D", "R" };
 	for (unsigned int i = 0; i < MAX_POS; i++) {
 		for (unsigned int j = 1; j < 3; j++)
 			Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.pacman, sysinfo.var.stateScreen, sysinfo.var.select,
-				IPath + "pacman/pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", "pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+				IPath + "pacman/pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", "pacman_" + Pos[i] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	}
 
 	// permet de charger les 32 Textures des Ghost (8 par Ghost, dont 4 pour les positions avec le 1er skin et les 4 autres pour l'autre skin(alternateskin))
@@ -238,41 +239,41 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 			for (unsigned int k = 0; k < MAX_POS; k++) // UP, LEFT, DOWN, RIGHT
 				Texture::loadImage(sysinfo.screen.renderer, *ghostTab[i], sysinfo.var.stateScreen,
 						sysinfo.var.select, IPath + "Ghost/" + ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png",
-						ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+						ghostName[i] + "_" + Pos[k] + "_" + std::to_string(j) + ".png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 		}
 	}
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "Ghost/not_Invincible_B.png", "not_Invincible_B.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "Ghost/not_Invincible_B.png", "not_Invincible_B.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "Ghost/not_Invincible_W.png", "not_Invincible_W.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "Ghost/not_Invincible_W.png", "not_Invincible_W.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscGhost, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "Ghost/goHome.png", "goHome.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "Ghost/goHome.png", "goHome.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "collectibles/gold.png", "gold.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "collectibles/cherry.png", "cherry.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "collectibles/strawberry.png", "strawberry.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "collectibles/lemon.png", "lemon.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "collectibles/lemon.png", "lemon.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "collectibles/pear.png", "pear.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "collectibles/pear.png", "pear.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.collectibles, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE);
+		IPath + "collectibles/key.png", "key.png", (Uint8)255, -1, -1, TILE_SIZE, TILE_SIZE, no_angle);
 
 
 	sysinfo.var.stateScreen = STATEecranTitre;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 600, SCREEN_HEIGHT / 2 - 50, NULL, NULL, center);
+		IPath + "ecranTitre/linux.jpg", "linux.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 600, SCREEN_HEIGHT / 2 - 50, NULL, NULL, no_angle, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 600, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
+		IPath + "ecranTitre/c++.jpg", "c++.jpg", (Uint8)255, SCREEN_WIDTH / 2 + 600, SCREEN_HEIGHT / 2 + 350, NULL, NULL, no_angle, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 600, SCREEN_HEIGHT / 2 - 50, NULL, NULL, center);
+		IPath + "ecranTitre/sudo.jpg", "sudo.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 600, SCREEN_HEIGHT / 2 - 50, NULL, NULL, no_angle, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 600, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
+		IPath + "ecranTitre/PC_master_Race.jpg", "PC_master_Race.jpg", (Uint8)255, SCREEN_WIDTH / 2 - 600, SCREEN_HEIGHT / 2 + 350, NULL, NULL, no_angle, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.imgecranTitre, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "ecranTitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, NULL, NULL, center);
+		IPath + "ecranTitre/matlab.jpg", "matlab.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 350, NULL, NULL, no_angle, center);
 	
 
 
@@ -288,36 +289,36 @@ void IHM::calculimage(Sysinfo& sysinfo) {
 	int spacemenu = 64, initspacemenu = 400;
 	sysinfo.var.stateScreen = STATEecranTitre;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, center);
+		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, no_angle, center);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
+		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, no_angle, center);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "Level 1", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2 - 150, initspacemenu += spacemenu, nonTransparent, center);
+		shaded, "Level 1", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2 - 150, initspacemenu += spacemenu, nonTransparent, no_angle, center);
 	// set level
 	sysinfo.allButtons.buttonTexteEcranTitre[sysinfo.allButtons.buttonTexteEcranTitre.size() - 1]->SETon(true);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "Level 2", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, center);
+		shaded, "Level 2", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, no_angle, center);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "Level 3", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2 + 150, initspacemenu, nonTransparent, center);
+		shaded, "Level 3", Yellow, BackColorButton, 32, SCREEN_WIDTH / 2 + 150, initspacemenu, nonTransparent, no_angle, center);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteEcranTitre,
-		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, center);
+		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, nonTransparent, no_angle, center);
 
 
 
 
 	sysinfo.var.stateScreen = STATEplay;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTextePlay,
-		shaded, "Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent);
+		shaded, "Go to leader board (END GAME)", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent, no_angle);
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTextePlay,
-		shaded, "Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64, nonTransparent);
+		shaded, "Save and Quit", WriteColorButton, BackColorButton, 32, 0, 64, nonTransparent, no_angle);
 
 	ButtonImage::createButtonImage(sysinfo.screen.renderer, sysinfo.allButtons.buttonImagePlay, sysinfo.var.stateScreen, sysinfo.var.select,
-		IPath + "Boutons/Play/pause.jpg", "Pause", nonTransparent, SCREEN_WIDTH / 2, 0, 64, 64, center_x);
+		IPath + "Boutons/Play/pause.jpg", "Pause", nonTransparent, SCREEN_WIDTH / 2, 0, 64, 64, no_angle, center_x);
 
 
 	sysinfo.var.stateScreen = STATEscore;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allButtons.buttonTexteScore,
-		shaded, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent);
+		shaded, "Return to Title Screen", WriteColorButton, BackColorButton, 32, 0, 0, nonTransparent, no_angle);
 
 
 	/* *********************************************************
@@ -325,57 +326,57 @@ void IHM::calculimage(Sysinfo& sysinfo) {
   ********************************************************* */
 	sysinfo.var.stateScreen = STATEecranTitre;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtecranTitre,
-		blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0, nonTransparent);
+		blended, "Game dev in C++ and with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 18, 0, 0, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtecranTitre,
-		blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30, nonTransparent);
+		blended, "Developed by Joeffrey VILLERONCE and Robin SAUTER", { 127, 255, 127, 255 }, NoColor, 18, 0, 30, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtecranTitre,
-		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, nonTransparent, center_x);
+		blended, "New Super Pac-Man Plus DELUX Pro Turbo Edition", { 0, 64, 255, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, nonTransparent, no_angle, center_x);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtecranTitre,
-		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, nonTransparent, center_x);
+		blended, "With ALL DLC For Only 99.99$ what a deal !!!", { 255, 255, 0, 255 }, NoColor, 25, SCREEN_WIDTH / 2, 160, nonTransparent, no_angle, center_x);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtecranTitre,
-		blended, "Use your mouse to select", { 0, 255, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 350, nonTransparent, center_x);
+		blended, "Use your mouse to select", { 0, 255, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 350, nonTransparent, no_angle, center_x);
 
 
 	sysinfo.var.stateScreen = STATEplay;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
-		blended, "Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 100, nonTransparent, center_x);
+		blended, "Your Score", { 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, 100, nonTransparent, no_angle, center_x);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
-		blended, "You can move Pacman", { 0, 255, 0, 255 }, NoColor, 24, 100, 500, nonTransparent);
+		blended, "You can move Pacman", { 0, 255, 0, 255 }, NoColor, 24, 100, 500, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
-		blended, "by pressing arrows on your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 524, nonTransparent);
+		blended, "by pressing arrows on your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 524, nonTransparent, no_angle);
 	sysinfo.var.select = lost;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay,
-		blended, "YOU DIED", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, nonTransparent, center);
+		blended, "YOU DIED", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, nonTransparent, no_angle, center);
 	sysinfo.var.select = win;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtPlay, 
-		blended, "YOU WIN", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, nonTransparent, center);
+		blended, "YOU WIN", { 255, 0, 0, 255 }, NoColor, 140, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, nonTransparent, no_angle, center);
 
 	sysinfo.var.select = selectnothing;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.scoreValue,
-		blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1, nonTransparent);
+		blended, "100", { 255, 0, 0, 255 }, NoColor, 26, -1, -1, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.scoreValue,
-		blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+		blended, "200", { 0, 64, 255, 255 }, NoColor, 26, -1, -1, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.scoreValue,
-		blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1, nonTransparent);
+		blended, "400", { 0, 255, 0, 255 }, NoColor, 26, -1, -1, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.scoreValue,
-		blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+		blended, "800", { 255, 0, 255, 255 }, NoColor, 26, -1, -1, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.scoreValue,
-		blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+		blended, "1600", { 255, 0, 255, 255 }, NoColor, 26, -1, -1, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.scoreValue,
-		blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1, nonTransparent);
+		blended, "5000", { 0, 64, 255, 255 }, NoColor, 26, -1, -1, nonTransparent, no_angle);
 
 	sysinfo.var.stateScreen = STATEscore;
 	sysinfo.var.select = pause;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtScore,
-		blended, "TOP 10 SCORES", { 255, 0, 0, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, nonTransparent, center_x);
+		blended, "TOP 10 SCORES", { 255, 0, 0, 255 }, NoColor, 50, SCREEN_WIDTH / 2, 100, nonTransparent, no_angle, center_x);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtScore,
-		blended, "Enter your name", { 0, 255, 0, 255 }, NoColor, 24, 100, 200, nonTransparent);
+		blended, "Enter your name", { 0, 255, 0, 255 }, NoColor, 24, 100, 200, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtScore,
-		blended, "with your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 224, nonTransparent);
+		blended, "with your keyboard", { 0, 255, 0, 255 }, NoColor, 24, 100, 224, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtScore,
-		blended, "Remove last letter with backspace", { 0, 255, 0, 255 }, NoColor, 24, 100, 248, nonTransparent);
+		blended, "Remove last letter with backspace", { 0, 255, 0, 255 }, NoColor, 24, 100, 248, nonTransparent, no_angle);
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.txtScore,
-		blended, "Press return when finish", { 0, 255, 0, 255 }, NoColor, 24, 100, 272, nonTransparent);
+		blended, "Press return when finish", { 0, 255, 0, 255 }, NoColor, 24, 100, 272, nonTransparent, no_angle);
 
 	sysinfo.var.select = selectnothing;
 	logfileconsole("_calculimage End_");
@@ -410,16 +411,20 @@ void IHM::eventSDL(Sysinfo& sysinfo) {
 		case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 			switch (event.key.keysym.sym) {
 			case SDLK_UP:
-				sysinfo.pacman->SETnextHeading(UP);
+				if(sysinfo.pacman != nullptr)
+					sysinfo.pacman->SETnextHeading(UP);
 				break;
 			case SDLK_DOWN:
-				sysinfo.pacman->SETnextHeading(DOWN);
+				if (sysinfo.pacman != nullptr)
+					sysinfo.pacman->SETnextHeading(DOWN);
 				break;
 			case SDLK_RIGHT:
-				sysinfo.pacman->SETnextHeading(RIGHT);
+				if (sysinfo.pacman != nullptr)
+					sysinfo.pacman->SETnextHeading(RIGHT);
 				break;
 			case SDLK_LEFT:
-				sysinfo.pacman->SETnextHeading(LEFT);
+				if (sysinfo.pacman != nullptr)
+					sysinfo.pacman->SETnextHeading(LEFT);
 				break;
 			case SDLK_ESCAPE:
 				sysinfo.var.continuer = 0;
@@ -584,7 +589,7 @@ void IHM::ecranScore(Sysinfo& sysinfo) {
 	for (unsigned int i = 0; i < sysinfo.var.saveReload.GETtabScorePlayer().size(); i++)
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextes.font, sysinfo.var.stateScreen, sysinfo.var.select, sysinfo.allTextes.tabScore,
 			blended, sysinfo.var.saveReload.GETtabScorePlayer()[i].name + "      " + std::to_string(sysinfo.var.saveReload.GETtabScorePlayer()[i].score),
-			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, nonTransparent, center_x);
+			{ 0, 64, 255, 255 }, NoColor, 26, SCREEN_WIDTH / 2, initspacemenu += 32, nonTransparent, no_angle, center_x);
 
 	SDL_SetRenderDrawColor(sysinfo.screen.renderer, 0, 0, 0, 255);
 	SDL_RenderClear(sysinfo.screen.renderer);
@@ -890,10 +895,10 @@ void GameTime::calculTime() {
 void GameTime::affichage(SDL_Renderer*& renderer, TTF_Font* font[]) {
 	Texte::writeTexte(renderer, font, blended, "Run Time : " +
 		std::to_string(_hoursRunTime) + ":" + std::to_string(_minutesRunTime) + ":"
-		+ std::to_string(_secondsRunTime), Black, NoColor, 24, SCREEN_WIDTH - 300, 0, center_x);
+		+ std::to_string(_secondsRunTime), Black, NoColor, 24, SCREEN_WIDTH - 300, 0, no_angle, center_x);
 
 	std::ostringstream stream;
 	stream << std::fixed << std::setprecision(0) << (((double)_t2RealTime - (double)_t1RealTime) / CLOCKS_PER_SEC);
 	Texte::writeTexte(renderer, font, blended, "Real Time : " +
-		stream.str() + " secondes", Black, NoColor, 24, SCREEN_WIDTH - 300, 50, center_x);
+		stream.str() + " secondes", Black, NoColor, 24, SCREEN_WIDTH - 300, 50, no_angle, center_x);
 }

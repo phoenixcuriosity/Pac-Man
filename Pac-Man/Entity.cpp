@@ -1,24 +1,25 @@
 /*
 
-	Pac-Man
-	Copyright SAUTER Robin and Joeffrey VILLERONCE 2018-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
+   Pac-Man
+   Copyright SAUTER Robin (robin.sauter@orange.fr)
+   last modification on this file on version : 0.17
+   file version : 1.0
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
+   You can check for update on github.com -> https://github.com/phoenixcuriosity/Pac-Man
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "Entity.h"
@@ -537,15 +538,15 @@ void Pacman::pathForecast(Map& map) {
 }
 void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
 	Texte::writeTexte(renderer, font,
-		blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 126, center_x);
+		blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 126, no_angle, center_x);
 	Texte::writeTexte(renderer, font,
-		shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250);
+		shaded, "Remaining life  : " + std::to_string(_life), { 255, 0, 0, 255 }, White, 32, 0, 250, no_angle);
 	// debug positions pacman sur l'ecran
 	//Texte::writeTexte(renderer, font,
 	//	blended, std::to_string(this->GETx()) + " , " + std::to_string(this->GETy()), { 0, 64, 255, 255 }, NoColor, 24, 0, 300);
 	if (this->GETinvincible())
 		Texte::writeTexte(renderer,font,
-			blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / SCREEN_REFRESH_RATE), { 0, 64, 255, 255 }, NoColor, 24, 0, 350);
+			blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / SCREEN_REFRESH_RATE), { 0, 64, 255, 255 }, NoColor, 24, 0, 350, no_angle);
 }
 void Pacman::afficher(std::vector<Texture*> tabTexture[]) {
 	std::string pacmanPos[MAX_POS] = { "U", "L", "D", "R" }, pacmanSkin[MAX_SKIN] = { "1", "2" };

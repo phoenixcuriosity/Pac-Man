@@ -19,26 +19,12 @@ Create ButtonTexte n:1 msg = Save and Quit Success
 Create ButtonImage n:0 msg = Pause Success
 Create ButtonTexte n:0 msg = Return to Title Screen Success
 _calculimage End_
-temps d'execution de l'initialisation : 1.814000 secondes
-_ecranTitres Start_
-_ecranTitres End_
-Pacman is alive
-Red is alive
-Blue is alive
-Yellow is alive
-Pink is alive
-_ecranTitres Start_
-_ecranTitres End_
+temps d'execution de l'initialisation : 1.223000 secondes
 _ecranTitres Start_
 _ecranTitres End_
 _saveScore Start_
 _saveScore End_
 *********_________ Start DeleteAll _________*********
-Pacman is dead
-Red is dead
-Blue is dead
-Yellow is dead
-Pink is dead
 Delete ground Texture name = Black.bmp Success
 Delete ground Texture name = White.bmp Success
 Delete ALL ground Texture Success
@@ -129,13 +115,6 @@ Delete txtscore Texte name = with your keyboard Success
 Delete txtscore Texte name = Remove last letter with backspace Success
 Delete txtscore Texte name = Press return when finish Success
 Delete ALL txtscore Texte Success
-Delete tabScore Texte name = jh      27600 Success
-Delete tabScore Texte name = goal      14700 Success
-Delete tabScore Texte name = jhj      10400 Success
-Delete tabScore Texte name = 334t      6500 Success
-Delete tabScore Texte name = robin      4400 Success
-Delete tabScore Texte name = drgh      1600 Success
-Delete tabScore Texte name = kjn      1600 Success
 Delete ALL tabScore Texte Success
 Delete Button ecranTitre name = New Game Success
 Delete Button ecranTitre name = Reload Success

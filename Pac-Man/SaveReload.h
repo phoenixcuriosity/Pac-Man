@@ -27,7 +27,8 @@
 
 #include "lib.h"
 
-struct ScorePlayer {
+struct ScorePlayer
+{
 	// score du joueur
 	unsigned int score = 0;
 
@@ -35,7 +36,8 @@ struct ScorePlayer {
 	std::string name = "";
 };
 
-class SaveReload {
+class SaveReload
+{
 
 	/* *********************************************************
 						STATIC
@@ -93,3 +95,7 @@ private:
 };
 
 #endif
+
+/*
+*	End Of File
+*/

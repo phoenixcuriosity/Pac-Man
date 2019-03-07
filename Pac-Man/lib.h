@@ -93,3 +93,7 @@ class SaveReload;
 const Uint8 TILE_SIZE = 32;
 
 #endif
+
+/*
+*	End Of File
+*/

@@ -1,0 +1,20 @@
+{
+  "Entity": {
+    "Pacman": {
+      "Name": "Player",
+      "PositionPixel": {
+        "x": "1200",
+        "y": "464"
+      },
+      "PositionGrille": {
+        "x": "23",
+        "y": "10"
+      },
+      "CurrentHeading": "3",
+      "NextHeading": "3",
+      "Invincible": "1",
+      "TimeInvincible": "269",
+      "Value": "1400"
+    }
+  }
+}

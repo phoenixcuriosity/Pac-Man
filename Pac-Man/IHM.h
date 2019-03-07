@@ -27,7 +27,8 @@
 
 #include "lib.h"
 
-class IHM {
+class IHM 
+{
 
 /* *********************************************************
 	*					 Init
@@ -132,9 +133,11 @@ public:
 	static void deleteAll(Sysinfo&);
 };
 template<class T>
-void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
+void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name)
+{
 	unsigned int size = dytab.size();
-	for (unsigned int i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++)
+	{
 		IHM::logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
 		delete dytab[i];
 		dytab[i] = nullptr;
@@ -153,7 +156,8 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 #define GameTime_H
 //--- GameTime --------------------------------------------------------------------------------------------------------------------------------------
 
-class GameTime {
+class GameTime
+{
 public:
 	GameTime();
 	~GameTime();
@@ -205,3 +209,7 @@ private:
 	bool _startTimerRealTime;
 };
 #endif GameTime_H
+
+/*
+*	End Of File
+*/

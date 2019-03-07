@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SaveEntity>
+
+	<Entity>
+	
+		<Pacman>
+			<Name>Player</Name>
+			<PositionPixel>
+				<x>1200</x>
+				<y>464</y>
+			</PositionPixel>
+			<PositionGrille>
+				<x>23</x>
+				<y>10</y>
+			</PositionGrille>
+			<CurrentHeading>3</CurrentHeading>
+			<NextHeading>3</NextHeading>
+			<Invincible>1</Invincible>
+			<TimeInvincible>269</TimeInvincible>
+			<Value>1400</Value>
+		</Pacman>
+		
+		
+		
+		
+	</Entity>
+</SaveEntity>
+Pacman:
+player
+1200
+464
+23
+10
+3
+3
+1
+269
+1400
+
+
+Ghost:
+Red
+944
+516
+15
+12
+2
+2
+1
+600
+
+
+Ghost:
+Blue
+944
+516
+15
+12
+2
+2
+1
+600
+
+
+Ghost:
+Yellow
+848
+456
+12
+10
+0
+2
+1
+600
+
+
+Ghost:
+Pink
+818
+560
+11
+13
+3
+3
+1
+600

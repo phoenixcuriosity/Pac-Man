@@ -91,11 +91,13 @@ enum BonusValue_Type { nothing1, valuegold = 100, valuecherry = 200, valuestrawb
 
 
 // structure représentant une case de la grille pour etre utilisée dans findAPath()
-struct Node {
+struct Node 
+{
 	Uint8 indexX = NULL;
 	Uint8 indexY = NULL;
 };
-struct NodeA {
+struct NodeA
+{
 	Uint8 indexX = NULL;
 	Uint8 indexY = NULL;
 	unsigned int cost = NULL;
@@ -109,7 +111,8 @@ struct NodeA {
 //--- Entity -------------------------------------------------------------------------------------------------------------------------------------
 
 // classe abstraite
-class Entity { 
+class Entity
+{ 
 
 	/* *********************************************************
 		*				STATIC
@@ -266,7 +269,8 @@ private:
 
 //--- Pacman ------------------------------------------------------------------------------------------------------------------------------------
 
-class Pacman : public Entity {
+class Pacman : public Entity
+{
 public: // constructeurs et destructeur
 	Pacman(std::string name, unsigned int x, unsigned int y, unsigned int value = 0);
 	Pacman(const Pacman& player);
@@ -337,7 +341,8 @@ private:
 
 //--- Ghost -------------------------------------------------------------------------------------------------------------------------------------
 
-class Ghost : public Entity {
+class Ghost : public Entity
+{
 public: // constructeurs et destructeur
 	Ghost(std::string name, unsigned int x, unsigned int y, Uint8 type,unsigned int value = 0);
 	~Ghost();
@@ -385,4 +390,8 @@ private:
 };
 
 #endif // !Entity_H
+
+/*
+*	End Of File
+*/
 

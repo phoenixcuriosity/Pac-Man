@@ -30,36 +30,44 @@
 	/* *********************************************************
 						ENTITY::STATIC
 	 ********************************************************* */
-void Entity::move(Sysinfo& sysinfo) {
+void Entity::move(Sysinfo& sysinfo)
+{
 
 	// mouvement de tous objets Entity
-	if (sysinfo.var.stateScreen == STATEplay && sysinfo.var.select == selectnothing) {
+	if (sysinfo.var.stateScreen == STATEplay && sysinfo.var.select == selectnothing)
+	{
 		for (unsigned int i = 0; i < sysinfo.ghost.size(); i++)
 			sysinfo.ghost[i]->move(sysinfo.map, sysinfo);
 		sysinfo.pacman->move(sysinfo.map, sysinfo.ghost);
 
 		// recherche si Pacman a mangé toutes les pastilles
 		sysinfo.var.win = true;
-		for (Uint8 i = 0; i < sysinfo.map.map_length && sysinfo.var.win; i++) {
-			for (Uint8 j = 0; j < sysinfo.map.map_height && sysinfo.var.win; j++) {
-				if (sysinfo.map.matriceMap[i][j].entity) {
+		for (Uint8 i = 0; i < sysinfo.map.map_length && sysinfo.var.win; i++)
+		{
+			for (Uint8 j = 0; j < sysinfo.map.map_height && sysinfo.var.win; j++)
+			{
+				if (sysinfo.map.matriceMap[i][j].entity)
+				{
 					sysinfo.var.win = false;
 					break;
 				}
 			}
 		}
-		if (sysinfo.pacman->GETlife() == 0) {
+		if (sysinfo.pacman->GETlife() == 0)
+		{
 			sysinfo.var.select = lost;
 			IHM::logfileconsole("End Game");
 			Mix_PlayMusic(sysinfo.music[music_died], 1);
 		}
-		if(sysinfo.var.win) {
+		if(sysinfo.var.win)
+		{
 			sysinfo.var.select = win;
 			IHM::logfileconsole("End Game");
 		}
 	}
 }
-void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector<std::vector<Tile>>& map) {
+void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector<std::vector<Tile>>& map)
+{
 	destroyEntity(pacman, ghost);
 
 	// initialisation des positions de Pacman au milieu de gauche de la grille
@@ -75,13 +83,17 @@ void Entity::initEntity(Pacman*& pacman, std::vector<Ghost*>& ghost, std::vector
 	ghost.push_back(new Ghost("Yellow", x, y, yellow));
 	ghost.push_back(new Ghost("Pink", x, y, pink));
 }
-void Entity::destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost) {
-	if (pacman != nullptr) {
+void Entity::destroyEntity(Pacman*& pacman, std::vector<Ghost*>& ghost)
+{
+	if (pacman != nullptr)
+	{
 		delete pacman;
 		pacman = nullptr;
 	}
-	for (unsigned int g = 0; g < ghost.size(); g++) {
-		if (ghost[g] != nullptr) {
+	for (unsigned int g = 0; g < ghost.size(); g++)
+	{
+		if (ghost[g] != nullptr)
+		{
 			delete ghost[g];
 			ghost[g] = nullptr;
 		}
@@ -107,15 +119,19 @@ Entity::~Entity()
 
 //--- Algorithme ---------------------------------------------------------------------------------------------------------------------------------
 
-bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY) {
-	for (unsigned int i = 0; i < path.size(); i++) {
+bool Entity::notPreviousTile(std::vector<Node>& path, Uint8 newIndexX, Uint8 newIndexY)
+{
+	for (unsigned int i = 0; i < path.size(); i++)
+	{
 		if (path[i].indexX == newIndexX && path[i].indexY == newIndexY)
 			return false;
 	}
 	return true;
 }
-void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY) {
-	if (_indexX != indexX || _indexY != indexY) {
+void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 indexY)
+{
+	if (_indexX != indexX || _indexY != indexY)
+	{
 
 		// tableau d'un chemin constitué de Node
 		std::vector<Node> blankTab, newPath;
@@ -136,15 +152,20 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		*	Chaque chemin a au moins le Node initial en commun
 		*	L'algorithme s'arrete une fois que le premier chemin trouve la cible (forcement le chemin le plus court)
 		*/
-		for (unsigned int i = 0; i < _tabPath.size(); i++) {
-			if (!breakLoop) {
-				for (unsigned int m = 0; m < MAX_POS; m++) {
+		for (unsigned int i = 0; i < _tabPath.size(); i++)
+		{
+			if (!breakLoop) 
+			{
+				for (unsigned int m = 0; m < MAX_POS; m++)
+				{
 
 					if ((unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]) < map.size()
-						&& (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) < map.size()) {
+						&& (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) >= 0 && (unsigned int)(_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]) < map.size())
+					{
 
 						if (!map[_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m]][_tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m]].wall
-							&& notPreviousTile(_tabPath[i], _tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m], _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m])) {
+							&& notPreviousTile(_tabPath[i], _tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m], _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m])) 
+						{
 
 							blankTile.indexX = _tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m];
 							blankTile.indexY = _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m];
@@ -154,7 +175,8 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 							_tabPath.push_back(newPath);
 
 							if (_tabPath[i][_tabPath[i].size() - 1].indexX + tabX[m] == indexX
-								&& _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m] == indexY) {
+								&& _tabPath[i][_tabPath[i].size() - 1].indexY + tabY[m] == indexY)
+							{
 								indexTabFound = i;
 								breakLoop = true;
 								break;
@@ -169,21 +191,25 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 		}
 
 		// affectation du nextHeading en fonction du chemin le plus court
-		if (_tabPath[indexTabFound].size() > 1) {
-			if (_tabPath[0][0].indexX != _tabPath[indexTabFound][1].indexX) {
+		if (_tabPath[indexTabFound].size() > 1)
+		{
+			if (_tabPath[0][0].indexX != _tabPath[indexTabFound][1].indexX)
+			{
 				if (_tabPath[indexTabFound][1].indexX < _tabPath[0][0].indexX)
 					_nextHeading = LEFT;
 				else
 					_nextHeading = RIGHT;
 			}
-			else {
+			else 
+			{
 				if (_tabPath[indexTabFound][1].indexY < _tabPath[0][0].indexY)
 					_nextHeading = UP;
 				else
 					_nextHeading = DOWN;
 			}
 		}
-		else {
+		else
+		{
 			goHomeGhost();
 		}
 
@@ -193,18 +219,21 @@ void Entity::findAPath(std::vector<std::vector<Tile>>& map, Uint8 indexX, Uint8 
 
 //--- opérations sur l'objet -----------------------------------------------------------------------------------------------------------------------
 
-bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
+bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos)
+{
 	unsigned int nextindexX = 0, nextindexY = 0;
 
 	/*
 		recherche si la prochaine direction est disponible (pas de mur)
 			si elle est disponible l'objet ce déplace de "velocity" pixels dans cette direction
 	*/
-	switch (pos) {
+	switch (pos)
+	{
 	case UP:
 		nextindexX = _indexX;
 		nextindexY = _indexY - 1;
-		if (map[nextindexX][nextindexY].wall) {
+		if (map[nextindexX][nextindexY].wall)
+		{
 			if (_y - _velocity >= (map[nextindexX][nextindexY].tile_y + TILE_SIZE))
 				return (bool)validCondition;
 			else
@@ -216,7 +245,8 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	case LEFT:
 		nextindexX = _indexX - 1;
 		nextindexY = _indexY;
-		if (map[nextindexX][nextindexY].wall) {
+		if (map[nextindexX][nextindexY].wall)
+		{
 			if (_x - _velocity >= (map[nextindexX][nextindexY].tile_x + TILE_SIZE))
 				return (bool)validCondition;
 			else
@@ -228,7 +258,8 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	case DOWN:
 		nextindexX = _indexX;
 		nextindexY = _indexY + 1;
-		if (map[nextindexX][nextindexY].wall) {
+		if (map[nextindexX][nextindexY].wall)
+		{
 			if (((_y + TILE_SIZE) + _velocity) <= map[nextindexX][nextindexY].tile_y)
 				return (bool)validCondition;
 			else
@@ -240,7 +271,8 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 	case RIGHT:
 		nextindexX = _indexX + 1;
 		nextindexY = _indexY;
-		if (map[nextindexX][nextindexY].wall) {
+		if (map[nextindexX][nextindexY].wall)
+		{
 			if (((_x + TILE_SIZE) + _velocity) <= map[nextindexX][nextindexY].tile_x)
 				return (bool)validCondition;
 			else
@@ -253,27 +285,36 @@ bool Entity::tryToMove(std::vector<std::vector<Tile>>& map, unsigned int pos) {
 
 	return (bool)Not_Valid;
 }
-bool Entity::isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
-	if (_x == map[i][j].tile_x) {
-		if (_y == map[i][j].tile_y) {
+bool Entity::isOnFullTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j)
+{
+	if (_x == map[i][j].tile_x)
+	{
+		if (_y == map[i][j].tile_y)
+		{
 			return true;
 		}
 		return false;
 	}
 	return false;
 }
-bool Entity::isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j) {
-	if ((_x + TILE_SIZE / 2) >= map[i][j].tile_x && (_x + TILE_SIZE / 2) < (map[i][j].tile_x + TILE_SIZE)) {
-		if ((_y + TILE_SIZE / 2) >= map[i][j].tile_y && (_y + TILE_SIZE / 2) < (map[i][j].tile_y + TILE_SIZE)) {
+bool Entity::isOnTile(std::vector<std::vector<Tile>>& map, unsigned int i, unsigned int j)
+{
+	if ((_x + TILE_SIZE / 2) >= map[i][j].tile_x && (_x + TILE_SIZE / 2) < (map[i][j].tile_x + TILE_SIZE))
+	{
+		if ((_y + TILE_SIZE / 2) >= map[i][j].tile_y && (_y + TILE_SIZE / 2) < (map[i][j].tile_y + TILE_SIZE))
+		{
 			return true;
 		}
 		return false;
 	}
 	return false;
 }
-void Entity::makeTheMove(bool validMove, unsigned int pos) {
-	if (validMove) {
-		switch (pos) {
+void Entity::makeTheMove(bool validMove, unsigned int pos)
+{
+	if (validMove)
+	{
+		switch (pos)
+		{
 		case UP:
 			_y -= _velocity;
 			break;
@@ -289,13 +330,15 @@ void Entity::makeTheMove(bool validMove, unsigned int pos) {
 		}
 	}
 }
-void Entity::teleport(std::vector<std::vector<Tile>>& map){
+void Entity::teleport(std::vector<std::vector<Tile>>& map)
+{
 	if (_x <= map[1][0].tile_x && _y == map[0][map[0].size() / 2].tile_y)
 		_x = map[map.size() - 2][0].tile_x;
 	else if (_x >= map[map.size() - 2][0].tile_x && _y == map[0][map[0].size() / 2].tile_y)
 		_x = map[1][0].tile_x;
 }
-void Entity::goHomeGhost() {
+void Entity::goHomeGhost()
+{
 
 }
 
@@ -316,26 +359,31 @@ Pacman::~Pacman()
 {
 	IHM::logfileconsole("Pacman is dead");
 }
-int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoop) {
+int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoop)
+{
 	Uint8 validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
 	
-	if (secondLoop == -1) {
+	if (secondLoop == -1)
+	{
 		// cherche une première fois à faire un mouvement
 		// test avec nextHeading et currentHeading
 
-		switch (validTryToMove = search(map)) {
+		switch (validTryToMove = search(map))
+		{
 		case Not_Valid:
 			break;
 		case validCondition:
-			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading()))
+			{
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
 			break;
 		case validNextHeading:
-			if (tryToMove(map.matriceMap, this->GETnextHeading())) {
+			if (tryToMove(map.matriceMap, this->GETnextHeading()))
+			{
 				validMove = validCondition;
 				pos = this->GETnextHeading();
 				this->SETcurrentHeading(this->GETnextHeading());
@@ -345,22 +393,27 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 			break;
 		}
 	}
-	else {
+	else
+	{
 		// cherche une deuxième fois à faire un mouvement après l'echec du premier test de mouvement
 		// test uniquement sur currentHeading
 
-		if ((validTryToMove = search(map)) != Not_Valid) {
-			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
+		if ((validTryToMove = search(map)) != Not_Valid)
+		{
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading()))
+			{
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
 		}
 	}
 
-	if (this->GETinvincible()) {
+	if (this->GETinvincible())
+	{
 		if (this->GETtimeInvincible() > 0)
 			this->SETtimeInvincible(this->GETtimeInvincible() - 1);
-		else {
+		else 
+		{
 			this->SETtimeInvincible(TEMPO_INVINCIBLE);
 			this->SETinvincible(false);
 			for (unsigned int i = 0; i < ghost.size(); i++)
@@ -368,7 +421,8 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 		}
 	}
 	value(map.matriceMap, validMove);
-	if (_powerUP) {
+	if (_powerUP)
+	{
 		this->SETinvincible(true);
 		for (unsigned int i = 0; i < ghost.size(); i++)
 			ghost[i]->SETinvincible(false);
@@ -385,19 +439,25 @@ int8_t Pacman::move(Map& map, std::vector<Ghost*>& ghost, unsigned int secondLoo
 
 	return 0;
 }
-Uint8 Pacman::search(Map& map) {
+Uint8 Pacman::search(Map& map)
+{
 	Uint8 condition = Not_Valid;
-	for (Uint8 i = 0; i < map.map_length; i++) {
-		for (Uint8 j = 0; j < map.map_height; j++) {
-			if (this->GETcurrentHeading() != this->GETnextHeading()) {
-				if (isOnFullTile(map.matriceMap, i, j)) {
+	for (Uint8 i = 0; i < map.map_length; i++)
+	{
+		for (Uint8 j = 0; j < map.map_height; j++)
+		{
+			if (this->GETcurrentHeading() != this->GETnextHeading())
+			{
+				if (isOnFullTile(map.matriceMap, i, j))
+				{
 					this->SETindexX(i);
 					this->SETindexY(j);
 					condition = validNextHeading;
 					return condition;
 				}
 			}
-			if (isOnTile(map.matriceMap, i, j)) {
+			if (isOnTile(map.matriceMap, i, j))
+			{
 				this->SETindexX(i);
 				this->SETindexY(j);
 				condition = validCondition;
@@ -407,9 +467,12 @@ Uint8 Pacman::search(Map& map) {
 	}
 	return condition;
 }
-void Pacman::value(std::vector<std::vector<Tile>>& map, bool validMove) {
-	if (validMove) {
-		switch (map[this->GETindexX()][this->GETindexY()].entity) {
+void Pacman::value(std::vector<std::vector<Tile>>& map, bool validMove)
+{
+	if (validMove)
+	{
+		switch (map[this->GETindexX()][this->GETindexY()].entity)
+		{
 		case nothing:
 			_typeOfValue = 0;
 			break;
@@ -450,44 +513,53 @@ void Pacman::value(std::vector<std::vector<Tile>>& map, bool validMove) {
 		}
 	}
 }
-void Pacman::collideGhost(std::vector<Ghost*>& ghost, Map& map) {
+void Pacman::collideGhost(std::vector<Ghost*>& ghost, Map& map)
+{
 	bool hit = false;
 	unsigned int l = 0;
-	for (l; l < ghost.size(); l++) {
+	for (l; l < ghost.size(); l++)
+	{
 		// pacman gauche et ghost droite
 		if (((this->GETx() + TILE_SIZE) >= ghost[l]->GETx()) && ((this->GETx() + TILE_SIZE) <= (ghost[l]->GETx() + TILE_SIZE)) 
-			&& (this->GETy() == ghost[l]->GETy())) {
+			&& (this->GETy() == ghost[l]->GETy()))
+		{
 			hit = true;
 			break;
 		}
 		// pacman bas et ghost haut
 		else if (((this->GETy()) >= ghost[l]->GETy()) && ((this->GETy()) <= (ghost[l]->GETy() + TILE_SIZE)) 
-			&& (this->GETx() == ghost[l]->GETx())){
+			&& (this->GETx() == ghost[l]->GETx()))
+		{
 			hit = true;
 			break;
 		}
 		// pacman droite et ghost gauche
 		else if (((this->GETx()) >= ghost[l]->GETx()) && ((this->GETx()) <= (ghost[l]->GETx() + TILE_SIZE))
-			&& (this->GETy() == ghost[l]->GETy())) {
+			&& (this->GETy() == ghost[l]->GETy())) 
+		{
 			hit = true;
 			break;
 		}
 		// pacman haut et ghost bas
 		else if (((this->GETy() + TILE_SIZE) >= ghost[l]->GETy()) && ((this->GETy() + TILE_SIZE) <= (ghost[l]->GETy() + TILE_SIZE)) 
-			&& (this->GETx() == ghost[l]->GETx())) {
+			&& (this->GETx() == ghost[l]->GETx())) 
+		{
 			hit = true;
 			break;
 		}
 	}
-	if (hit && !ghost[l]->GETgoHome()) {
+	if (hit && !ghost[l]->GETgoHome())
+	{
 
-		if (this->GETinvincible()) {
+		if (this->GETinvincible())
+		{
 			ghost[l]->SETinvincible(true);
 			ghost[l]->SETgoHome(true);
 			this->SETvalue(this->GETvalue() + ghost1);
 			IHM::logfileconsole("Pacman hit a Ghost successfully");
 		}
-		else {
+		else 
+		{
 			this->SETx(map.matriceMap[3][map.map_height / 2].tile_x);
 			this->SETy(map.matriceMap[3][map.map_height / 2].tile_y);
 			if (_life > 0)
@@ -496,14 +568,17 @@ void Pacman::collideGhost(std::vector<Ghost*>& ghost, Map& map) {
 		}
 	}
 }
-void Pacman::goHomeGhost() {
+void Pacman::goHomeGhost()
+{
 	// à utiliser pour une future version où pacman ne se téléporte pas en mourant
 }
-void Pacman::pathForecast(Map& map) {
+void Pacman::pathForecast(Map& map)
+{
 	int8_t offSetX = 0, offSetY = 0;
 
 	// recherche de la direction courante en terme d'indexX et indexY
-	switch (this->GETcurrentHeading()) {
+	switch (this->GETcurrentHeading())
+	{
 	case UP:
 		offSetY = -1;
 		break;
@@ -521,22 +596,26 @@ void Pacman::pathForecast(Map& map) {
 
 	// recherche du premier mur pour la direction fixée
 	bool continuer = true;
-	while (continuer) {
+	while (continuer)
+	{
 		if (map.matriceMap[newIndexXPred][newIndexYPred].wall
 			|| (newIndexXPred == 0 && newIndexYPred == (map.map_height - 1) / 2)
-			|| (newIndexXPred == map.map_length - 1 && newIndexYPred == (map.map_height - 1) / 2)) {
+			|| (newIndexXPred == map.map_length - 1 && newIndexYPred == (map.map_height - 1) / 2))
+		{
 			
 			_indexXPred = newIndexXPred - offSetX;
 			_indexYPred = newIndexYPred - offSetY;
 			continuer = false;
 		}	
-		else {
+		else 
+		{
 			newIndexXPred += offSetX;
 			newIndexYPred += offSetY;
 		}
 	}
 }
-void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
+void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[])
+{
 	Texte::writeTexte(renderer, font,
 		blended, std::to_string(this->GETvalue()), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 126, no_angle, center_x);
 	Texte::writeTexte(renderer, font,
@@ -548,12 +627,14 @@ void Pacman::afficherStats(SDL_Renderer*& renderer, TTF_Font* font[]) {
 		Texte::writeTexte(renderer,font,
 			blended, "Remaining time Invincible : " + std::to_string(this->GETtimeInvincible() / SCREEN_REFRESH_RATE), { 0, 64, 255, 255 }, NoColor, 24, 0, 350, no_angle);
 }
-void Pacman::afficher(std::vector<Texture*> tabTexture[]) {
+void Pacman::afficher(std::vector<Texture*> tabTexture[])
+{
 	std::string pacmanPos[MAX_POS] = { "U", "L", "D", "R" }, pacmanSkin[MAX_SKIN] = { "1", "2" };
 	unsigned int skin = 0;
 	if (this->GETalternateSkin())
 		skin = 1;
-	for (unsigned int i = 0; i < tabTexture[0].size(); i++) {
+	for (unsigned int i = 0; i < tabTexture[0].size(); i++)
+	{
 		if (tabTexture[0][i]->renderTextureTestString("pacman_" + pacmanPos[this->GETcurrentHeading()]
 			+ "_" + pacmanSkin[skin] + ".png", this->GETx(), this->GETy()))
 			return;
@@ -572,28 +653,33 @@ Ghost::~Ghost()
 {
 	IHM::logfileconsole(this->GETname() + " is dead");
 }
-int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
+int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop)
+{
 	unsigned int validTryToMove = 0;
 	unsigned int pos = 0;
 	bool validMove = false;
 
 
-	if (secondLoop == -1) {
+	if (secondLoop == -1)
+	{
 		// cherche une première fois à faire un mouvement
 		// test avec nextHeading et currentHeading
 
 		switch (validTryToMove = search(map, sysinfo.pacman->GETindexX(), sysinfo.pacman->GETindexY(),
-			sysinfo.pacman->GETindexXpred(), sysinfo.pacman->GETindexYpred())) {
+			sysinfo.pacman->GETindexXpred(), sysinfo.pacman->GETindexYpred()))
+		{
 		case Not_Valid:
 			break;
 		case validCondition:
-			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading()))
+			{
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
 			break;
 		case validNextHeading:
-			if (tryToMove(map.matriceMap, this->GETnextHeading())) {
+			if (tryToMove(map.matriceMap, this->GETnextHeading()))
+			{
 				validMove = validCondition;
 				pos = this->GETnextHeading();
 				this->SETcurrentHeading(this->GETnextHeading());
@@ -603,13 +689,16 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 			break;
 		}
 	}
-	else {
+	else
+	{
 		// cherche une deuxième fois à faire un mouvement après l'echec du premier test de mouvement
 		// test uniquement currentHeading
 
 		if ((validTryToMove = search(map, sysinfo.pacman->GETindexX(), sysinfo.pacman->GETindexY(),
-			sysinfo.pacman->GETindexXpred(), sysinfo.pacman->GETindexYpred())) != Not_Valid) {
-			if (tryToMove(map.matriceMap, this->GETcurrentHeading())) {
+			sysinfo.pacman->GETindexXpred(), sysinfo.pacman->GETindexYpred())) != Not_Valid)
+		{
+			if (tryToMove(map.matriceMap, this->GETcurrentHeading()))
+			{
 				validMove = validCondition;
 				pos = this->GETcurrentHeading();
 			}
@@ -622,32 +711,41 @@ int8_t Ghost::move(Map& map, Sysinfo& sysinfo, unsigned int secondLoop) {
 
 	return 0;
 }
-Uint8 Ghost::search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacPred, Uint8 indexYPacPred) {
+Uint8 Ghost::search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacPred, Uint8 indexYPacPred)
+{
 	Uint8 condition = 0;
-	for (Uint8 i = 0; i < map.map_length; i++) {
-		for (Uint8 j = 0; j < map.map_height; j++) {
+	for (Uint8 i = 0; i < map.map_length; i++)
+	{
+		for (Uint8 j = 0; j < map.map_height; j++)
+		{
 
-			if (isOnFullTile(map.matriceMap, i, j)) {
+			if (isOnFullTile(map.matriceMap, i, j))
+			{
 				this->SETindexX(i);
 				this->SETindexY(j);
 
-				if (_goHome) {
+				if (_goHome)
+				{
 					findAPath(map.matriceMap, map.map_length / 2, map.map_height / 2);
 					condition = validNextHeading;
 					return condition;
 				}
-				else {
-					if (_type == red) {
+				else
+				{
+					if (_type == red)
+					{
 						findAPath(map.matriceMap, indexXPac, indexYPac);
 						condition = validNextHeading;
 						return condition;
 					}
-					else if (_type == blue) {
+					else if (_type == blue)
+					{
 						findAPath(map.matriceMap, indexXPacPred, indexYPacPred);
 						condition = validNextHeading;
 						return condition;
 					}
-					else {
+					else
+					{
 						if (((this->GETcurrentHeading() + this->GETnextHeading()) % 2) == 0)
 							condition = validCondition; // évite de changer de direction et de revenir en arrière
 						else
@@ -658,7 +756,8 @@ Uint8 Ghost::search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacP
 				
 			}
 
-			if (isOnTile(map.matriceMap, i, j)) {
+			if (isOnTile(map.matriceMap, i, j))
+			{
 				this->SETindexX(i);
 				this->SETindexY(j);
 				condition = validCondition;
@@ -668,14 +767,17 @@ Uint8 Ghost::search(Map& map, Uint8 indexXPac, Uint8 indexYPac, Uint8 indexXPacP
 	}
 	return condition;
 }
-void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman) {
+void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman) 
+{
 	Uint8 randomNextHeading = 0;
 	bool continuer = true;
 	
-	if(_type == yellow || _type == pink){
+	if(_type == yellow || _type == pink)
+	{
 		randomNextHeading = rand() % MAX_POS;
 		while (continuer) {
-			if (tryToMove(map, randomNextHeading)) {
+			if (tryToMove(map, randomNextHeading))
+			{
 				continuer = false;
 				break;
 			}
@@ -684,22 +786,28 @@ void Ghost::makeNextHeading(std::vector<std::vector<Tile>>& map, Pacman*& pacman
 		this->SETnextHeading(randomNextHeading);
 	}
 }
-void Ghost::goHomeGhost() {
+void Ghost::goHomeGhost()
+{
 	_goHome = false;
 }
-void Ghost::afficher(std::vector<Texture*> tabTexture[]) {
+void Ghost::afficher(std::vector<Texture*> tabTexture[])
+{
 	std::string ghostName[MAX_GHOST] = { "Red", "Blue", "Yellow", "Pink" }, ghostPos[MAX_POS] = { "U", "L", "D", "R" }, ghostSkin[MAX_SKIN] = { "1", "2" };
 	Uint8 skin = 0;
 	if (this->GETalternateSkin())
 		skin = 1; // évite le probleme : bool (false == 0) et (true == tout le reste)
 
-	if (_goHome) {
+	if (_goHome)
+	{
 		for(unsigned int i = 0; i < tabTexture[MAX_GHOST].size(); i++)
 			tabTexture[MAX_GHOST][i]->renderTextureTestString("goHome.png", this->GETx(), this->GETy());
 	}
-	else {
-		if (this->GETinvincible()) {
-			for (unsigned int i = 0; i < tabTexture[_type].size(); i++) {
+	else
+	{
+		if (this->GETinvincible())
+		{
+			for (unsigned int i = 0; i < tabTexture[_type].size(); i++)
+			{
 				if (tabTexture[_type][i]->renderTextureTestString(ghostName[_type] + "_" + ghostPos[this->GETcurrentHeading()] +
 					"_" + ghostSkin[skin] + ".png", this->GETx(), this->GETy()))
 					return;
@@ -709,3 +817,7 @@ void Ghost::afficher(std::vector<Texture*> tabTexture[]) {
 			tabTexture[MAX_GHOST][skin]->render(this->GETx(), this->GETy());
 	}
 }
+
+/*
+*	End Of File
+*/

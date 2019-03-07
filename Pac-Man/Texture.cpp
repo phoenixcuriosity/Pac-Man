@@ -29,7 +29,8 @@
 ///////////////////////////// Texture //////////////////////////////
 /* TEXTURE :: STATIC */
 void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, Uint8 stateScreen, Uint8 select,
-	std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint16 angle, Uint8 cnt) {
+	std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint16 angle, Uint8 cnt)
+{
 
 
 	int xt = 0, yt = 0, wt = 0, ht = 0;
@@ -38,20 +39,25 @@ void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTextu
 
 	SDL_Texture* newTexture = nullptr;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (w == 0 && h == 0) {
+	if (w == 0 && h == 0)
+	{
 		wt = loadedSurface->w;
 		ht = loadedSurface->h;
 	}
-	else {
+	else 
+	{
 		wt = w;
 		ht = h;
 	}
 
-	if (loadedSurface != nullptr) {
+	if (loadedSurface != nullptr)
+	{
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-		if (newTexture != nullptr) {
-			if (alpha != nonTransparent) {
+		if (newTexture != nullptr)
+		{
+			if (alpha != nonTransparent)
+			{
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 					IHM::logSDLError(std::cout, "alpha : ");
 			}
@@ -65,8 +71,10 @@ void Texture::loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTextu
 	else
 		IHM::logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
 }
-void Texture::centrage(int& xc, int& yc, int iW, int iH, Uint8 cnt) {
-	switch (cnt) {
+void Texture::centrage(int& xc, int& yc, int iW, int iH, Uint8 cnt)
+{
+	switch (cnt)
+	{
 	case nocenter:
 		break;
 	case center_x:
@@ -91,7 +99,8 @@ Texture::Texture(SDL_Renderer*& renderer,
 	_stateScreen(stateScreen), _select(select), _alpha(alpha), _angle(angle), _center(center)
 {
 }
-Texture::~Texture() {
+Texture::~Texture()
+{
 	if (_renderer != nullptr)
 		_renderer = nullptr;
 
@@ -100,7 +109,8 @@ Texture::~Texture() {
 		_texture = nullptr;
 	}
 }
-SDL_Rect Texture::rectangle(int x, int y, int w, int h) {
+SDL_Rect Texture::rectangle(int x, int y, int w, int h)
+{
 	SDL_Rect rectangle;
 	rectangle.x = x;
 	rectangle.y = y;
@@ -108,8 +118,10 @@ SDL_Rect Texture::rectangle(int x, int y, int w, int h) {
 	rectangle.h = h;
 	return rectangle;
 }
-void Texture::render(int x, int y) {
-	if (x != -1 && y != -1) {
+void Texture::render(int x, int y)
+{
+	if (x != -1 && y != -1)
+	{
 		_dst.x = x;
 		_dst.y = y;
 	}
@@ -118,19 +130,24 @@ void Texture::render(int x, int y) {
 	else
 		SDL_RenderCopyEx(_renderer, _texture, NULL, &_dst, _angle, NULL, SDL_FLIP_NONE);
 }
-void Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, int y) {
+void Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, int y)
+{
 	if (_stateScreen == stateScreen && _select == select)
 		render(x, y);
 }
-bool Texture::renderTextureTestString(std::string msg, int xc, int yc) {
-	if (_name.compare(msg) == 0) {
+bool Texture::renderTextureTestString(std::string msg, int xc, int yc)
+{
+	if (_name.compare(msg) == 0)
+	{
 		render(xc, yc);
 		return true;
 	}
 	return false;
 }
-bool Texture::renderTextureTestStringAndStates(std::string msg, Uint8 stateScreen, int xc, int yc) {
-	if (_name.compare(msg) == 0 && _stateScreen == stateScreen) {
+bool Texture::renderTextureTestStringAndStates(std::string msg, Uint8 stateScreen, int xc, int yc)
+{
+	if (_name.compare(msg) == 0 && _stateScreen == stateScreen)
+	{
 		render(xc, yc);
 		return true;
 	}
@@ -141,7 +158,8 @@ bool Texture::renderTextureTestStringAndStates(std::string msg, Uint8 stateScree
 
 ///////////////////////////// Texte //////////////////////////////
 /* Texte :: STATIC */
-SDL_Texture* Texte::createSDL_TextureFromTexte(SDL_Renderer*& renderer, Uint8 type, std::string message, SDL_Color color, SDL_Color colorback, TTF_Font* font) {
+SDL_Texture* Texte::createSDL_TextureFromTexte(SDL_Renderer*& renderer, Uint8 type, std::string message, SDL_Color color, SDL_Color colorback, TTF_Font* font)
+{
 	SDL_Surface *surf = nullptr;
 
 	if (type == blended)
@@ -158,7 +176,8 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(SDL_Renderer*& renderer, Uint8 ty
 }
 void Texte::loadTexte(SDL_Renderer*& renderer, TTF_Font* font[],
 	Uint8 stateScreen, Uint8 select, std::vector<Texte*>& tabTexte, Uint8 type, std::string msg,
-	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint16 angle, Uint8 cnt) {
+	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint16 angle, Uint8 cnt)
+{
 
 	SDL_Texture *image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
 	if (alpha != nonTransparent)
@@ -170,7 +189,8 @@ void Texte::loadTexte(SDL_Renderer*& renderer, TTF_Font* font[],
 		type, color, backcolor, size, alpha, angle, cnt));
 }
 void Texte::writeTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 type, std::string msg,
-	SDL_Color color, SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint16 angle, Uint8 cnt) {
+	SDL_Color color, SDL_Color backcolor, Uint8 size, unsigned int x, unsigned int y, Uint16 angle, Uint8 cnt)
+{
 
 	SDL_Texture *image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
 
@@ -210,48 +230,61 @@ Texte::~Texte()
 		_font[i] = nullptr;
 }
 
-void Texte::SETname(std::string msg) {
-	if (this->GETname().compare(msg) != 0) {
+void Texte::SETname(std::string msg)
+{
+	if (this->GETname().compare(msg) != 0)
+	{
 		this->Texture::SETname(msg);
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 		resizeTexte();
 	}
 }
-void Texte::SETtype(Uint8 type) {
-	if (type != _type) {
+void Texte::SETtype(Uint8 type)
+{
+	if (type != _type) 
+	{
 		_type = type;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 	}
 }
-void Texte::SETsize(Uint8 size) {
-	if (size != _size) {
+void Texte::SETsize(Uint8 size)
+{
+	if (size != _size) 
+	{
 		_size = size;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 		resizeTexte();
 	}
 }
-void Texte::SETtxtcolor(SDL_Color txtcolor) {
-	if (!isSameColor(txtcolor, _txtcolor)) {
+void Texte::SETtxtcolor(SDL_Color txtcolor)
+{
+	if (!isSameColor(txtcolor, _txtcolor))
+	{
 		_txtcolor = txtcolor;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 	}
 }
-void Texte::SETbackcolor(SDL_Color backcolor) {
-	if (!isSameColor(backcolor, _backcolor)) {
+void Texte::SETbackcolor(SDL_Color backcolor)
+{
+	if (!isSameColor(backcolor, _backcolor))
+	{
 		_backcolor = backcolor;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 	}
 }
-bool Texte::isSameColor(SDL_Color color1, SDL_Color color2) const {
+bool Texte::isSameColor(SDL_Color color1, SDL_Color color2) const
+{
 	if (color1.a != color2.a || color1.b != color2.b || color1.g != color2.g || color1.r != color2.r)
 		return false;
 	else
 		return true;
 }
-void Texte::resizeTexte() {
+void Texte::resizeTexte()
+{
 	int xc = 0, yc = 0, iW = 0, iH = 0;
 
-	switch (this->GETcenter()) {
+	switch (this->GETcenter())
+	{
 	case nocenter:
 		xc = this->GETdstx();
 		yc = this->GETdsty();
@@ -281,7 +314,8 @@ void Texte::resizeTexte() {
 ///////////////////////////// ButtonImage //////////////////////////////
 /* ButtonImage :: STATIC */
 void ButtonImage::createButtonImage(SDL_Renderer*& renderer, std::vector<ButtonImage*>& tabButtonImage, Uint8 stateScreen, Uint8 select,
-	std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint16 angle, Uint8 cnt) {
+	std::string path, std::string msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, Uint16 angle, Uint8 cnt)
+{
 
 	int xt = 0, yt = 0, wt = 0, ht = 0;
 	if (x != -1 && y != -1)
@@ -292,22 +326,27 @@ void ButtonImage::createButtonImage(SDL_Renderer*& renderer, std::vector<ButtonI
 	if (found != std::string::npos)
 		path.insert(found, "On");
 	SDL_Surface* loadedSurfaceOn = IMG_Load(path.c_str());
-	if (w == 0 && h == 0) {
+	if (w == 0 && h == 0)
+	{
 		wt = loadedSurface->w;
 		ht = loadedSurface->h;
 	}
-	else {
+	else
+	{
 		wt = w;
 		ht = h;
 	}
 
-	if (loadedSurface != nullptr && loadedSurfaceOn != nullptr) {
+	if (loadedSurface != nullptr && loadedSurfaceOn != nullptr)
+	{
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		SDL_SetColorKey(loadedSurfaceOn, SDL_TRUE, SDL_MapRGB(loadedSurfaceOn->format, 0, 0xFF, 0xFF));
 		SDL_Texture *image = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		SDL_Texture *imageOn = SDL_CreateTextureFromSurface(renderer, loadedSurfaceOn);
-		if (image != nullptr && imageOn != nullptr) {
-			if (alpha != nonTransparent) {
+		if (image != nullptr && imageOn != nullptr)
+		{
+			if (alpha != nonTransparent)
+			{
 				SDL_SetTextureAlphaMod(image, alpha);
 				SDL_SetTextureAlphaMod(imageOn, alpha);
 			}
@@ -335,16 +374,22 @@ ButtonImage::ButtonImage(SDL_Renderer*& renderer,
 {
 
 }
-ButtonImage::~ButtonImage() {
-	if (_imageOn != nullptr) {
+ButtonImage::~ButtonImage()
+{
+	if (_imageOn != nullptr)
+	{
 		SDL_DestroyTexture(_imageOn);
 		_imageOn = nullptr;
 	}
 }
-unsigned int ButtonImage::searchButtonImage(std::string msg, Uint8 stateScreen, signed int x, signed int y) {
-	if (stateScreen == this->GETstateScreen()) {
-		if (x >= this->GETdstx() && x <= this->GETdstx() + this->GETdstw()) {
-			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth()) {
+unsigned int ButtonImage::searchButtonImage(std::string msg, Uint8 stateScreen, signed int x, signed int y)
+{
+	if (stateScreen == this->GETstateScreen())
+	{
+		if (x >= this->GETdstx() && x <= this->GETdstx() + this->GETdstw())
+		{
+			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth())
+			{
 				if (this->GETname().compare(msg) == 0)
 					return 1;
 			}
@@ -352,23 +397,29 @@ unsigned int ButtonImage::searchButtonImage(std::string msg, Uint8 stateScreen, 
 	}
 	return 0;
 }
-unsigned int ButtonImage::searchButtonImageName(std::string& msg, Uint8 stateScreen) {
-	if (stateScreen == this->GETstateScreen()) {
+unsigned int ButtonImage::searchButtonImageName(std::string& msg, Uint8 stateScreen)
+{
+	if (stateScreen == this->GETstateScreen())
+	{
 		if (this->GETname().compare(msg) == 0)
 			return 1;
 	}
 	return 0;
 }
-bool ButtonImage::renderButtonImage(Uint8 stateScreen) {
-	if (this->GETstateScreen() == stateScreen) {
-		if (this->GETangle() == 0) {
+bool ButtonImage::renderButtonImage(Uint8 stateScreen)
+{
+	if (this->GETstateScreen() == stateScreen)
+	{
+		if (this->GETangle() == 0)
+		{
 			if (_on)
 				SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
 			else
 				SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst());
 			return true;
 		}
-		else {
+		else 
+		{
 			if (_on)
 				SDL_RenderCopyEx(this->GETrenderer(), _imageOn, NULL, &this->GETdst(), this->GETangle(), NULL, SDL_FLIP_NONE);
 			else
@@ -379,9 +430,12 @@ bool ButtonImage::renderButtonImage(Uint8 stateScreen) {
 	}
 	return false;
 }
-bool ButtonImage::renderButtonImageTestString(Uint8 stateScreen, std::string& msg, int newx, int newy, Uint8 cnt) {
-	if (this->GETstateScreen() == stateScreen && this->GETname().compare(msg) == 0) {
-		if (newx != -1 && newy != -1) {
+bool ButtonImage::renderButtonImageTestString(Uint8 stateScreen, std::string& msg, int newx, int newy, Uint8 cnt)
+{
+	if (this->GETstateScreen() == stateScreen && this->GETname().compare(msg) == 0) 
+	{
+		if (newx != -1 && newy != -1)
+		{
 			centrage(newx, newy, this->GETdstw(), this->GETdsth(), cnt);
 			this->SETdstx(newx);
 			this->SETdstx(newx);
@@ -394,24 +448,31 @@ bool ButtonImage::renderButtonImageTestString(Uint8 stateScreen, std::string& ms
 	}
 	return false;
 }
-void ButtonImage::changeOn() {
+void ButtonImage::changeOn()
+{
 	_on = !_on;
 }
-SDL_Texture* ButtonImage::GETimageOn() const {
+SDL_Texture* ButtonImage::GETimageOn() const
+{
 	return _imageOn;
 }
-bool ButtonImage::GETon() const {
+bool ButtonImage::GETon() const
+{
 	return _on;
 }
-void ButtonImage::SETname(std::string msg) {
-	if (this->GETname().compare(msg) != 0) {
+void ButtonImage::SETname(std::string msg)
+{
+	if (this->GETname().compare(msg) != 0)
+	{
 		IHM::logfileconsole("___ERROR : ButtonTexte::SETname() : Le nom d'un bouton ne peut pas changer après initialisation");
 	}
 }
-void ButtonImage::SETon(bool state) {
+void ButtonImage::SETon(bool state)
+{
 	_on = state;
 }
-void ButtonImage::SETalpha(Uint8 alpha) {
+void ButtonImage::SETalpha(Uint8 alpha)
+{
 	this->SETalpha(alpha);
 	if (SDL_SetTextureAlphaMod(this->GETtextureNonConst(), this->GETalpha()) != 0)
 		IHM::logSDLError(std::cout, "alpha : ");
@@ -427,7 +488,8 @@ void ButtonImage::SETalpha(Uint8 alpha) {
 /* ButtonTexteS :: STATIC */
 void ButtonTexte::createButtonTexte(SDL_Renderer*& renderer, TTF_Font* font[], Uint8 stateScreen, Uint8 select,
 	std::vector<ButtonTexte*>& tabButtonTexte, Uint8 type, std::string msg,
-	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint16 angle, Uint8 cnt) {
+	SDL_Color color, SDL_Color backcolor, Uint8 size, int x, int y, Uint8 alpha, Uint16 angle, Uint8 cnt)
+{
 	int iW = 0, iH = 0;
 
 	SDL_Texture *image = nullptr;
@@ -435,7 +497,8 @@ void ButtonTexte::createButtonTexte(SDL_Renderer*& renderer, TTF_Font* font[], U
 
 	image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
 	imageOn = createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]);
-	if (alpha != nonTransparent) {
+	if (alpha != nonTransparent)
+	{
 		SDL_SetTextureAlphaMod(image, alpha);
 		SDL_SetTextureAlphaMod(imageOn, alpha);
 	}
@@ -455,16 +518,22 @@ ButtonTexte::ButtonTexte(SDL_Renderer *renderer, TTF_Font *font[], SDL_Texture* 
 	_imageOn(imageOn), _on(false)
 {
 }
-ButtonTexte::~ButtonTexte() {
-	if (_imageOn != nullptr) {
+ButtonTexte::~ButtonTexte()
+{
+	if (_imageOn != nullptr)
+	{
 		SDL_DestroyTexture(_imageOn);
 		_imageOn = nullptr;
 	}
 }
-bool ButtonTexte::searchButtonTexte(std::string msg, Uint8 stateScreen, signed int x, signed int y) {
-	if (stateScreen == this->GETstateScreen()) {
-		if (x >= this->GETdstx() && x <= this->GETdstx() + this->GETdstw()) {
-			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth()) {
+bool ButtonTexte::searchButtonTexte(std::string msg, Uint8 stateScreen, signed int x, signed int y)
+{
+	if (stateScreen == this->GETstateScreen())
+	{
+		if (x >= this->GETdstx() && x <= this->GETdstx() + this->GETdstw()) 
+		{
+			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth())
+			{
 				if (this->GETname().compare(msg) == 0)
 					return true;
 			}
@@ -472,25 +541,32 @@ bool ButtonTexte::searchButtonTexte(std::string msg, Uint8 stateScreen, signed i
 	}
 	return false;
 }
-bool ButtonTexte::searchButtonTexteName(std::string msg, Uint8 stateScreen) {
-	if (stateScreen == this->GETstateScreen()) {
+bool ButtonTexte::searchButtonTexteName(std::string msg, Uint8 stateScreen)
+{
+	if (stateScreen == this->GETstateScreen())
+	{
 		if (this->GETname().compare(msg) == 0)
 			return true;
 	}
 	return false;
 }
-void ButtonTexte::resetOnstateScreen(Uint8 select, unsigned int selectnothing) {
+void ButtonTexte::resetOnstateScreen(Uint8 select, unsigned int selectnothing) 
+{
 	if (this->GETselect() != select && this->GETselect() != selectnothing)
 		_on = false;
 }
-void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::string> tabPlayerName) {
-	for (unsigned int i = 0; i < tabPlayerName.size(); i++) {
+void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::string> tabPlayerName)
+{
+	for (unsigned int i = 0; i < tabPlayerName.size(); i++)
+	{
 		if (i != selectplayer && this->GETname().compare(tabPlayerName[i]) == 0)
 			_on = false;
 	}
 }
-bool ButtonTexte::renderButtonTexte(Uint8 stateScreen) {
-	if (this->GETstateScreen() == stateScreen) {
+bool ButtonTexte::renderButtonTexte(Uint8 stateScreen)
+{
+	if (this->GETstateScreen() == stateScreen)
+	{
 		if (_on)
 			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
 		else
@@ -499,9 +575,12 @@ bool ButtonTexte::renderButtonTexte(Uint8 stateScreen) {
 	}
 	return false;
 }
-bool ButtonTexte::renderButtonTexteTestString(Uint8 stateScreen, std::string msg, int newx, int newy, Uint8 cnt) {
-	if (this->GETstateScreen() == stateScreen && this->GETname().compare(msg) == 0) {
-		if (newx != -1 && newy != -1) {
+bool ButtonTexte::renderButtonTexteTestString(Uint8 stateScreen, std::string msg, int newx, int newy, Uint8 cnt)
+{
+	if (this->GETstateScreen() == stateScreen && this->GETname().compare(msg) == 0)
+	{
+		if (newx != -1 && newy != -1)
+		{
 			centrage(newx, newy, this->GETdstw(), this->GETdsth(), cnt);
 			this->SETdstx(newx);
 			this->SETdstx(newx);
@@ -514,27 +593,38 @@ bool ButtonTexte::renderButtonTexteTestString(Uint8 stateScreen, std::string msg
 	}
 	return false;
 }
-void ButtonTexte::changeOn() {
+void ButtonTexte::changeOn()
+{
 	_on = !_on;
 }
-SDL_Texture* ButtonTexte::GETimageOn() const {
+SDL_Texture* ButtonTexte::GETimageOn() const
+{
 	return _imageOn;
 }
-bool ButtonTexte::GETon() const {
+bool ButtonTexte::GETon() const
+{
 	return _on;
 }
-void ButtonTexte::SETname(std::string msg) {
-	if (this->GETname().compare(msg) != 0) {
+void ButtonTexte::SETname(std::string msg)
+{
+	if (this->GETname().compare(msg) != 0)
+	{
 		IHM::logfileconsole("___ERROR : ButtonTexte::SETname() : Le nom d'un bouton ne peut pas changer après initialisation");
 	}
 }
-void ButtonTexte::SETon(bool state) {
+void ButtonTexte::SETon(bool state)
+{
 	_on = state;
 }
-void ButtonTexte::SETalpha(Uint8 alpha) {
+void ButtonTexte::SETalpha(Uint8 alpha)
+{
 	this->SETalpha(alpha);
 	if (SDL_SetTextureAlphaMod(this->GETtextureNonConst(), this->GETalpha()) != 0)
 		IHM::logSDLError(std::cout, "alpha : ");
 	if (SDL_SetTextureAlphaMod(_imageOn, this->GETalpha()) != 0)
 		IHM::logSDLError(std::cout, "alpha : ");
 }
+
+/*
+*	End Of File
+*/

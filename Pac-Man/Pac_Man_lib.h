@@ -43,12 +43,13 @@
 	*	-> SCREEN_WIDTH = 1920 pixels 
 	*	-> SCREEN_HEIGHT = 1088 pixels
 	*	-> SCREEN_REFRESH_RATE = 60 Hz
-	SCREEN_WIDTH et SCREEN_HEIGHT doivent etre des multiples de TILE_SIZE pour que le placement des objets Entity fonctionne bien
+	SCREEN_WIDTH et SCREEN_HEIGHT doivent etre des multiples de TILE_SIZE pour que le placement des objets Entity fonctionnent bien
 */
 
 
 // Donne la valeur en pixel de la longueur et de la largeur de l'écran
-inline Uint16 getHorizontal() {
+inline Uint16 getHorizontal()
+{
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
@@ -60,7 +61,8 @@ inline Uint16 getHorizontal() {
 // longueur de la fenetre en pixel
 const Uint16 SCREEN_WIDTH = getHorizontal();
 
-inline Uint16 getVertical() {
+inline Uint16 getVertical()
+{
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
@@ -73,10 +75,12 @@ inline Uint16 getVertical() {
 const Uint16 SCREEN_HEIGHT = getVertical();
 
 // Donne la fréquence de rafraichissement de l'écran en Hz
-inline Uint8 getRefreshRate() {
+inline Uint8 getRefreshRate()
+{
 	DEVMODE screen;
 	memset(&screen, 0, sizeof(DEVMODE));
-	if (EnumDisplaySettings(NULL, 0, &screen)) {
+	if (EnumDisplaySettings(NULL, 0, &screen))
+	{
 		return (Uint8)screen.dmDisplayFrequency;
 	}
 	return 0;
@@ -115,7 +119,8 @@ enum Select_Type: Uint8 { selectnothing, pause, win, lost };
 /*
 	*	Structure décrivant une case dans la map
 */
-struct Tile {
+struct Tile 
+{
 	// numéro de la case en x map[x][y]
 	Uint8 indexX = NULL; 
 
@@ -135,7 +140,8 @@ struct Tile {
 	Uint8 entity = gold;
 };
 //---------------------- Structure niveau 1 ---------------------------------------------------------------------------------------------------------
-struct Screen {
+struct Screen
+{
 	// ptr sur la fenetre crée par la SDL
 	SDL_Window *window = nullptr;
 
@@ -145,7 +151,8 @@ struct Screen {
 /*
 	*	Structure contenant tous les noms des fichiers ainsi que leurs chemins
 */
-struct File {
+struct File
+{
 	const std::string log = "log.txt";
 
 	const std::string score = "save/scores.save";
@@ -154,7 +161,8 @@ struct File {
 
 	const std::string levelMap = "bin/levelMap.pacman";
 };
-struct Var {
+struct Var
+{
 	/*** type primitif	***/
 
 	// variable permettant de quitter la boucle principale donc le jeu
@@ -200,7 +208,8 @@ struct Var {
 /*
 	*	Contient toutes les Textures images
 */
-struct AllTextures {
+struct AllTextures
+{
 	// tableau d'images contenu dans l'écran titre
 	std::vector<Texture*> imgecranTitre;
 
@@ -231,7 +240,8 @@ struct AllTextures {
 /*
 	*	Contient toutes les Textes
 */
-struct AllTextes {
+struct AllTextes
+{
 	// tableau de polices de la font arial
 	TTF_Font *font[MAX_FONT] = {};
 
@@ -253,7 +263,8 @@ struct AllTextes {
 /*
 	*	Contient tous les boutons
 */
-struct AllButtons {
+struct AllButtons
+{
 	// tableau de boutonsTexte contenu dans l'écran titre
 	std::vector<ButtonTexte*> buttonTexteEcranTitre;
 
@@ -269,7 +280,8 @@ struct AllButtons {
 	// tableau de boutons contenu dans l'écran Score
 	std::vector<ButtonTexte*> buttonTexteScore;
 };
-struct Map {
+struct Map
+{
 
 	// Matrice contenant les murs de la map -> donné par save/levelMap.txt
 	std::vector<std::vector<bool>> matriceMapWall;
@@ -295,7 +307,8 @@ struct Map {
 	*						-> les variables de la fenetre SDL
 	*						-> les variable de la map
 */
-struct Sysinfo {
+struct Sysinfo
+{
 	// contient les données en rapport à la SDL 
 	Screen screen;
 
@@ -328,3 +341,7 @@ struct Sysinfo {
 };
 
 #endif
+
+/*
+*	End Of File
+*/

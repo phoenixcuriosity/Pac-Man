@@ -96,6 +96,11 @@ enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTran
 */
 enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
 
+/*
+	* type de rotation des textures
+	* valeur en degrès
+	* par défaut les textures n'ont pas d'angle
+*/
 enum Rotation_Type : Uint16 {no_angle, inverse = 180};
 
 /* *********************************************************
@@ -110,7 +115,8 @@ enum Rotation_Type : Uint16 {no_angle, inverse = 180};
 	*		2] directement utiliser le constructeur (préalable : déja avoir le ptr SDL_Texture)
 
 */
-class Texture {
+class Texture
+{
 
 	/* *********************************************************
 	*					Texture::STATIC
@@ -183,7 +189,8 @@ public: // assesseurs
 	inline virtual Uint8 GETcenter()const { return _center; };
 	inline virtual Uint16 GETangle()const { return _angle; };
 
-	inline virtual void SETtexture(SDL_Texture* texture) {
+	inline virtual void SETtexture(SDL_Texture* texture)
+	{
 		if (_texture != texture) {
 			if (_texture != nullptr) {
 				SDL_DestroyTexture(_texture);
@@ -197,14 +204,16 @@ public: // assesseurs
 	inline virtual void SETdstw(int w) { _dst.w = w; };
 	inline virtual void SETdsth(int h) { _dst.h = h; };
 	inline virtual void SETname(std::string msg) { _name = msg; };
-	inline virtual void SETalpha(Uint8 alpha){
+	inline virtual void SETalpha(Uint8 alpha)
+	{
 		if (_alpha != alpha) {
 			_alpha = alpha;
 			if (SDL_SetTextureAlphaMod(_texture, _alpha) != 0)
 				_alpha = 255;
 		}
 	}
-	inline virtual void SETcenter(Uint8) {
+	inline virtual void SETcenter(Uint8)
+	{
 		if (_center != center) {
 			_center = center;
 			centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
@@ -252,7 +261,8 @@ private:
 #define Texte_H
 //--- Texte ----------------------------------------------------------------------------------------------------------------------------------------
 
-class Texte : public Texture {
+class Texte : public Texture
+{
 
 	/* *********************************************************
 		*				Texte::STATIC
@@ -348,7 +358,8 @@ private:
 #define ButtonImage_H
 //--- ButtonImage ---------------------------------------------------------------------------------------------------------------------------------------
 
-class ButtonImage : public Texture {
+class ButtonImage : public Texture
+{
 
 	/* *********************************************************
 		*				ButtonImage::STATIC
@@ -419,7 +430,8 @@ private:
 	changeOn permet de changer entre l'imageOn et l'image
 
 */
-class ButtonTexte : public Texte {
+class ButtonTexte : public Texte
+{
 
 	/* *********************************************************
 		*				ButtonTexte::STATIC
@@ -474,4 +486,8 @@ private:
 	bool _on;
 };
 #endif ButtonTexte_H
+
+/*
+*	End Of File
+*/
 

@@ -24,7 +24,8 @@
 
 #include "Pac_Man_lib.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 	Sysinfo sysinfo;
 	
 	clock_t t1, t2;
@@ -35,8 +36,10 @@ int main(int argc, char** argv) {
 
 	IHM::logfileconsole("________PROGRAMME START________");
 
-	if (IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextes.font)) {
-		if (sysinfo.var.saveReload.loadScore(sysinfo.file.score)) {
+	if (IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextes.font))
+	{
+		if (sysinfo.var.saveReload.loadScore(sysinfo.file.score))
+		{
 			IHM::calculimage(sysinfo);
 			IHM::initMusic(sysinfo.music);
 
@@ -50,7 +53,8 @@ int main(int argc, char** argv) {
 			Mix_PlayMusic(sysinfo.music[music_intro], -1);
 
 
-			while (sysinfo.var.continuer) {
+			while (sysinfo.var.continuer)
+			{
 				/*
 					Boucle principale bloquante
 					Boucle fonctionnant à la fréquence SCREEN_REFRESH_RATE
@@ -79,3 +83,6 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
 }
 
+/*
+*	End Of File
+*/

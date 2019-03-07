@@ -1,3 +1,5 @@
-﻿  IHM.cpp
-c:\users\robin\documents\github\pac-man\pac-man\ihm.cpp(732): warning C4100: 'font' : paramètre formel non référencé
+﻿  main.cpp
+c:\users\robin\documents\github\pac-man\pac-man\main.cpp(32): warning C4100: 'argv' : paramètre formel non référencé
+c:\users\robin\documents\github\pac-man\pac-man\main.cpp(32): warning C4100: 'argc' : paramètre formel non référencé
+c:\users\robin\documents\github\pac-man\pac-man\main.cpp(56): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
   Pac-Man.vcxproj -> C:\Users\Robin\Documents\GitHub\Pac-Man\Debug\Pac-Man.exe

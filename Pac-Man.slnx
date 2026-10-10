@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Pac-Man.vcxproj" Id="d72b5573-d29f-41ee-8594-fd2b8dcdb7dd" />
+</Solution>

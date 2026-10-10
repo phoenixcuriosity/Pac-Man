@@ -1,0 +1,84 @@
+# =============================================================================
+#  Pac-Man — Continuous Integration (GitHub Actions)
+#
+#   Job "build"    : compiles the game with MSVC (Release | x64), same
+#                    configuration as local development.
+#   Job "cppcheck" : static code analysis of dev/src + dev/inc with Cppcheck.
+# =============================================================================
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Cancel redundant runs for the same ref (e.g. several consecutive pushes)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Compile with MSVC — Release | x64 (toolset v143, as configured in the vcxproj).
+  # Note: Debug|x64 uses toolset v145 (VS Insiders), not available on GitHub runners.
+  # ---------------------------------------------------------------------------
+  build:
+    name: Compile (MSVC Release x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Pac-Man.vcxproj (Release | x64)
+        run: msbuild Pac-Man.vcxproj /p:Configuration=Release /p:Platform=x64 /m /nologo /v:minimal
+
+  # ---------------------------------------------------------------------------
+  # Cppcheck static analysis (runs on Linux — cppcheck itself does not need MSVC).
+  # The Windows SDK header "wtypes.h" is not available here, so the resulting
+  # "missing include system file" message is suppressed.
+  # ---------------------------------------------------------------------------
+  cppcheck:
+    name: Static analysis (Cppcheck)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install Cppcheck
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y cppcheck
+
+      - name: Cppcheck version
+        run: cppcheck --version
+
+      - name: Run Cppcheck on dev/src and dev/inc
+        shell: bash
+        working-directory: .
+        env:
+          # Set to 0 while cleaning up the first batch of warnings, then back to 1.
+          CPPCHECK_STRICT: "1"
+        run: |
+          set -euo pipefail
+
+          # Same sources as the Visual Studio project (dev\src + dev\inc)
+          # --error-exitcode : fail CI if any diagnostic is reported
+          cppcheck \
+            --std=c++latest \
+            --language=c++ \
+            --platform=win64 \
+            -Idev/inc \
+            --suppressions-list=cppcheck.suppr \
+            --suppress=missingIncludeSystem \
+            --enable=warning,style,performance,portability \
+            --error-exitcode="${CPPCHECK_STRICT}" \
+            dev/src dev/inc | tee cppcheck.log
+
+      - name: Upload Cppcheck log (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cppcheck-report
+          path: cppcheck.log

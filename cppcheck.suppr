@@ -1,0 +1,12 @@
+# =============================================================================
+#  Pac-Man — Cppcheck suppression list (used by .github/workflows/ci.yml)
+#
+#  Syntax:
+#    <id>                 suppress everywhere
+#    file.cpp:<id>        suppress in one file only
+#    file.cpp:123:<id>    suppress on one line only
+#
+#  Tip (find what to add locally):
+#    cppcheck dev/src --enable=style,performance,portability --inline-suppr \
+#      | sed -E 's/.*\[([^]]+)\].*/\1/' | sort -u
+# =============================================================================

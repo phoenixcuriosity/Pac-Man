@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Pac-Man\\x64\\Debug\\IHM.obj",
+            "outputs": [
+                "Pac-Man\\x64\\Debug\\IHM.cpp.obj.dt.module.json",
+                "Pac-Man\\x64\\Debug\\IHM.cpp.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

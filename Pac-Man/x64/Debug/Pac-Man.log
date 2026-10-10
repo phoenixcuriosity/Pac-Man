@@ -1,0 +1,51 @@
+﻿Build started 10/10/2026 23:37:21.
+Logging verbosity is set to: Normal.     1>Project "C:\Users\robin\Documents\Git\Pac-Man\Pac-Man.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /ZI /JMC /nologo /W4 /WX- /diagnostics:column /sdl /MP /Od /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++latest /permissive- /Fo"Pac-Man\x64\Debug\\" /Fd"Pac-Man\x64\Debug\vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:prompt dev\src\Entity.cpp dev\src\IHM.cpp dev\src\main.cpp dev\src\SaveReload.cpp dev\src\Texture.cpp
+         Entity.cpp
+         IHM.cpp
+         main.cpp
+         SaveReload.cpp
+         Texture.cpp
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\src\Entity.cpp(763,75): warning C4100: 'pacman': unreferenced parameter
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\src\main.cpp(27,27): warning C4100: 'argv': unreferenced parameter
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\src\main.cpp(27,14): warning C4100: 'argc': unreferenced parameter
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\src\main.cpp(51,8): warning C4189: 'SDL_EnableUNICODE': local variable is initialized but not referenced
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\src\IHM.cpp(805,61): warning C4100: 'font': unreferenced parameter
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\src\IHM.cpp(880,32): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+     1>C:\Users\robin\Documents\Git\Pac-Man\dev\inc\IHM.h(139,20): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+         (compiling source file 'dev/src/IHM.cpp')
+             C:\Users\robin\Documents\Git\Pac-Man\dev\inc\IHM.h(139,20):
+             the template instantiation context (the oldest one first) is
+                 C:\Users\robin\Documents\Git\Pac-Man\dev\src\IHM.cpp(920,2):
+                 see reference to function template instantiation 'void deleteDyTabPlayerAndTextures<std::vector<Texture *,std::allocator<Texture *>>>(T &,const std::string &)' being compiled
+                 with
+                 [
+                     T=std::vector<Texture *,std::allocator<Texture *>>
+                 ]
+         
+       Link:
+         C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\robin\Documents\Git\Pac-Man\x64\Debug\Pac-Man.exe" /INCREMENTAL /ILK:"Pac-Man\x64\Debug\Pac-Man.ilk" /NOLOGO SDL2.lib SDL2main.lib SDL2_ttf.lib SDL2_image.lib SDL2_mixer.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:\Users\robin\Documents\Git\Pac-Man\x64\Debug\Pac-Man.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\robin\Documents\Git\Pac-Man\x64\Debug\Pac-Man.lib" /MACHINE:X64 "Pac-Man\x64\Debug\Entity.obj"
+         "Pac-Man\x64\Debug\IHM.obj"
+         "Pac-Man\x64\Debug\main.obj"
+         "Pac-Man\x64\Debug\SaveReload.obj"
+         "Pac-Man\x64\Debug\Texture.obj"
+         Pac-Man.vcxproj -> C:\Users\robin\Documents\Git\Pac-Man\x64\Debug\Pac-Man.exe
+     1>Done Building Project "C:\Users\robin\Documents\Git\Pac-Man\Pac-Man.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+       "C:\Users\robin\Documents\Git\Pac-Man\Pac-Man.vcxproj" (Build target) (1) ->
+       (ClCompile target) -> 
+         C:\Users\robin\Documents\Git\Pac-Man\dev\src\Entity.cpp(763,75): warning C4100: 'pacman': unreferenced parameter
+         C:\Users\robin\Documents\Git\Pac-Man\dev\src\main.cpp(27,27): warning C4100: 'argv': unreferenced parameter
+         C:\Users\robin\Documents\Git\Pac-Man\dev\src\main.cpp(27,14): warning C4100: 'argc': unreferenced parameter
+         C:\Users\robin\Documents\Git\Pac-Man\dev\src\main.cpp(51,8): warning C4189: 'SDL_EnableUNICODE': local variable is initialized but not referenced
+         C:\Users\robin\Documents\Git\Pac-Man\dev\src\IHM.cpp(805,61): warning C4100: 'font': unreferenced parameter
+         C:\Users\robin\Documents\Git\Pac-Man\dev\src\IHM.cpp(880,32): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+         C:\Users\robin\Documents\Git\Pac-Man\dev\inc\IHM.h(139,20): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+
+    7 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.66
